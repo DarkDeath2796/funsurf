@@ -65,7 +65,7 @@ loadTimeData.data = {
   resetAllStatsDialogTitle: "Reset all stats",
   share: "Share with a friend",
   shareCopy: "Copy",
-  shareLink: "edge://surf",
+  shareLink: "https://darkdeath2796.github.io/funsurf",
   shareLinkCopied: "Copied!",
   skiTheme: "Let's ski: Fun Edition",
   specialThanks: "Special thanks:",
