@@ -1,3 +1,8 @@
+new Audio("resources/sfx/boost.mp3");
+new Audio("resources/sfx/pickup.mp3");
+new Audio("resources/sfx/splash.mp3");
+
+
 (() => {
   var e,
   t = {
@@ -8498,8 +8503,8 @@ reset() {
           y: 0,
           raw: 0,
           min: 1,
-          max: 8,
-          base: 8,
+          max: 8.5,
+          base: 8.5,
           accel: 0.042,
           airAdd: 2.5,
           boostAdd: 5,
