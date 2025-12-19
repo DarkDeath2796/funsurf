@@ -67,9 +67,9 @@ loadTimeData.data = {
   shareCopy: "Copy",
   shareLink: "edge://surf",
   shareLinkCopied: "Copied!",
-  skiTheme: "Let's ski",
+  skiTheme: "Let's ski: Fun Edition",
   specialThanks: "Special thanks:",
-  surfTheme: "Let's surf",
+  surfTheme: "Let's surf: Fun Edition",
   textdirection: "ltr",
   theme: "Theme changed to $1",
   themeSelectLabel: "Theme",
@@ -84,4 +84,5 @@ loadTimeData.data = {
   zigzagModeTitleInline: "Zig zag:",
   zigzagTitle: "Zig zag",
   zigzagUnit: "gates",
+  modder: "Modder", // hehehe
 };

@@ -297,8 +297,10 @@ html[dir="rtl"].icon-arrow-left {
 
 #dash-stats {
   display: flex;
-  width: 280px;
-  margin: 0 auto;
+  justify-content: center;
+  gap: 8px;
+  left: 90px;
+  transform: translateX(-90px);
 }
 
 #stats-score,
@@ -347,6 +349,7 @@ html[dir="rtl"].icon-arrow-left {
 
 .icon-star {
   vertical-align: top;
+  visibility: hidden;
 }
 
 .icon-fill {
