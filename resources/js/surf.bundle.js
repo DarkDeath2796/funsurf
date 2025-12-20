@@ -1,8 +1,3 @@
-new Audio("resources/sfx/boost.mp3");
-new Audio("resources/sfx/pickup.mp3");
-new Audio("resources/sfx/splash.mp3");
-
-
 (() => {
   var e,
   t = {
@@ -8338,10 +8333,6 @@ checkButtons(e) {
   case "rb":
         s = He.Right;
         break;
-  case "lt":
-  case "rt":
-        s = He.Boost;
-        break;
   case "up":
         s = He.Stop;
         break;
@@ -8438,9 +8429,7 @@ focusNextElement(e = 1) {
               }
         }
         onContextMenu(e) {
-            e.preventDefault(),
-            te.sys.session.state === Q.Play &&
-            Ae.sys.routeInput(He.Boost, false, false);
+            e.preventDefault();
       }
       checkAngle(e, t) {
             const s =
@@ -8615,8 +8604,6 @@ routeAction(e, t = false) {
       case He.DownRight:
             this.changeDirection(e, t);
             break;
-      case He.Boost:
-            this.boost();
       }
 }
 changeDirection(e, t = false) {
@@ -9050,8 +9037,6 @@ onKeydown(e) {
       case "escape":
             Ae.sys.routeInput(He.Settings, false, false);
             break;
-      case "f":
-            Ae.sys.routeInput(He.Boost, false, false);
       }
       Ae.sys.checkCheatCode(t);
 }
