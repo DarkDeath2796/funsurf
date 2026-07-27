@@ -340,7 +340,7 @@ html[dir="rtl"].icon-arrow-left {
   margin-inline-end: 4px;
 }
 
-#score-text {
+#score-text, #speed-text, #life-count {
   vertical-align: middle;
   font-size: 16px;
   font-weight: bold;

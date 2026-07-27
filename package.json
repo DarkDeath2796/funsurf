@@ -1,0 +1,12 @@
+{
+  "name": "surf-src",
+  "version": "1.0.0",
+  "description": "The *Let's Surf* game from ``edge://surf``",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
