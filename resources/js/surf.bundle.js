@@ -20,7 +20,7 @@
             i.createElement("path", {
               d: "M4.09 4.22l.06-.07a.5.5 0 01.63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 01.63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 01-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 01-.63.06l-.07-.06a.5.5 0 01-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 01-.06-.63l.06-.07-.06.07z",
               fillRule: "nonzero",
-            })
+            }),
           );
         }
       },
@@ -40,14 +40,14 @@
           g = s(38066),
           u = s(14570);
         const m = {
-          toggle_toggleButton: {
-            float: (0, d.zw)("right", "left"),
-            marginInlineStart: "5px",
+            toggle_toggleButton: {
+              float: (0, d.zw)("right", "left"),
+              marginInlineStart: "5px",
+            },
+            toggle_statusMessage: {
+              paddingInlineStart: "0px",
+            },
           },
-          toggle_statusMessage: {
-            paddingInlineStart: "0px",
-          },
-        },
           y = {
             button: {
               height: "fit-content",
@@ -178,7 +178,7 @@
             },
             a.createElement("path", {
               d: "M3.37 10.17a.5.5 0 00-.74.66l4 4.5c.19.22.52.23.72.02l10.5-10.5a.5.5 0 00-.7-.7L7.02 14.27l-3.65-4.1z",
-            })
+            }),
           );
         }
 
@@ -194,7 +194,7 @@
             a.createElement("path", {
               d: "M8 6a.5.5 0 01.09 1H6a3 3 0 00-.2 6H8a.5.5 0 01.09 1H6a4 4 0 01-.22-8H8zm6 0a4 4 0 01.22 8H12a.5.5 0 01-.09-1H14a3 3 0 00.2-6H12a.5.5 0 01-.09-1H14zM6 9.5h8a.5.5 0 01.09 1H6a.5.5 0 01-.09-1H14 6z",
               fillRule: "nonzero",
-            })
+            }),
           );
         }
         var Z = s(3117);
@@ -207,6 +207,8 @@
             case "BUOY":
             case "zigzag":
               return q.ZigZag;
+            case "custom":
+              return q.Custom;
             case "CLASSIC":
             case "endless":
             default:
@@ -215,9 +217,10 @@
         }
         let q;
         !(function (e) {
-          (e.ZigZag = "zigzag"),
+          ((e.ZigZag = "zigzag"),
             (e.Endless = "endless"),
-            (e.TimeTrial = "timetrial");
+            (e.TimeTrial = "timetrial"),
+            (e.Custom = "custom"));
         })(q || (q = {}));
         const G = {
           ski: {
@@ -274,11 +277,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -286,9 +289,9 @@
         class Y {
           constructor() {
             if ((X(this, "localData", void 0), Y.offline)) return Y.offline;
-            (Y.offline = this),
+            ((Y.offline = this),
               this.loadData(),
-              re.subscribe(this.loadData.bind(this));
+              re.subscribe(this.loadData.bind(this)));
           }
           loadData() {
             const e = re.getState();
@@ -304,22 +307,24 @@
                 endless: e.endless_bestScore,
                 timetrial: e.timetrial_bestScore,
                 zigzag: e.zigzag_bestScore,
+                custom: e.custom_bestScore,
               },
             };
           }
           saveData(e) {
-            re.dispatch(oe(e)),
+            (re.dispatch(oe(e)),
               he.saveZigZagHighScore(e.zigzag_bestScore),
               he.saveEndlessHighScore(e.endless_bestScore),
               he.saveTimeTrialHighScore(e.timetrial_bestScore),
+              he.saveCustomHighScore(e.custom_bestScore),
               he.saveGameMode(e.mode),
               he.saveHighVisibilityMode(e.highVisibilityMode),
               he.saveReducedSpeedMode(e.gameSpeed < se),
               he.saveDefaultCharacter(e.currentCharacter),
-              he.saveDefaultTheme(e.theme);
+              he.saveDefaultTheme(e.theme));
           }
           resetData() {
-            re.dispatch(ne()), he.resetAllStats();
+            (re.dispatch(ne()), he.resetAllStats());
           }
           getCommonStats(e, t) {
             const s = te.sys.game;
@@ -337,51 +342,54 @@
             const e = te.sys.getCurrentScore(),
               t = te.sys.session.bestScore.endless,
               s = te.sys.game;
-            he.recordGameEnd({
+            (he.recordGameEnd({
               ...this.getCommonStats(q.Endless, e),
               loseCondition: s.caught ? "kraken" : "lives",
               dogCollected: s.friend,
             }),
               !s.cheat.used &&
-              e > t &&
-              ((te.sys.session.bestScore.endless = e),
+                e > t &&
+                ((te.sys.session.bestScore.endless = e),
                 (s.highScore = true),
                 this.saveData({
                   ...re.getState(),
                   endless_bestScore: e,
-                }));
+                })));
           }
           storeTimeTrialStats() {
             const e = te.sys.getCurrentScore(),
               t = te.sys.session.bestScore.timetrial,
               s = te.sys.game;
-            he.recordGameEnd({
+            (he.recordGameEnd({
               ...this.getCommonStats(q.TimeTrial, e),
               livesCollected: s.lives.numCollected,
             }),
               !s.cheat.used &&
-              (e < t || t < 0) &&
-              s.finish &&
-              ((te.sys.session.bestScore.timetrial = e),
+                (e < t || t < 0) &&
+                s.finish &&
+                ((te.sys.session.bestScore.timetrial = e),
                 (s.highScore = true),
                 this.saveData({
                   ...re.getState(),
                   timetrial_bestScore: e,
-                }));
+                })));
           }
           storeZigZagStreak() {
             const e = te.sys.getCurrentScore(),
               t = te.sys.session.bestScore.zigzag,
               s = te.sys.game;
-            he.recordGameEnd(this.getCommonStats(q.ZigZag, e)),
+            (he.recordGameEnd(this.getCommonStats(q.ZigZag, e)),
               !s.cheat.used &&
-              e > t &&
-              ((te.sys.session.bestScore.zigzag = e),
+                e > t &&
+                ((te.sys.session.bestScore.zigzag = e),
                 (s.highScore = true),
                 this.saveData({
                   ...re.getState(),
                   zigzag_bestScore: e,
-                }));
+                })));
+          }
+          storeCustomStats() {
+            // TODO: Implement custom stats saving
           }
         }
 
@@ -389,38 +397,38 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
         }
         let Q, ee;
-        X(Y, "offline", void 0),
+        (X(Y, "offline", void 0),
           (function (e) {
-            (e.Menu = "menu"),
+            ((e.Menu = "menu"),
               (e.Play = "play"),
               (e.Pause = "pause"),
-              (e.Over = "over");
+              (e.Over = "over"));
           })(Q || (Q = {})),
           (function (e) {
-            (e.Keyboard = "keyboard"),
+            ((e.Keyboard = "keyboard"),
               (e.Mouse = "mouse"),
               (e.Touch = "touch"),
               (e.Xbox = "xbox"),
-              (e.Ps = "ps");
-          })(ee || (ee = {}));
+              (e.Ps = "ps"));
+          })(ee || (ee = {})));
         class te {
           constructor() {
             if ((J(this, "session", void 0), J(this, "game", void 0), te.sys))
               return te.sys;
-            (te.sys = this),
+            ((te.sys = this),
               this.defineSessionSettings(),
               this.resetGameData(),
-              re.subscribe(this.loadSessionSettings.bind(this));
+              re.subscribe(this.loadSessionSettings.bind(this)));
           }
           defineSessionSettings() {
             const e = re.getState();
@@ -436,6 +444,7 @@
                 endless: e.endless_bestScore,
                 timetrial: e.timetrial_bestScore,
                 zigzag: e.zigzag_bestScore,
+                custom: e.custom_bestScore,
               },
               state: Q.Menu,
               flyoutActive: false,
@@ -444,7 +453,7 @@
               w: 0,
               h: 0,
               x: 0,
-              y: 0,
+              y: 0
             };
           }
           saveSessionSettings() {
@@ -457,19 +466,21 @@
               endless_bestScore: this.session.bestScore.endless,
               zigzag_bestScore: this.session.bestScore.zigzag,
               timetrial_bestScore: this.session.bestScore.timetrial,
+              custom_bestScore: this.session.bestScore.custom,
               gameState: this.session.state,
             });
           }
           loadSessionSettings() {
             const e = re.getState();
-            (this.session.settings.mode = e.mode),
+            ((this.session.settings.mode = e.mode),
               (this.session.settings.theme = e.theme),
               (this.session.settings.character = e.currentCharacter),
               (this.session.settings.hitbox = e.highVisibilityMode),
               (this.session.settings.gameSpeed = e.gameSpeed),
               (this.session.bestScore.endless = e.endless_bestScore),
               (this.session.bestScore.timetrial = e.timetrial_bestScore),
-              (this.session.bestScore.zigzag = e.zigzag_bestScore);
+              (this.session.bestScore.zigzag = e.zigzag_bestScore),
+              (this.session.bestScore.custom = e.custom_bestScore));
           }
           saveGameStats() {
             switch (this.session.settings.mode) {
@@ -481,6 +492,10 @@
                 break;
               case q.ZigZag:
                 Y.offline.storeZigZagStreak();
+                break;
+              case q.Custom:
+                Y.offline.storeCustomStats();
+                break;
             }
           }
           getCurrentScore() {
@@ -491,6 +506,8 @@
                 return this.game.time.elapsed - 2 * this.game.coins;
               case q.ZigZag:
                 return this.game.gates;
+              case q.Custom:
+                return 0;
             }
           }
           getCurrentScoreFormatted() {
@@ -511,6 +528,8 @@
                 return W(this.session.bestScore.timetrial);
               case q.ZigZag:
                 return Math.max(this.session.bestScore.zigzag, 0).toString();
+              case q.Custom:
+                return "0";
             }
           }
           resetGameData() {
@@ -555,15 +574,15 @@
             };
           }
           update(e) {
-            (this.game.time.loop = e / 1e3),
+            ((this.game.time.loop = e / 1e3),
               (this.game.time.elapsed += this.game.time.loop),
               (this.game.time.scale =
-                60 * this.game.time.loop * this.session.settings.gameSpeed);
+                60 * this.game.time.loop * this.session.settings.gameSpeed));
           }
           updateDistances(e, t) {
-            (this.game.dist.x += e),
+            ((this.game.dist.x += e),
               (this.game.dist.y += t),
-              (this.game.dist.unit += t / 10);
+              (this.game.dist.unit += t / 10));
           }
           rand(e, t) {
             return Math.floor(e + (t + 1 - e) * Math.random());
@@ -588,6 +607,9 @@
                 ? -1
                 : Z.pz.getInteger("timetrialBestScore") / 1e3,
             zigzag_bestScore: Z.pz.getInteger("zigzagBestScore"),
+            custom_bestScore: -1,
+            boundaries: true,
+            area_size: 256,
           };
         var ae;
 
@@ -604,19 +626,24 @@
             endless_bestScore: -1,
             zigzag_bestScore: -1,
             timetrial_bestScore: -1,
+            custom_bestScore: -1,
             currentCharacter: 1,
             theme: new Date().getMonth() === 11 ? "ski" : "surf",
           };
         }
         !(function (e) {
-          (e.RESET_STATS = "RESET_STATS"),
+          ((e.RESET_STATS = "RESET_STATS"),
             (e.UPDATE_GAME_STATE = "UPDATE_GAME_STATE"),
-            (e.UPDATE_STATS = "UPDATE_STATS");
+            (e.UPDATE_STATS = "UPDATE_STATS"));
         })(ae || (ae = {}));
         const re = (0, U.MT)(function (e = ie, t) {
           switch (t.type) {
             case ae.UPDATE_STATS: {
               const s = t;
+              if (s.lives) {
+                te.sys.game.lives.current = s.lives;
+                te.sys.game.lives.max = s.lives;
+              }
               return {
                 ...e,
                 currentCharacter: t.currentCharacter,
@@ -624,18 +651,24 @@
                 highVisibilityMode: s.highVisibilityMode,
                 gameSpeed: s.gameSpeed,
                 theme: s.theme,
+                boundaries: s.boundaries,
+                area_size: s.area_size,
                 endless_bestScore: Math.max(
                   e.endless_bestScore,
-                  s.endless_bestScore
+                  s.endless_bestScore,
                 ),
                 zigzag_bestScore: Math.max(
                   e.zigzag_bestScore,
-                  s.zigzag_bestScore
+                  s.zigzag_bestScore,
                 ),
                 timetrial_bestScore:
                   e.timetrial_bestScore < 0
                     ? s.timetrial_bestScore
                     : Math.min(e.timetrial_bestScore, s.timetrial_bestScore),
+                custom_bestScore: Math.max(
+                  e.custom_bestScore,
+                  s.custom_bestScore,
+                ),
               };
             }
             case ae.UPDATE_GAME_STATE:
@@ -649,6 +682,7 @@
                 endless_bestScore: t.endless_bestScore,
                 zigzag_bestScore: t.zigzag_bestScore,
                 timetrial_bestScore: t.timetrial_bestScore,
+                custom_bestScore: -1,
                 currentCharacter: t.currentCharacter,
                 theme: t.theme,
               };
@@ -657,15 +691,27 @@
           }
         }, ie);
 
+        function updateCustomBoundary() {
+          const state = re.getState();
+          if (be.sys) {
+            if (state.boundaries) {
+              be.sys.boundary.custom = state.area_size;
+            } else {
+              be.sys.boundary.custom = 0;
+            }
+          }
+        }
+        re.subscribe(updateCustomBoundary);
+
         function le(e, t, s) {
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -689,6 +735,7 @@
               endless_bestScore: -1,
               zigzag_bestScore: -1,
               timetrial_bestScore: -1,
+              custom_bestScore: -1,
               currentCharacter: 1,
               theme: new Date().getMonth() === 11 ? "ski" : "surf",
               mode: "endless",
@@ -705,8 +752,9 @@
               "function" == typeof Z.cr.sendWithPromise
               ? Z.cr.sendWithPromise("get-stats")
               : Promise.resolve(
-                JSON.parse(localStorage.getItem("stats")) || he.defaultStats()
-              );
+                  JSON.parse(localStorage.getItem("stats")) ||
+                    he.defaultStats(),
+                );
           } // this part is a little bit different from the original code
           static resetAllStats() {
             // Z.e9.send("reset-stats")
@@ -725,13 +773,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       endless_bestScore: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -746,13 +794,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       zigzag_bestScore: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -760,8 +808,8 @@
             let t = e;
             // e > 0 && (t *= 1e3), Z.e9.send("set-high-score", [q.TimeTrial, Math.floor(t)])
             if ("undefined" != typeof Z.e9 && "function" == typeof Z.e9.send) {
-              e > 0 && (t *= 1e3),
-                Z.e9.send("set-high-score", [q.TimeTrial, Math.floor(t)]);
+              (e > 0 && (t *= 1e3),
+                Z.e9.send("set-high-score", [q.TimeTrial, Math.floor(t)]));
             } else {
               e > 0 && (t *= 1e3);
               localStorage.setItem(
@@ -770,13 +818,33 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       timetrial_bestScore: t,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
+              );
+            }
+          }
+          static saveCustomHighScore(e) {
+            if ("undefined" != typeof Z.e9 && "function" == typeof Z.e9.send) {
+              Z.e9.send("set-high-score", [q.Custom, Math.floor(e)]);
+            } else {
+              localStorage.setItem(
+                "stats",
+                JSON.stringify(
+                  Object.assign(
+                    Object.assign(
+                      {},
+                      JSON.parse(localStorage.getItem("stats")),
+                    ),
+                    {
+                      custom_bestScore: e,
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -791,13 +859,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       mode: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -812,13 +880,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       theme: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -833,13 +901,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       highVisibilityMode: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -854,13 +922,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       reducedSpeedMode: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -875,13 +943,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       currentCharacter: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -896,13 +964,13 @@
                   Object.assign(
                     Object.assign(
                       {},
-                      JSON.parse(localStorage.getItem("stats"))
+                      JSON.parse(localStorage.getItem("stats")),
                     ),
                     {
                       theme: e,
-                    }
-                  )
-                )
+                    },
+                  ),
+                ),
               );
             }
           }
@@ -915,11 +983,11 @@
               };
             // Z.e9.send("record-unload", [t, e]), he.numZigZagGames = 0, he.numEndlessGames = 0, he.numTimeTrialGames = 0, he.sessionStartTime = Date.now()
             if ("undefined" != typeof Z.e9 && "function" == typeof Z.e9.send) {
-              Z.e9.send("record-unload", [t, e]),
+              (Z.e9.send("record-unload", [t, e]),
                 (he.numZigZagGames = 0),
                 (he.numEndlessGames = 0),
                 (he.numTimeTrialGames = 0),
-                (he.sessionStartTime = Date.now());
+                (he.sessionStartTime = Date.now()));
             }
           }
           static recordGameEnd(e) {
@@ -938,55 +1006,55 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
         }
-        le(he, "numTimeTrialGames", 0),
+        (le(he, "numTimeTrialGames", 0),
           le(he, "numEndlessGames", 0),
           le(he, "numZigZagGames", 0),
-          le(he, "sessionStartTime", Date.now());
+          le(he, "sessionStartTime", Date.now()));
         class de {
           constructor() {
             if (
               (ce(this, "canvas", void 0),
-                ce(this, "ctx", void 0),
-                ce(this, "gradient", void 0),
-                ce(this, "bg", void 0),
-                ce(this, "offset", void 0),
-                de.sys)
+              ce(this, "ctx", void 0),
+              ce(this, "gradient", void 0),
+              ce(this, "bg", void 0),
+              ce(this, "offset", void 0),
+              de.sys)
             )
               return de.sys;
             de.sys = this;
           }
           createBackground() {
-            (this.canvas = ue.sys.createNewCanvas()),
+            ((this.canvas = ue.sys.createNewCanvas()),
               (this.ctx = this.canvas.getContext("2d")),
               (this.gradient = ue.sys.createNew(
                 "div",
                 document.body,
-                "game-gradient"
+                "game-gradient",
               )),
               (this.bg = ue.sys.createNew("div", document.body, "game-bg")),
               (this.offset = {
                 x: 0,
                 y: 0,
-              });
+              }));
           }
           updateBackground(e = 0, t = 0, s) {
-            (this.offset.x = this.offset.x + (s.x - e)),
+            ((this.offset.x = this.offset.x + (s.x - e)),
               (this.offset.y = this.offset.y + (s.y - t)),
               (this.bg.style.backgroundPosition =
-                -this.offset.x + "px " + -this.offset.y + "px");
+                -this.offset.x + "px " + -this.offset.y + "px"));
           }
           defineCanvas() {
             const e = window.getComputedStyle(this.canvas.parentNode);
-            (te.sys.session.w = parseInt(e.getPropertyValue("width"), 10)),
+            ((te.sys.session.w = parseInt(e.getPropertyValue("width"), 10)),
               (te.sys.session.h = parseInt(e.getPropertyValue("height"), 10)),
               (this.canvas.style.width = te.sys.session.w + "px"),
               (this.canvas.style.height = te.sys.session.h + "px"),
@@ -994,7 +1062,7 @@
               (this.canvas.height = te.sys.session.h),
               (te.sys.session.x = Math.floor(0.5 * te.sys.session.w)),
               (te.sys.session.y = Math.floor(0.4 * te.sys.session.h)),
-              (this.ctx.imageSmoothingEnabled = false);
+              (this.ctx.imageSmoothingEnabled = false));
           }
           clearCanvas() {
             this.ctx.clearRect(0, 0, te.sys.session.w, te.sys.session.h);
@@ -1018,14 +1086,14 @@
                 x: n,
                 y: o.mount[r],
               },
-              a
+              a,
             );
           }
           drawPlayerMenu(e, t, s = 0, i = 0, a = 1) {
             const o = be.sys.sheet.player,
               n = o.character[e],
               r = o.poseData[t];
-            this.drawScaled(
+            (this.drawScaled(
               pe.sys.playerImg,
               o,
               s,
@@ -1034,7 +1102,7 @@
                 x: r,
                 y: 0,
               },
-              a
+              a,
             ),
               this.drawScaled(
                 pe.sys.playerImg,
@@ -1045,8 +1113,8 @@
                   x: r,
                   y: n,
                 },
-                a
-              );
+                a,
+              ));
           }
           drawNpc(e, t, s, i) {
             const a = be.sys.sheet.npc,
@@ -1060,12 +1128,16 @@
             if ("hidden" === o) return;
             const r = be.sys.sheet[e],
               l = r.poseData[t] || [],
-              h = Math.floor(a * r.fps) % l.length;
-            if (
-              (this.draw(pe.sys.objectsImg, r, s, i, l[h]),
-                ("oneshot" === o || "ending" === o) &&
+              h = Math.floor(a * r.fps) % l.length,
+              frameData = l[h];
+            
+            if (frameData) {
+              this.draw(pe.sys.objectsImg, r, s, i, frameData)
+            }
+            
+            if (("oneshot" === o || "ending" === o) &&
                 Math.ceil(a * r.fps) > l.length - 1)
-            )
+             {
               switch (o) {
                 case "oneshot":
                   n.anim = "paused";
@@ -1073,37 +1145,38 @@
                 case "ending":
                   n.sleep = true;
               }
+            }
           }
           drawShadow(e, t, s) {
             const i = de.sys.ctx;
-            i.beginPath(),
+            (i.beginPath(),
               i.arc(e, t + s, 20 - s / 12, 0, 2 * Math.PI),
               (i.fillStyle = "rgba(0,0,0," + (0.6 - s / 200) + ")"),
-              i.fill();
+              i.fill());
           }
           drawBoost(e) {
             const t = de.sys.ctx;
-            (t.strokeStyle = "rgba(" + pe.sys.accent + ",0.5)"),
+            ((t.strokeStyle = "rgba(" + pe.sys.accent + ",0.5)"),
               (t.lineCap = "round"),
               t.setLineDash([]),
               e.forEach((e) => {
                 const s = 0.5 - e.time;
-                (t.lineWidth = 6 * s),
+                ((t.lineWidth = 6 * s),
                   t.beginPath(),
                   t.moveTo(e.start.x, e.start.y),
                   t.lineTo(e.end.x, e.end.y),
-                  t.stroke();
-              });
+                  t.stroke());
+              }));
           }
           drawShield(e, t) {
             const s =
-              te.sys.game.shields.current / te.sys.game.shields.max / 2 + 0.5,
+                te.sys.game.shields.current / te.sys.game.shields.max / 2 + 0.5,
               i = Math.cos(4 * te.sys.game.time.elapsed) + 3,
               a = Math.cos(4 * (te.sys.game.time.elapsed + 2)) + 3,
               o = (32 + 4 * i) * s,
               n = (50 + 5 * a) * s,
               r = de.sys.ctx;
-            r.beginPath(),
+            (r.beginPath(),
               r.ellipse(e, t, o, 0.7 * o, 0, 0, 2 * Math.PI),
               (r.strokeStyle =
                 "rgba(" + pe.sys.accent + "," + (6 - i) / 4 + ")"),
@@ -1112,15 +1185,15 @@
               r.beginPath(),
               r.ellipse(e, t, n / 2, (n / 2) * 0.7, 0, 0, 2 * Math.PI),
               (r.fillStyle = "rgba(" + pe.sys.accent + "," + a / 8 + ")"),
-              r.fill();
+              r.fill());
           }
           drawPickup(e) {
-            if (e.time >= 1) return (e.pickup = false), void (e.sleep = true);
+            if (e.time >= 1) return ((e.pickup = false), void (e.sleep = true));
             const t = e.time % 1,
               s = (e.h / 2) * (t / 1.5 + 0.5),
               i = e.h * Math.min(t, 0.5),
               a = de.sys.ctx;
-            a.beginPath(),
+            (a.beginPath(),
               a.arc(e.x, e.y, s, 0, 2 * Math.PI),
               (a.strokeStyle = "rgba(" + pe.sys.accent + "," + (1 - t) + ")"),
               (a.lineWidth = 6 * (1 - t)),
@@ -1130,7 +1203,7 @@
               (a.strokeStyle =
                 "rgba(" + pe.sys.accent + "," + (1 - 2 * t) + ")"),
               (a.lineWidth = 6 * (1 - 2 * t)),
-              a.stroke();
+              a.stroke());
           }
           drawHitbox(e, t) {
             const s = be.sys.sheet[e].str;
@@ -1149,7 +1222,7 @@
                   a = "LinkText";
               }
             const o = de.sys.ctx;
-            o.beginPath(),
+            (o.beginPath(),
               (o.lineWidth = 4),
               (o.strokeStyle = a + ""),
               i ? o.setLineDash([8]) : o.setLineDash([]),
@@ -1157,18 +1230,18 @@
                 Math.floor(t.x) + 1,
                 Math.floor(t.y) + 1,
                 t.w - 2,
-                t.h - 2
-              );
+                t.h - 2,
+              ));
           }
           drawBoundaries() {
             const e = te.sys.session.x - te.sys.game.dist.x,
               t = be.sys.boundary[te.sys.session.settings.mode],
               s = de.sys.ctx;
-            s.beginPath(),
+            (s.beginPath(),
               s.rect(0, 0, e - t, te.sys.session.h),
               s.rect(e + t, 0, te.sys.session.w, te.sys.session.h),
               (s.fillStyle = "rgba(" + pe.sys.boundary + ")"),
-              s.fill();
+              s.fill());
           }
           drawScaled(e, t, s, i, a, o = 1) {
             de.sys.ctx.drawImage(
@@ -1180,7 +1253,7 @@
               Math.floor(s - t.w / (2 / o)),
               Math.floor(i - t.h / (2 / o)),
               t.w * o,
-              t.h * o
+              t.h * o,
             );
           }
           draw(e, t, s, i, a) {
@@ -1193,7 +1266,7 @@
               Math.floor(s - t.w / 2),
               Math.floor(i - t.h / 2),
               t.w,
-              t.h
+              t.h,
             );
           }
         }
@@ -1202,39 +1275,39 @@
           constructor() {
             if (
               (ce(this, "objectsImg", null),
-                ce(this, "playerImg", null),
-                ce(this, "bgImg", null),
-                ce(this, "bgSize", void 0),
-                ce(this, "objectsTemp", null),
-                ce(this, "playerTemp", null),
-                ce(this, "bgTemp", null),
-                ce(this, "gradient", void 0),
-                ce(this, "hitbox", void 0),
-                ce(this, "boundary", void 0),
-                ce(this, "accent", void 0),
-                pe.sys)
+              ce(this, "playerImg", null),
+              ce(this, "bgImg", null),
+              ce(this, "bgSize", void 0),
+              ce(this, "objectsTemp", null),
+              ce(this, "playerTemp", null),
+              ce(this, "bgTemp", null),
+              ce(this, "gradient", void 0),
+              ce(this, "hitbox", void 0),
+              ce(this, "boundary", void 0),
+              ce(this, "accent", void 0),
+              pe.sys)
             )
               return pe.sys;
-            (pe.sys = this), this.setupImages();
+            ((pe.sys = this), this.setupImages());
           }
           setupImages() {
-            (this.objectsImg = new Image()),
+            ((this.objectsImg = new Image()),
               (this.playerImg = new Image()),
               (this.bgImg = new Image()),
-              (this.bgSize = 256);
+              (this.bgSize = 256));
           }
           loadNewTheme(e) {
             const t = pe.allThemes[e];
-            (this.objectsTemp = new Image()),
+            ((this.objectsTemp = new Image()),
               (this.objectsTemp.src = t.folder + "/objects.png"),
               (this.playerTemp = new Image()),
               (this.playerTemp.src = t.folder + "/player.png"),
               (this.bgTemp = new Image()),
-              (this.bgTemp.src = t.folder + "/bg.png");
+              (this.bgTemp.src = t.folder + "/bg.png"));
           }
           setNewTheme(e) {
             const t = pe.allThemes[e];
-            (this.objectsImg.src = this.objectsTemp.src),
+            ((this.objectsImg.src = this.objectsTemp.src),
               (this.playerImg.src = this.playerTemp.src),
               (this.bgImg.src = this.bgTemp.src),
               (this.gradient = t.gradient),
@@ -1243,10 +1316,10 @@
               (this.accent = t.accent),
               (de.sys.bg.style.backgroundImage = "url(" + this.bgImg.src + ")"),
               (de.sys.bg.style.backgroundSize =
-                this.bgSize + "px " + this.bgSize + "px");
+                this.bgSize + "px " + this.bgSize + "px"));
             const s = this.gradient.start.join(", "),
               i = this.gradient.end.join(", ");
-            (de.sys.gradient.style.background =
+            ((de.sys.gradient.style.background =
               "linear-gradient(180deg, rgb(" +
               s +
               ") 0%, rgb(" +
@@ -1257,1297 +1330,1298 @@
               te.sys.saveSessionSettings(),
               delete this.objectsTemp,
               delete this.playerTemp,
-              delete this.bgTemp;
+              delete this.bgTemp);
           }
         }
-        ce(pe, "sys", null),
+        (ce(pe, "sys", null),
           ce(pe, "allThemes", {
             ...G,
-          });
+          }));
         class be {
           constructor() {
             if (
               (ce(this, "playerSprite", new Image()),
-                ce(this, "sheet", {
-                  player: {
+              ce(this, "sheet", {
+                player: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "crash",
+                  hitbox: {
+                    x: 29,
+                    y: 27,
+                    w: 10,
+                    h: 20,
+                  },
+                  poseData: {
+                    stop: 0,
+                    left: 64,
+                    downleft: 128,
+                    down: 192,
+                    downright: 256,
+                    right: 320,
+                    crash: 384,
+                    end: 448,
+                    air1: 512,
+                    air2: 576,
+                    chase: 192,
+                  },
+                  mount: [0, 64, 128],
+                  friend: 192,
+                  character: {
+                    player1: 256,
+                    player2: 320,
+                    player3: 384,
+                    player4: 448,
+                    player5: 512,
+                    player6: 576,
+                    player7: 640,
+                    konami: 704,
+                    special: 768,
+                  },
+                },
+                npc: {
+                  w: 64,
+                  h: 64,
+                  fps: 0,
+                  str: "crash",
+                  group: "npc",
+                  hitbox: {
+                    x: 20,
+                    y: 32,
+                    w: 24,
+                    h: 24,
+                  },
+                  poseData: {
+                    left: 1152,
+                    right: 1216,
+                    crash: 1280,
+                  },
+                },
+                foe: {
+                  w: 128,
+                  h: 128,
+                  fps: 6,
+                  str: "crash",
+                  group: "foe",
+                  hitbox: {
+                    x: 32,
+                    y: 80,
                     w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "crash",
-                    hitbox: {
-                      x: 29,
-                      y: 27,
-                      w: 10,
-                      h: 20,
-                    },
-                    poseData: {
-                      stop: 0,
-                      left: 64,
-                      downleft: 128,
-                      down: 192,
-                      downright: 256,
-                      right: 320,
-                      crash: 384,
-                      end: 448,
-                      air1: 512,
-                      air2: 576,
-                      chase: 192,
-                    },
-                    mount: [0, 64, 128],
-                    friend: 192,
-                    character: {
-                      player1: 256,
-                      player2: 320,
-                      player3: 384,
-                      player4: 448,
-                      player5: 512,
-                      player6: 576,
-                      player7: 640,
-                      konami: 704,
-                      special: 768,
-                    },
+                    h: 40,
                   },
-                  npc: {
-                    w: 64,
-                    h: 64,
-                    fps: 0,
-                    str: "crash",
-                    group: "npc",
-                    hitbox: {
-                      x: 20,
-                      y: 32,
-                      w: 24,
-                      h: 24,
-                    },
-                    poseData: {
-                      left: 1152,
-                      right: 1216,
-                      crash: 1280,
-                    },
+                  poseData: {
+                    chase: [
+                      {
+                        x: 1152,
+                        y: 256,
+                      },
+                      {
+                        x: 1280,
+                        y: 256,
+                      },
+                      {
+                        x: 1408,
+                        y: 256,
+                      },
+                      {
+                        x: 1536,
+                        y: 256,
+                      },
+                    ],
+                    crash: [
+                      {
+                        x: 1664,
+                        y: 256,
+                      },
+                      {
+                        x: 1792,
+                        y: 256,
+                      },
+                    ],
+                    end: [
+                      {
+                        x: 1152,
+                        y: 384,
+                      },
+                      {
+                        x: 1280,
+                        y: 384,
+                      },
+                      {
+                        x: 1408,
+                        y: 384,
+                      },
+                      {
+                        x: 1536,
+                        y: 384,
+                      },
+                      {
+                        x: 1664,
+                        y: 384,
+                      },
+                      {
+                        x: 1792,
+                        y: 384,
+                      },
+                    ],
                   },
-                  foe: {
-                    w: 128,
-                    h: 128,
-                    fps: 6,
-                    str: "crash",
-                    group: "foe",
-                    hitbox: {
-                      x: 32,
-                      y: 80,
-                      w: 64,
-                      h: 40,
-                    },
-                    poseData: {
-                      chase: [
-                        {
-                          x: 1152,
-                          y: 256,
-                        },
-                        {
-                          x: 1280,
-                          y: 256,
-                        },
-                        {
-                          x: 1408,
-                          y: 256,
-                        },
-                        {
-                          x: 1536,
-                          y: 256,
-                        },
-                      ],
-                      crash: [
-                        {
-                          x: 1664,
-                          y: 256,
-                        },
-                        {
-                          x: 1792,
-                          y: 256,
-                        },
-                      ],
-                      end: [
-                        {
-                          x: 1152,
-                          y: 384,
-                        },
-                        {
-                          x: 1280,
-                          y: 384,
-                        },
-                        {
-                          x: 1408,
-                          y: 384,
-                        },
-                        {
-                          x: 1536,
-                          y: 384,
-                        },
-                        {
-                          x: 1664,
-                          y: 384,
-                        },
-                        {
-                          x: 1792,
-                          y: 384,
-                        },
-                      ],
-                    },
-                  },
-                  wall: {
-                    w: 64,
-                    h: 64,
-                    fps: 0,
-                    str: "crash",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 6,
-                      y: 16,
-                      w: 52,
-                      h: 32,
-                    },
-                    poseData: {
-                      sw: [
-                        {
-                          x: 0,
-                          y: 448,
-                        },
-                      ],
-                      s: [
-                        {
-                          x: 64,
-                          y: 448,
-                        },
-                      ],
-                      se: [
-                        {
-                          x: 128,
-                          y: 448,
-                        },
-                      ],
-                      w: [
-                        {
-                          x: 192,
-                          y: 448,
-                        },
-                      ],
-                      e: [
-                        {
-                          x: 256,
-                          y: 448,
-                        },
-                      ],
-                      n: [
-                        {
-                          x: 320,
-                          y: 448,
-                        },
-                      ],
-                      b: [
-                        {
-                          x: 384,
-                          y: 448,
-                        },
-                      ],
-                      f1: [
-                        {
-                          x: 448,
-                          y: 448,
-                        },
-                      ],
-                      f2: [
-                        {
-                          x: 512,
-                          y: 448,
-                        },
-                      ],
-                      f3: [
-                        {
-                          x: 576,
-                          y: 448,
-                        },
-                      ],
-                    },
-                  },
-                  wallDecor: {
-                    w: 32,
+                },
+                wall: {
+                  w: 64,
+                  h: 64,
+                  fps: 0,
+                  str: "crash",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 6,
+                    y: 16,
+                    w: 52,
                     h: 32,
-                    fps: 0,
-                    poseData: {
-                      a: [
-                        {
-                          x: 384,
-                          y: 416,
-                        },
-                      ],
-                      b: [
-                        {
-                          x: 416,
-                          y: 416,
-                        },
-                      ],
-                      c: [
-                        {
-                          x: 448,
-                          y: 416,
-                        },
-                      ],
-                      d: [
-                        {
-                          x: 480,
-                          y: 416,
-                        },
-                      ],
-                      e: [
-                        {
-                          x: 512,
-                          y: 416,
-                        },
-                      ],
-                      f: [
-                        {
-                          x: 544,
-                          y: 416,
-                        },
-                      ],
-                      g: [
-                        {
-                          x: 576,
-                          y: 416,
-                        },
-                      ],
-                      h: [
-                        {
-                          x: 608,
-                          y: 416,
-                        },
-                      ],
-                    },
                   },
-                  snag: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "crash",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 16,
-                      y: 36,
-                      w: 32,
-                      h: 20,
-                    },
-                    poseData: {
-                      side1: [
-                        {
-                          x: 0,
-                          y: 64,
-                        },
-                      ],
-                      side2: [
-                        {
-                          x: 64,
-                          y: 64,
-                        },
-                      ],
-                      hurdle1: [
-                        {
-                          x: 128,
-                          y: 64,
-                        },
-                      ],
-                      hurdle2: [
-                        {
-                          x: 192,
-                          y: 64,
-                        },
-                      ],
-                      vehicle1: [
-                        {
-                          x: 256,
-                          y: 64,
-                        },
-                      ],
-                      vehicle2: [
-                        {
-                          x: 320,
-                          y: 64,
-                        },
-                      ],
-                      common1: [
-                        {
-                          x: 384,
-                          y: 64,
-                        },
-                      ],
-                      common2: [
-                        {
-                          x: 448,
-                          y: 64,
-                        },
-                      ],
-                      common3: [
-                        {
-                          x: 512,
-                          y: 64,
-                        },
-                      ],
-                      common4: [
-                        {
-                          x: 576,
-                          y: 64,
-                        },
-                      ],
-                      common5: [
-                        {
-                          x: 640,
-                          y: 64,
-                        },
-                      ],
-                      warn1: [
-                        {
-                          x: 704,
-                          y: 64,
-                        },
-                      ],
-                      isle1: [
-                        {
-                          x: 768,
-                          y: 64,
-                        },
-                      ],
-                      isle2: [
-                        {
-                          x: 832,
-                          y: 64,
-                        },
-                      ],
-                      isle3: [
-                        {
-                          x: 896,
-                          y: 64,
-                        },
-                      ],
-                      special1: [
-                        {
-                          x: 1536,
-                          y: 192,
-                        },
-                      ],
-                      special2: [
-                        {
-                          x: 1600,
-                          y: 192,
-                        },
-                      ],
-                      special3: [
-                        {
-                          x: 1664,
-                          y: 192,
-                        },
-                      ],
-                      special4: [
-                        {
-                          x: 1728,
-                          y: 192,
-                        },
-                      ],
-                    },
+                  poseData: {
+                    sw: [
+                      {
+                        x: 0,
+                        y: 448,
+                      },
+                    ],
+                    s: [
+                      {
+                        x: 64,
+                        y: 448,
+                      },
+                    ],
+                    se: [
+                      {
+                        x: 128,
+                        y: 448,
+                      },
+                    ],
+                    w: [
+                      {
+                        x: 192,
+                        y: 448,
+                      },
+                    ],
+                    e: [
+                      {
+                        x: 256,
+                        y: 448,
+                      },
+                    ],
+                    n: [
+                      {
+                        x: 320,
+                        y: 448,
+                      },
+                    ],
+                    b: [
+                      {
+                        x: 384,
+                        y: 448,
+                      },
+                    ],
+                    f1: [
+                      {
+                        x: 448,
+                        y: 448,
+                      },
+                    ],
+                    f2: [
+                      {
+                        x: 512,
+                        y: 448,
+                      },
+                    ],
+                    f3: [
+                      {
+                        x: 576,
+                        y: 448,
+                      },
+                    ],
                   },
-                  snagsml: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "crash",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 22,
-                      y: 36,
-                      w: 20,
-                      h: 20,
-                    },
-                    poseData: {
-                      debris1: [
-                        {
-                          x: 384,
-                          y: 0,
-                        },
-                      ],
-                      debris2: [
-                        {
-                          x: 448,
-                          y: 0,
-                        },
-                      ],
-                      beacon1: [
-                        {
-                          x: 512,
-                          y: 0,
-                        },
-                      ],
-                      point1: [
-                        {
-                          x: 576,
-                          y: 0,
-                        },
-                      ],
-                      rare1: [
-                        {
-                          x: 640,
-                          y: 0,
-                        },
-                      ],
-                      decor1: [
-                        {
-                          x: 704,
-                          y: 0,
-                        },
-                      ],
-                      decor2: [
-                        {
-                          x: 768,
-                          y: 0,
-                        },
-                      ],
-                      decor3: [
-                        {
-                          x: 832,
-                          y: 0,
-                        },
-                      ],
-                      decor4: [
-                        {
-                          x: 896,
-                          y: 0,
-                        },
-                      ],
-                    },
+                },
+                wallDecor: {
+                  w: 32,
+                  h: 32,
+                  fps: 0,
+                  poseData: {
+                    a: [
+                      {
+                        x: 384,
+                        y: 416,
+                      },
+                    ],
+                    b: [
+                      {
+                        x: 416,
+                        y: 416,
+                      },
+                    ],
+                    c: [
+                      {
+                        x: 448,
+                        y: 416,
+                      },
+                    ],
+                    d: [
+                      {
+                        x: 480,
+                        y: 416,
+                      },
+                    ],
+                    e: [
+                      {
+                        x: 512,
+                        y: 416,
+                      },
+                    ],
+                    f: [
+                      {
+                        x: 544,
+                        y: 416,
+                      },
+                    ],
+                    g: [
+                      {
+                        x: 576,
+                        y: 416,
+                      },
+                    ],
+                    h: [
+                      {
+                        x: 608,
+                        y: 416,
+                      },
+                    ],
                   },
-                  snagtall: {
-                    w: 64,
-                    h: 128,
-                    fps: 6,
-                    str: "crash",
-                    fx: 36,
-                    group: "top",
-                    hitbox: {
-                      x: 12,
-                      y: 88,
-                      w: 40,
-                      h: 24,
-                    },
-                    poseData: {
-                      tall1: [
-                        {
-                          x: 640,
-                          y: 384,
-                        },
-                      ],
-                      tall2: [
-                        {
-                          x: 704,
-                          y: 384,
-                        },
-                      ],
-                      tall3: [
-                        {
-                          x: 768,
-                          y: 384,
-                        },
-                      ],
-                      tall4: [
-                        {
-                          x: 832,
-                          y: 384,
-                        },
-                      ],
-                      tall5: [
-                        {
-                          x: 896,
-                          y: 384,
-                        },
-                      ],
-                      tall6: [
-                        {
-                          x: 768,
-                          y: 256,
-                        },
-                      ],
-                      tall7: [
-                        {
-                          x: 832,
-                          y: 256,
-                        },
-                      ],
-                      tall8: [
-                        {
-                          x: 896,
-                          y: 256,
-                        },
-                      ],
-                    },
-                  },
-                  spin: {
+                },
+                snag: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "crash",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 16,
+                    y: 36,
                     w: 32,
-                    h: 32,
-                    fps: 0,
-                    str: "avoid",
-                    fx: 4,
-                    group: "top",
-                    hitbox: {
-                      x: 8,
-                      y: 20,
-                      w: 16,
-                      h: 12,
-                    },
-                    poseData: {
-                      spin1: [
-                        {
-                          x: 384,
-                          y: 384,
-                        },
-                      ],
-                      spin2: [
-                        {
-                          x: 416,
-                          y: 384,
-                        },
-                      ],
-                      spin3: [
-                        {
-                          x: 448,
-                          y: 384,
-                        },
-                      ],
-                      spin4: [
-                        {
-                          x: 480,
-                          y: 384,
-                        },
-                      ],
-                      spin5: [
-                        {
-                          x: 512,
-                          y: 384,
-                        },
-                      ],
-                    },
+                    h: 20,
                   },
-                  spiral: {
-                    w: 128,
-                    h: 128,
-                    fps: 6,
-                    str: "avoid",
-                    group: "btm",
-                    hitbox: {
-                      x: 16,
-                      y: 32,
-                      w: 96,
-                      h: 64,
-                    },
-                    poseData: {
-                      spiral1: [
-                        {
-                          x: 0,
-                          y: 128,
-                        },
-                        {
-                          x: 128,
-                          y: 128,
-                        },
-                        {
-                          x: 256,
-                          y: 128,
-                        },
-                      ],
-                    },
+                  poseData: {
+                    side1: [
+                      {
+                        x: 0,
+                        y: 64,
+                      },
+                    ],
+                    side2: [
+                      {
+                        x: 64,
+                        y: 64,
+                      },
+                    ],
+                    hurdle1: [
+                      {
+                        x: 128,
+                        y: 64,
+                      },
+                    ],
+                    hurdle2: [
+                      {
+                        x: 192,
+                        y: 64,
+                      },
+                    ],
+                    vehicle1: [
+                      {
+                        x: 256,
+                        y: 64,
+                      },
+                    ],
+                    vehicle2: [
+                      {
+                        x: 320,
+                        y: 64,
+                      },
+                    ],
+                    common1: [
+                      {
+                        x: 384,
+                        y: 64,
+                      },
+                    ],
+                    common2: [
+                      {
+                        x: 448,
+                        y: 64,
+                      },
+                    ],
+                    common3: [
+                      {
+                        x: 512,
+                        y: 64,
+                      },
+                    ],
+                    common4: [
+                      {
+                        x: 576,
+                        y: 64,
+                      },
+                    ],
+                    common5: [
+                      {
+                        x: 640,
+                        y: 64,
+                      },
+                    ],
+                    warn1: [
+                      {
+                        x: 704,
+                        y: 64,
+                      },
+                    ],
+                    isle1: [
+                      {
+                        x: 768,
+                        y: 64,
+                      },
+                    ],
+                    isle2: [
+                      {
+                        x: 832,
+                        y: 64,
+                      },
+                    ],
+                    isle3: [
+                      {
+                        x: 896,
+                        y: 64,
+                      },
+                    ],
+                    special1: [
+                      {
+                        x: 1536,
+                        y: 192,
+                      },
+                    ],
+                    special2: [
+                      {
+                        x: 1600,
+                        y: 192,
+                      },
+                    ],
+                    special3: [
+                      {
+                        x: 1664,
+                        y: 192,
+                      },
+                    ],
+                    special4: [
+                      {
+                        x: 1728,
+                        y: 192,
+                      },
+                    ],
                   },
-                  block: {
-                    w: 128,
-                    h: 128,
-                    fps: 0,
-                    str: "crash",
-                    group: "top",
-                    hitbox: {
-                      x: 24,
-                      y: 64,
-                      w: 80,
-                      h: 40,
-                    },
-                    poseData: {
-                      block1: [
-                        {
-                          x: 384,
-                          y: 256,
-                        },
-                      ],
-                      block2: [
-                        {
-                          x: 512,
-                          y: 256,
-                        },
-                      ],
-                      block3: [
-                        {
-                          x: 640,
-                          y: 256,
-                        },
-                      ],
-                    },
+                },
+                snagsml: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "crash",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 22,
+                    y: 36,
+                    w: 20,
+                    h: 20,
                   },
-                  blockbig: {
-                    w: 192,
-                    h: 128,
-                    fps: 0,
-                    str: "crash",
-                    group: "top",
-                    hitbox: {
-                      x: 24,
-                      y: 64,
-                      w: 144,
-                      h: 40,
-                    },
-                    poseData: {
-                      blockbig1: [
-                        {
-                          x: 384,
-                          y: 128,
-                        },
-                      ],
-                      blockbig2: [
-                        {
-                          x: 576,
-                          y: 128,
-                        },
-                      ],
-                      blockbig3: [
-                        {
-                          x: 768,
-                          y: 128,
-                        },
-                      ],
-                    },
+                  poseData: {
+                    debris1: [
+                      {
+                        x: 384,
+                        y: 0,
+                      },
+                    ],
+                    debris2: [
+                      {
+                        x: 448,
+                        y: 0,
+                      },
+                    ],
+                    beacon1: [
+                      {
+                        x: 512,
+                        y: 0,
+                      },
+                    ],
+                    point1: [
+                      {
+                        x: 576,
+                        y: 0,
+                      },
+                    ],
+                    rare1: [
+                      {
+                        x: 640,
+                        y: 0,
+                      },
+                    ],
+                    decor1: [
+                      {
+                        x: 704,
+                        y: 0,
+                      },
+                    ],
+                    decor2: [
+                      {
+                        x: 768,
+                        y: 0,
+                      },
+                    ],
+                    decor3: [
+                      {
+                        x: 832,
+                        y: 0,
+                      },
+                    ],
+                    decor4: [
+                      {
+                        x: 896,
+                        y: 0,
+                      },
+                    ],
                   },
-                  marker: {
-                    w: 64,
-                    h: 64,
-                    fps: 0,
-                    str: "crash",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 20,
-                      y: 36,
-                      w: 24,
-                      h: 20,
-                    },
-                    poseData: {
-                      default: [
-                        {
-                          x: 1792,
-                          y: 192,
-                        },
-                      ],
-                      pass: [
-                        {
-                          x: 1856,
-                          y: 192,
-                        },
-                      ],
-                      fail: [
-                        {
-                          x: 1792,
-                          y: 192,
-                        },
-                      ],
-                    },
+                },
+                snagtall: {
+                  w: 64,
+                  h: 128,
+                  fps: 6,
+                  str: "crash",
+                  fx: 36,
+                  group: "top",
+                  hitbox: {
+                    x: 12,
+                    y: 88,
+                    w: 40,
+                    h: 24,
                   },
-                  guide: {
-                    w: 32,
-                    h: 32,
-                    fps: 0,
-                    str: "avoid",
-                    fx: 4,
-                    group: "top",
-                    hitbox: {
-                      x: 4,
-                      y: 20,
-                      w: 24,
-                      h: 12,
-                    },
-                    poseData: {
-                      default: [
-                        {
-                          x: 544,
-                          y: 384,
-                        },
-                      ],
-                      pass: [
-                        {
-                          x: 576,
-                          y: 384,
-                        },
-                      ],
-                      fail: [
-                        {
-                          x: 608,
-                          y: 384,
-                        },
-                      ],
-                    },
+                  poseData: {
+                    tall1: [
+                      {
+                        x: 640,
+                        y: 384,
+                      },
+                    ],
+                    tall2: [
+                      {
+                        x: 704,
+                        y: 384,
+                      },
+                    ],
+                    tall3: [
+                      {
+                        x: 768,
+                        y: 384,
+                      },
+                    ],
+                    tall4: [
+                      {
+                        x: 832,
+                        y: 384,
+                      },
+                    ],
+                    tall5: [
+                      {
+                        x: 896,
+                        y: 384,
+                      },
+                    ],
+                    tall6: [
+                      {
+                        x: 768,
+                        y: 256,
+                      },
+                    ],
+                    tall7: [
+                      {
+                        x: 832,
+                        y: 256,
+                      },
+                    ],
+                    tall8: [
+                      {
+                        x: 896,
+                        y: 256,
+                      },
+                    ],
                   },
-                  slow: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "avoid",
-                    group: "btm",
-                    hitbox: {
-                      x: 4,
-                      y: 8,
-                      w: 56,
-                      h: 48,
-                    },
-                    poseData: {
-                      slow1: [
-                        {
-                          x: 1536,
-                          y: 0,
-                        },
-                        {
-                          x: 1536,
-                          y: 64,
-                        },
-                        {
-                          x: 1536,
-                          y: 128,
-                        },
-                      ],
-                      slow2: [
-                        {
-                          x: 1600,
-                          y: 0,
-                        },
-                        {
-                          x: 1600,
-                          y: 64,
-                        },
-                        {
-                          x: 1600,
-                          y: 128,
-                        },
-                      ],
-                      slow3: [
-                        {
-                          x: 1664,
-                          y: 0,
-                        },
-                        {
-                          x: 1664,
-                          y: 64,
-                        },
-                        {
-                          x: 1664,
-                          y: 128,
-                        },
-                      ],
-                    },
+                },
+                spin: {
+                  w: 32,
+                  h: 32,
+                  fps: 0,
+                  str: "avoid",
+                  fx: 4,
+                  group: "top",
+                  hitbox: {
+                    x: 8,
+                    y: 20,
+                    w: 16,
+                    h: 12,
                   },
-                  slowbig: {
-                    w: 192,
-                    h: 64,
-                    fps: 6,
-                    str: "avoid",
-                    group: "btm",
-                    hitbox: {
-                      x: 8,
-                      y: 8,
-                      w: 176,
-                      h: 48,
-                    },
-                    poseData: {
-                      slowbig1: [
-                        {
-                          x: 1536,
-                          y: 0,
-                        },
-                        {
-                          x: 1536,
-                          y: 64,
-                        },
-                        {
-                          x: 1536,
-                          y: 128,
-                        },
-                      ],
-                    },
+                  poseData: {
+                    spin1: [
+                      {
+                        x: 384,
+                        y: 384,
+                      },
+                    ],
+                    spin2: [
+                      {
+                        x: 416,
+                        y: 384,
+                      },
+                    ],
+                    spin3: [
+                      {
+                        x: 448,
+                        y: 384,
+                      },
+                    ],
+                    spin4: [
+                      {
+                        x: 480,
+                        y: 384,
+                      },
+                    ],
+                    spin5: [
+                      {
+                        x: 512,
+                        y: 384,
+                      },
+                    ],
                   },
-                  bump: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "avoid",
-                    group: "btm",
-                    hitbox: {
-                      x: 4,
-                      y: 8,
-                      w: 56,
-                      h: 48,
-                    },
-                    poseData: {
-                      bump1: [
-                        {
-                          x: 1728,
-                          y: 0,
-                        },
-                        {
-                          x: 1728,
-                          y: 64,
-                        },
-                        {
-                          x: 1728,
-                          y: 128,
-                        },
-                      ],
-                      bump2: [
-                        {
-                          x: 1792,
-                          y: 0,
-                        },
-                        {
-                          x: 1792,
-                          y: 64,
-                        },
-                        {
-                          x: 1792,
-                          y: 128,
-                        },
-                      ],
-                      bump3: [
-                        {
-                          x: 1856,
-                          y: 0,
-                        },
-                        {
-                          x: 1856,
-                          y: 64,
-                        },
-                        {
-                          x: 1856,
-                          y: 128,
-                        },
-                      ],
-                    },
-                  },
-                  bumpbig: {
-                    w: 192,
-                    h: 64,
-                    fps: 6,
-                    str: "avoid",
-                    group: "btm",
-                    hitbox: {
-                      x: 8,
-                      y: 8,
-                      w: 176,
-                      h: 48,
-                    },
-                    poseData: {
-                      bumpbig1: [
-                        {
-                          x: 1728,
-                          y: 0,
-                        },
-                        {
-                          x: 1728,
-                          y: 64,
-                        },
-                        {
-                          x: 1728,
-                          y: 128,
-                        },
-                      ],
-                    },
-                  },
-                  ramp: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "boost",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 8,
-                      y: 8,
-                      w: 48,
-                      h: 24,
-                    },
-                    poseData: {
-                      ramp: [
-                        {
-                          x: 960,
-                          y: 0,
-                        },
-                        {
-                          x: 960,
-                          y: 64,
-                        },
-                        {
-                          x: 960,
-                          y: 128,
-                        },
-                        {
-                          x: 960,
-                          y: 192,
-                        },
-                      ],
-                    },
-                  },
-                  boost: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "boost",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 0,
-                      y: 0,
-                      w: 64,
-                      h: 64,
-                    },
-                    poseData: {
-                      boost: [
-                        {
-                          x: 1024,
-                          y: 0,
-                        },
-                        {
-                          x: 1024,
-                          y: 64,
-                        },
-                        {
-                          x: 1024,
-                          y: 128,
-                        },
-                        {
-                          x: 1024,
-                          y: 192,
-                        },
-                      ],
-                    },
-                  },
-                  life: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "boost",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 0,
-                      y: 0,
-                      w: 64,
-                      h: 64,
-                    },
-                    poseData: {
-                      life: [
-                        {
-                          x: 1088,
-                          y: 0,
-                        },
-                        {
-                          x: 1088,
-                          y: 64,
-                        },
-                        {
-                          x: 1088,
-                          y: 128,
-                        },
-                        {
-                          x: 1088,
-                          y: 192,
-                        },
-                      ],
-                    },
-                  },
-                  coin: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "boost",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: 0,
-                      y: 0,
-                      w: 64,
-                      h: 64,
-                    },
-                    poseData: {
-                      coin: [
-                        {
-                          x: 960,
-                          y: 256,
-                        },
-                        {
-                          x: 960,
-                          y: 320,
-                        },
-                        {
-                          x: 960,
-                          y: 384,
-                        },
-                        {
-                          x: 960,
-                          y: 448,
-                        },
-                      ],
-                    },
-                  },
-                  friend: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "boost",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: -32,
-                      y: -32,
-                      w: 128,
-                      h: 128,
-                    },
-                    poseData: {
-                      friend: [
-                        {
-                          x: 1024,
-                          y: 256,
-                        },
-                        {
-                          x: 1024,
-                          y: 320,
-                        },
-                        {
-                          x: 1024,
-                          y: 384,
-                        },
-                        {
-                          x: 1024,
-                          y: 448,
-                        },
-                      ],
-                      crash: [
-                        {
-                          x: 1024,
-                          y: 256,
-                        },
-                      ],
-                    },
-                  },
-                  lure: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    str: "avoid",
-                    fx: 12,
-                    group: "top",
-                    hitbox: {
-                      x: -64,
-                      y: -64,
-                      w: 192,
-                      h: 192,
-                    },
-                    poseData: {
-                      lure: [
-                        {
-                          x: 1088,
-                          y: 256,
-                        },
-                        {
-                          x: 1088,
-                          y: 320,
-                        },
-                        {
-                          x: 1088,
-                          y: 384,
-                        },
-                        {
-                          x: 1088,
-                          y: 448,
-                        },
-                      ],
-                    },
-                  },
-                  ambient: {
-                    w: 64,
-                    h: 64,
-                    fps: 6,
-                    fx: 12,
-                    group: "btm",
-                    hitbox: {
-                      x: 0,
-                      y: 0,
-                      w: 64,
-                      h: 64,
-                    },
-                    poseData: {
-                      ambient1: [
-                        {
-                          x: 1344,
-                          y: 0,
-                        },
-                        {
-                          x: 1344,
-                          y: 64,
-                        },
-                        {
-                          x: 1344,
-                          y: 128,
-                        },
-                        {
-                          x: 1344,
-                          y: 192,
-                        },
-                      ],
-                      ambient2: [
-                        {
-                          x: 1408,
-                          y: 0,
-                        },
-                        {
-                          x: 1408,
-                          y: 64,
-                        },
-                        {
-                          x: 1408,
-                          y: 128,
-                        },
-                        {
-                          x: 1408,
-                          y: 192,
-                        },
-                      ],
-                      ambient3: [
-                        {
-                          x: 1472,
-                          y: 0,
-                        },
-                        {
-                          x: 1472,
-                          y: 64,
-                        },
-                        {
-                          x: 1472,
-                          y: 128,
-                        },
-                        {
-                          x: 1472,
-                          y: 192,
-                        },
-                      ],
-                    },
-                  },
-                  finish: {
-                    w: 384,
-                    h: 192,
-                    fps: 0,
-                    str: "boost",
-                    group: "top",
-                    hitbox: {
-                      x: 0,
-                      y: 128,
-                      w: 384,
-                      h: 192,
-                    },
-                    poseData: {
-                      default: [
-                        {
-                          x: 0,
-                          y: 256,
-                        },
-                      ],
-                    },
-                  },
-                  checkpoint: {
-                    w: 384,
-                    h: 192,
-                    fps: 0,
-                    str: "boost",
-                    group: "top",
-                    hitbox: {
-                      x: 64,
-                      y: 128,
-                      w: 256,
-                      h: 64,
-                    },
-                    poseData: {
-                      default: [
-                        {
-                          x: 0,
-                          y: 256,
-                        },
-                      ],
-                    },
-                  },
-                  gate: {
-                    w: 192,
-                    h: 64,
-                    str: "boost",
-                    group: "btm",
-                    hitbox: {
-                      x: -28,
-                      y: 0,
-                      w: 256,
-                      h: 64,
-                    },
-                  },
-                  swap: {
-                    w: 256,
-                    h: 256,
-                    str: "boost",
-                    group: "btm",
-                    hitbox: {
-                      x: 0,
-                      y: 0,
-                      w: 256,
-                      h: 256,
-                    },
-                  },
-                  fx: {
+                },
+                spiral: {
+                  w: 128,
+                  h: 128,
+                  fps: 6,
+                  str: "avoid",
+                  group: "btm",
+                  hitbox: {
+                    x: 16,
+                    y: 32,
                     w: 96,
                     h: 64,
-                    fps: 6,
-                    poseData: {
-                      effect: [
-                        {
-                          x: 96,
-                          y: 0,
-                        },
-                        {
-                          x: 192,
-                          y: 0,
-                        },
-                        {
-                          x: 288,
-                          y: 0,
-                        },
-                      ],
-                    },
                   },
-                }),
-                ce(this, "boundary", {
-                  [q.ZigZag]: 960,
-                  [q.TimeTrial]: 576,
-                  [q.Endless]: void 0,
-                }),
-                ce(this, "characterList", void 0),
-                ce(this, "selectionList", void 0),
-                be.sys)
+                  poseData: {
+                    spiral1: [
+                      {
+                        x: 0,
+                        y: 128,
+                      },
+                      {
+                        x: 128,
+                        y: 128,
+                      },
+                      {
+                        x: 256,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                block: {
+                  w: 128,
+                  h: 128,
+                  fps: 0,
+                  str: "crash",
+                  group: "top",
+                  hitbox: {
+                    x: 24,
+                    y: 64,
+                    w: 80,
+                    h: 40,
+                  },
+                  poseData: {
+                    block1: [
+                      {
+                        x: 384,
+                        y: 256,
+                      },
+                    ],
+                    block2: [
+                      {
+                        x: 512,
+                        y: 256,
+                      },
+                    ],
+                    block3: [
+                      {
+                        x: 640,
+                        y: 256,
+                      },
+                    ],
+                  },
+                },
+                blockbig: {
+                  w: 192,
+                  h: 128,
+                  fps: 0,
+                  str: "crash",
+                  group: "top",
+                  hitbox: {
+                    x: 24,
+                    y: 64,
+                    w: 144,
+                    h: 40,
+                  },
+                  poseData: {
+                    blockbig1: [
+                      {
+                        x: 384,
+                        y: 128,
+                      },
+                    ],
+                    blockbig2: [
+                      {
+                        x: 576,
+                        y: 128,
+                      },
+                    ],
+                    blockbig3: [
+                      {
+                        x: 768,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                marker: {
+                  w: 64,
+                  h: 64,
+                  fps: 0,
+                  str: "crash",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 20,
+                    y: 36,
+                    w: 24,
+                    h: 20,
+                  },
+                  poseData: {
+                    default: [
+                      {
+                        x: 1792,
+                        y: 192,
+                      },
+                    ],
+                    pass: [
+                      {
+                        x: 1856,
+                        y: 192,
+                      },
+                    ],
+                    fail: [
+                      {
+                        x: 1792,
+                        y: 192,
+                      },
+                    ],
+                  },
+                },
+                guide: {
+                  w: 32,
+                  h: 32,
+                  fps: 0,
+                  str: "avoid",
+                  fx: 4,
+                  group: "top",
+                  hitbox: {
+                    x: 4,
+                    y: 20,
+                    w: 24,
+                    h: 12,
+                  },
+                  poseData: {
+                    default: [
+                      {
+                        x: 544,
+                        y: 384,
+                      },
+                    ],
+                    pass: [
+                      {
+                        x: 576,
+                        y: 384,
+                      },
+                    ],
+                    fail: [
+                      {
+                        x: 608,
+                        y: 384,
+                      },
+                    ],
+                  },
+                },
+                slow: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "avoid",
+                  group: "btm",
+                  hitbox: {
+                    x: 4,
+                    y: 8,
+                    w: 56,
+                    h: 48,
+                  },
+                  poseData: {
+                    slow1: [
+                      {
+                        x: 1536,
+                        y: 0,
+                      },
+                      {
+                        x: 1536,
+                        y: 64,
+                      },
+                      {
+                        x: 1536,
+                        y: 128,
+                      },
+                    ],
+                    slow2: [
+                      {
+                        x: 1600,
+                        y: 0,
+                      },
+                      {
+                        x: 1600,
+                        y: 64,
+                      },
+                      {
+                        x: 1600,
+                        y: 128,
+                      },
+                    ],
+                    slow3: [
+                      {
+                        x: 1664,
+                        y: 0,
+                      },
+                      {
+                        x: 1664,
+                        y: 64,
+                      },
+                      {
+                        x: 1664,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                slowbig: {
+                  w: 192,
+                  h: 64,
+                  fps: 6,
+                  str: "avoid",
+                  group: "btm",
+                  hitbox: {
+                    x: 8,
+                    y: 8,
+                    w: 176,
+                    h: 48,
+                  },
+                  poseData: {
+                    slowbig1: [
+                      {
+                        x: 1536,
+                        y: 0,
+                      },
+                      {
+                        x: 1536,
+                        y: 64,
+                      },
+                      {
+                        x: 1536,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                bump: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "avoid",
+                  group: "btm",
+                  hitbox: {
+                    x: 4,
+                    y: 8,
+                    w: 56,
+                    h: 48,
+                  },
+                  poseData: {
+                    bump1: [
+                      {
+                        x: 1728,
+                        y: 0,
+                      },
+                      {
+                        x: 1728,
+                        y: 64,
+                      },
+                      {
+                        x: 1728,
+                        y: 128,
+                      },
+                    ],
+                    bump2: [
+                      {
+                        x: 1792,
+                        y: 0,
+                      },
+                      {
+                        x: 1792,
+                        y: 64,
+                      },
+                      {
+                        x: 1792,
+                        y: 128,
+                      },
+                    ],
+                    bump3: [
+                      {
+                        x: 1856,
+                        y: 0,
+                      },
+                      {
+                        x: 1856,
+                        y: 64,
+                      },
+                      {
+                        x: 1856,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                bumpbig: {
+                  w: 192,
+                  h: 64,
+                  fps: 6,
+                  str: "avoid",
+                  group: "btm",
+                  hitbox: {
+                    x: 8,
+                    y: 8,
+                    w: 176,
+                    h: 48,
+                  },
+                  poseData: {
+                    bumpbig1: [
+                      {
+                        x: 1728,
+                        y: 0,
+                      },
+                      {
+                        x: 1728,
+                        y: 64,
+                      },
+                      {
+                        x: 1728,
+                        y: 128,
+                      },
+                    ],
+                  },
+                },
+                ramp: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "boost",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 8,
+                    y: 8,
+                    w: 48,
+                    h: 24,
+                  },
+                  poseData: {
+                    ramp: [
+                      {
+                        x: 960,
+                        y: 0,
+                      },
+                      {
+                        x: 960,
+                        y: 64,
+                      },
+                      {
+                        x: 960,
+                        y: 128,
+                      },
+                      {
+                        x: 960,
+                        y: 192,
+                      },
+                    ],
+                  },
+                },
+                boost: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "boost",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 0,
+                    y: 0,
+                    w: 64,
+                    h: 64,
+                  },
+                  poseData: {
+                    boost: [
+                      {
+                        x: 1024,
+                        y: 0,
+                      },
+                      {
+                        x: 1024,
+                        y: 64,
+                      },
+                      {
+                        x: 1024,
+                        y: 128,
+                      },
+                      {
+                        x: 1024,
+                        y: 192,
+                      },
+                    ],
+                  },
+                },
+                life: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "boost",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 0,
+                    y: 0,
+                    w: 64,
+                    h: 64,
+                  },
+                  poseData: {
+                    life: [
+                      {
+                        x: 1088,
+                        y: 0,
+                      },
+                      {
+                        x: 1088,
+                        y: 64,
+                      },
+                      {
+                        x: 1088,
+                        y: 128,
+                      },
+                      {
+                        x: 1088,
+                        y: 192,
+                      },
+                    ],
+                  },
+                },
+                coin: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "boost",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: 0,
+                    y: 0,
+                    w: 64,
+                    h: 64,
+                  },
+                  poseData: {
+                    coin: [
+                      {
+                        x: 960,
+                        y: 256,
+                      },
+                      {
+                        x: 960,
+                        y: 320,
+                      },
+                      {
+                        x: 960,
+                        y: 384,
+                      },
+                      {
+                        x: 960,
+                        y: 448,
+                      },
+                    ],
+                  },
+                },
+                friend: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "boost",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: -32,
+                    y: -32,
+                    w: 128,
+                    h: 128,
+                  },
+                  poseData: {
+                    friend: [
+                      {
+                        x: 1024,
+                        y: 256,
+                      },
+                      {
+                        x: 1024,
+                        y: 320,
+                      },
+                      {
+                        x: 1024,
+                        y: 384,
+                      },
+                      {
+                        x: 1024,
+                        y: 448,
+                      },
+                    ],
+                    crash: [
+                      {
+                        x: 1024,
+                        y: 256,
+                      },
+                    ],
+                  },
+                },
+                lure: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  str: "avoid",
+                  fx: 12,
+                  group: "top",
+                  hitbox: {
+                    x: -64,
+                    y: -64,
+                    w: 192,
+                    h: 192,
+                  },
+                  poseData: {
+                    lure: [
+                      {
+                        x: 1088,
+                        y: 256,
+                      },
+                      {
+                        x: 1088,
+                        y: 320,
+                      },
+                      {
+                        x: 1088,
+                        y: 384,
+                      },
+                      {
+                        x: 1088,
+                        y: 448,
+                      },
+                    ],
+                  },
+                },
+                ambient: {
+                  w: 64,
+                  h: 64,
+                  fps: 6,
+                  fx: 12,
+                  group: "btm",
+                  hitbox: {
+                    x: 0,
+                    y: 0,
+                    w: 64,
+                    h: 64,
+                  },
+                  poseData: {
+                    ambient1: [
+                      {
+                        x: 1344,
+                        y: 0,
+                      },
+                      {
+                        x: 1344,
+                        y: 64,
+                      },
+                      {
+                        x: 1344,
+                        y: 128,
+                      },
+                      {
+                        x: 1344,
+                        y: 192,
+                      },
+                    ],
+                    ambient2: [
+                      {
+                        x: 1408,
+                        y: 0,
+                      },
+                      {
+                        x: 1408,
+                        y: 64,
+                      },
+                      {
+                        x: 1408,
+                        y: 128,
+                      },
+                      {
+                        x: 1408,
+                        y: 192,
+                      },
+                    ],
+                    ambient3: [
+                      {
+                        x: 1472,
+                        y: 0,
+                      },
+                      {
+                        x: 1472,
+                        y: 64,
+                      },
+                      {
+                        x: 1472,
+                        y: 128,
+                      },
+                      {
+                        x: 1472,
+                        y: 192,
+                      },
+                    ],
+                  },
+                },
+                finish: {
+                  w: 384,
+                  h: 192,
+                  fps: 0,
+                  str: "boost",
+                  group: "top",
+                  hitbox: {
+                    x: 0,
+                    y: 128,
+                    w: 384,
+                    h: 192,
+                  },
+                  poseData: {
+                    default: [
+                      {
+                        x: 0,
+                        y: 256,
+                      },
+                    ],
+                  },
+                },
+                checkpoint: {
+                  w: 384,
+                  h: 192,
+                  fps: 0,
+                  str: "boost",
+                  group: "top",
+                  hitbox: {
+                    x: 64,
+                    y: 128,
+                    w: 256,
+                    h: 64,
+                  },
+                  poseData: {
+                    default: [
+                      {
+                        x: 0,
+                        y: 256,
+                      },
+                    ],
+                  },
+                },
+                gate: {
+                  w: 192,
+                  h: 64,
+                  str: "boost",
+                  group: "btm",
+                  hitbox: {
+                    x: -28,
+                    y: 0,
+                    w: 256,
+                    h: 64,
+                  },
+                },
+                swap: {
+                  w: 256,
+                  h: 256,
+                  str: "boost",
+                  group: "btm",
+                  hitbox: {
+                    x: 0,
+                    y: 0,
+                    w: 256,
+                    h: 256,
+                  },
+                },
+                fx: {
+                  w: 96,
+                  h: 64,
+                  fps: 6,
+                  poseData: {
+                    effect: [
+                      {
+                        x: 96,
+                        y: 0,
+                      },
+                      {
+                        x: 192,
+                        y: 0,
+                      },
+                      {
+                        x: 288,
+                        y: 0,
+                      },
+                    ],
+                  },
+                },
+              }),
+              ce(this, "boundary", {
+                [q.ZigZag]: 960,
+                [q.TimeTrial]: 576,
+                [q.Endless]: void 0,
+              }),
+              ce(this, "characterList", void 0),
+              ce(this, "selectionList", void 0),
+              be.sys)
             )
               return be.sys;
-            (be.sys = this),
+            ((be.sys = this),
+              updateCustomBoundary(),
               (this.characterList = Object.keys(this.sheet.player.character)),
               (this.selectionList = [
                 "player1",
@@ -2557,37 +2631,37 @@
                 "player5",
                 "player6",
                 "player7",
-              ]);
+              ]));
           }
           createPlayerSprite() {
             const e = 640,
               t = document.createElement("canvas");
-            (t.width = e), (t.height = 192);
+            ((t.width = e), (t.height = 192));
             const s = t.getContext("2d");
-            (s.imageSmoothingEnabled = false),
-              s.drawImage(pe.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192);
+            ((s.imageSmoothingEnabled = false),
+              s.drawImage(pe.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192));
             const i = document.createElement("canvas");
-            (i.width = e), (i.height = 64);
+            ((i.width = e), (i.height = 64));
             i.getContext("2d").imageSmoothingEnabled = false;
             const a = be.sys.characterList[te.sys.session.settings.character],
               o = this.sheet.player.character[a];
             if (
               (this.applyLayers(s, pe.sys.playerImg, o, e, 64),
-                te.sys.game.friend)
+              te.sys.game.friend)
             ) {
               const t = this.sheet.player.friend;
               this.applyLayers(s, pe.sys.playerImg, t, e, 64);
             }
             const n = new Image();
-            (n.src = t.toDataURL("image/png")),
+            ((n.src = t.toDataURL("image/png")),
               (async () => {
-                await n.decode(), (this.playerSprite.src = n.src);
-              })();
+                (await n.decode(), (this.playerSprite.src = n.src));
+              })());
           }
           applyLayers(e, t, s, i, a) {
-            e.drawImage(t, 0, s, i, a, 0, 0, i, a),
+            (e.drawImage(t, 0, s, i, a, 0, 0, i, a),
               e.drawImage(t, 0, s, i, a, 0, a, i, a),
-              e.drawImage(t, 0, s, i, a, 0, 2 * a, i, a);
+              e.drawImage(t, 0, s, i, a, 0, 2 * a, i, a));
           }
         }
 
@@ -2595,11 +2669,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -2609,56 +2683,60 @@
           constructor() {
             if (
               (ge(this, "ui", void 0),
-                ge(this, "tint", void 0),
-                ge(this, "topui", void 0),
-                ge(this, "livesDisplay", void 0),
-                ge(this, "score", void 0),
-                ge(this, "scoreIcon", void 0),
-                ge(this, "scoreText", void 0),
-                ge(this, "boostDisplay", void 0),
-                ge(this, "title", void 0),
-                ge(this, "subtitle", void 0),
-                ge(this, "instruct", void 0),
-                ge(this, "instructAction", void 0),
-                ge(this, "instructContent", void 0),
-                ge(this, "instructText", void 0),
-                ge(this, "notify", void 0),
-                ge(this, "notifyContent", void 0),
-                ge(this, "notifyTimer", void 0),
-                ge(this, "icons", void 0),
-                ge(this, "selector", void 0),
-                ue.sys)
+              ge(this, "tint", void 0),
+              ge(this, "topui", void 0),
+              ge(this, "livesDisplay", void 0),
+              ge(this, "score", void 0),
+              ge(this, "scoreIcon", void 0),
+              ge(this, "scoreText", void 0),
+              ge(this, "boostDisplay", void 0),
+              ge(this, "title", void 0),
+              ge(this, "subtitle", void 0),
+              ge(this, "instruct", void 0),
+              ge(this, "instructAction", void 0),
+              ge(this, "instructContent", void 0),
+              ge(this, "instructText", void 0),
+              ge(this, "notify", void 0),
+              ge(this, "notifyContent", void 0),
+              ge(this, "notifyTimer", void 0),
+              ge(this, "icons", void 0),
+              ge(this, "selector", void 0),
+              ue.sys)
             )
               return ue.sys;
-            (ue.sys = this),
+            ((ue.sys = this),
               this.defineIcons(),
               this.buildInterface(),
               (this.notifyTimer = void 0),
-              re.subscribe(this.updateScore.bind(this));
+              re.subscribe(this.updateScore.bind(this)));
           }
           buildInterface() {
-            (this.ui = this.createNew("div", document.body, "game-ui")),
+            ((this.ui = this.createNew("div", document.body, "game-ui")),
               (this.tint = this.createNew("div", document.body, "game-tint")),
               (this.topui = this.createNew("div", this.ui)),
-              this.topui.style.position = 'absolute',
-              this.topui.style.bottom = '15px',
-              this.topui.style.width = '100%';
+              (this.topui.style.position = "absolute"),
+              (this.topui.style.bottom = "15px"),
+              (this.topui.style.width = "100%"));
             const e = this.createNew("div", this.topui, "dash-stats");
-            e.style.justifyContent = 'center';
+            e.style.justifyContent = "center";
             this.livesDisplay = this.createNew("div", e, void 0, "stats-icons");
             const t = this.createNew("div", e, "stats-score");
-            (this.score = this.createNew("div", t)),
+            ((this.score = this.createNew("div", t)),
               (this.scoreIcon = this.createNew(
                 "span",
                 this.score,
-                "score-tras"
+                "score-tras",
               )),
               (this.scoreText = this.createNew(
                 "span",
                 this.score,
-                "score-text"
+                "score-text",
               )),
-              (this.speedText = this.createNew("span", this.score, "speed-text")),
+              (this.speedText = this.createNew(
+                "span",
+                this.score,
+                "speed-text",
+              )),
               (this.speedText.style.color = "black"),
               (this.speedText.style.position = "absolute"),
               (this.speedText.style.bottom = "25px"),
@@ -2668,73 +2746,73 @@
                 "div",
                 e,
                 void 0,
-                "stats-icons"
+                "stats-icons",
               )),
               (this.title = this.createNew("p", this.ui, "ui-title")),
               (this.subtitle = this.createNew("p", this.ui, "ui-subtitle")),
-              (this.selector = this.createNew("div", this.ui, "ui-selector"));
+              (this.selector = this.createNew("div", this.ui, "ui-selector")));
             const s = this.createNew("span", this.selector, "selector-left");
             this.createIconSVG(s, "leftArrow", 44);
             const i = this.createNew("span", this.selector, "selector-right");
-            this.createIconSVG(i, "rightArrow", 44),
+            (this.createIconSVG(i, "rightArrow", 44),
               s.addEventListener(
                 "click",
                 function () {
                   ze.sys.changeCharacter(-1);
                 },
-                false
+                false,
               ),
               i.addEventListener(
                 "click",
                 function () {
                   ze.sys.changeCharacter(1);
                 },
-                false
+                false,
               ),
               (this.instruct = this.createNew("div", this.ui, "ui-instruct")),
               (this.instructContent = this.createNew(
                 "div",
                 this.instruct,
-                "instruct-content"
+                "instruct-content",
               )),
               (this.instructAction = this.createNew(
                 "div",
                 this.instructContent,
-                "instruct-action"
+                "instruct-action",
               )),
               (this.instructText = this.createNew(
                 "p",
                 this.instructContent,
-                "instruct-text"
+                "instruct-text",
               )),
               (this.notify = this.createNew("div", this.ui, "ui-notify")),
               (this.notifyContent = this.createNew(
                 "div",
                 this.notify,
-                "notify-content"
+                "notify-content",
               )),
-              this.hideNotification();
+              this.hideNotification());
           }
           refreshDisplay() {
-            this.updateIcons(), this.updateScore(), this.checkHighScoreIcon();
+            (this.updateIcons(), this.updateScore(), this.checkHighScoreIcon());
           }
           hideOverlayUI() {
-            this.tintScreen(),
+            (this.tintScreen(),
               (this.title.style.visibility = "hidden"),
               (this.subtitle.style.visibility = "hidden"),
               (this.selector.style.visibility = "hidden"),
-              (this.instructContent.style.visibility = "hidden");
+              (this.instructContent.style.visibility = "hidden"));
           }
           updateGameTitleUI() {
             const e = te.sys.session.settings.theme;
-            this.title.style.removeProperty("visibility"),
-              (this.title.textContent = Z.pz.getString(e + "Theme"));
+            (this.title.style.removeProperty("visibility"),
+              (this.title.textContent = Z.pz.getString(e + "Theme")));
           }
           updateGameModeUI() {
             const e = te.sys.session.settings.mode;
-            this.subtitle.style.removeProperty("visibility"),
+            (this.subtitle.style.removeProperty("visibility"),
               (this.subtitle.textContent = Z.pz.getString(e + "Title")),
-              this.updateScore();
+              this.updateScore());
           }
           updateInputTypeUI() {
             const e = te.sys.session.state;
@@ -2744,25 +2822,25 @@
               case ee.Mouse:
               case ee.Touch:
               case ee.Keyboard:
-                this.instructAction.classList.add("outline"),
+                (this.instructAction.classList.add("outline"),
                   (this.instructAction.textContent = Z.pz.getString(
-                    t + "Action"
-                  ));
+                    t + "Action",
+                  )));
                 break;
               case ee.Ps:
               case ee.Xbox: {
                 const e = t + "Action";
-                this.instructAction.classList.remove("outline"),
+                (this.instructAction.classList.remove("outline"),
                   (this.instructAction.textContent = ""),
-                  this.createIconSVG(this.instructAction, e, 32);
+                  this.createIconSVG(this.instructAction, e, 32));
                 break;
               }
             }
-            (this.instructText.textContent = Z.pz.getString(e + "Info")),
+            ((this.instructText.textContent = Z.pz.getString(e + "Info")),
               this.instructContent.style.removeProperty("visibility"),
               e !== Q.Menu
                 ? this.instructContent.classList.add("tinted")
-                : this.instructContent.classList.remove("tinted");
+                : this.instructContent.classList.remove("tinted"));
           }
           tintScreen() {
             te.sys.session.state === Q.Pause
@@ -2770,21 +2848,21 @@
               : this.tint.classList.remove("visible");
           }
           showPauseScreen() {
-            this.tintScreen(),
+            (this.tintScreen(),
               this.updateGameTitleUI(),
               this.updateGameModeUI(),
               this.updateInputTypeUI(),
-              this.refreshDisplay();
+              this.refreshDisplay());
           }
           showOverScreen() {
-            this.tintScreen(),
+            (this.tintScreen(),
               this.updateGameTitleUI(),
               this.updateInputTypeUI(),
-              this.refreshDisplay();
+              this.refreshDisplay());
           }
           showMenuScreen() {
-            this.showPauseScreen(),
-              this.selector.style.removeProperty("visibility");
+            (this.showPauseScreen(),
+              this.selector.style.removeProperty("visibility"));
           }
           sendNotification(e, t = 5e3) {
             const s = te.sys.session.settings.mode,
@@ -2793,35 +2871,35 @@
               case "mode":
                 this.notifyContent.textContent = Z.pz.getStringF(
                   "gameMode",
-                  Z.pz.getString(s + "Title")
+                  Z.pz.getString(s + "Title"),
                 );
                 break;
               case "theme":
                 this.notifyContent.textContent = Z.pz.getStringF(
                   "theme",
-                  Z.pz.getString(i + "Theme")
+                  Z.pz.getString(i + "Theme"),
                 );
                 break;
               case "score": {
                 const e = te.sys.getHighScore(s);
-                (this.notifyContent.textContent = Z.pz.getStringF(
+                ((this.notifyContent.textContent = Z.pz.getStringF(
                   "newBestScore",
                   Z.pz.getString(s + "Descriptor"),
                   e,
-                  Z.pz.getString(s + "Unit")
+                  Z.pz.getString(s + "Unit"),
                 )),
                   this.createIconSVG(
                     this.notifyContent,
                     "star",
                     20,
-                    "0 4px 0 0"
-                  );
+                    "0 4px 0 0",
+                  ));
                 break;
               }
               case "cheatcode":
                 this.notifyContent.textContent = Z.pz.getStringF(
                   "codeCheat",
-                  Z.pz.getString("codeScoring")
+                  Z.pz.getString("codeScoring"),
                 );
                 break;
               case "code":
@@ -2833,28 +2911,28 @@
               case "share":
                 this.notifyContent.textContent = Z.pz.getString("share");
             }
-            clearTimeout(this.notifyTimer),
+            (clearTimeout(this.notifyTimer),
               (this.notifyTimer = window.setTimeout(function () {
                 ue.sys.hideNotification();
               }, t)),
               "share" === e && this.createShareLink(),
-              this.showNotification();
+              this.showNotification());
           }
           createShareLink() {
             const e = this.createNew(
               "button",
               this.notifyContent,
-              "notify-shareLink"
+              "notify-shareLink",
             );
             e.onclick = this.copyShareLink.bind(this);
-            (this.createNew("p", e, "notify-shareText").textContent =
+            ((this.createNew("p", e, "notify-shareText").textContent =
               Z.pz.getString("shareCopy")),
-              this.createIconSVG(e, "link", 20, "0 4px 0 0");
+              this.createIconSVG(e, "link", 20, "0 4px 0 0"));
           }
           copyShareLink() {
-            $(Z.pz.getString("shareLink")),
+            ($(Z.pz.getString("shareLink")),
               (this.notifyContent.textContent =
-                Z.pz.getString("shareLinkCopied"));
+                Z.pz.getString("shareLinkCopied")));
           }
           showNotification() {
             this.notify.classList.add("visible");
@@ -2864,9 +2942,9 @@
           }
           checkHighScoreIcon() {
             const e = te.sys.session.state;
-            (this.scoreIcon.textContent = ""),
+            ((this.scoreIcon.textContent = ""),
               (e === Q.Menu || te.sys.game.highScore) &&
-              this.createIconSVG(this.scoreIcon, "star", 20);
+                this.createIconSVG(this.scoreIcon, "star", 20));
           }
           updateScore() {
             const e = te.sys.session.settings.mode;
@@ -2875,7 +2953,7 @@
               this.scoreText.textContent = Z.pz.getStringF(
                 "bestScoreMenuDisplay",
                 t,
-                Z.pz.getString(e + "Unit")
+                Z.pz.getString(e + "Unit"),
               );
             } else {
               const t = te.sys.getCurrentScoreFormatted();
@@ -2884,9 +2962,9 @@
           }
           updateSpeed(e) {
             if (te.sys.session.state === Q.Play) {
-                this.speedText.textContent = `Speed: ${e.toFixed(2)} km/h`;
+              this.speedText.textContent = `Speed: ${e.toFixed(2)} km/h`;
             } else {
-                this.speedText.textContent = "";
+              this.speedText.textContent = "";
             }
           }
           updateIcons() {
@@ -2894,18 +2972,18 @@
               t = [],
               s = te.sys.game.cheat;
             if (s.lives || s.safety)
-              s.safety && e.push("shield"),
+              (s.safety && e.push("shield"),
                 e.push("life-full"),
-                e.push("infinite");
+                e.push("infinite"));
             else
               for (let t = 1; t <= te.sys.game.lives.max; t++) {
                 let s = "life-empty";
-                t <= te.sys.game.shields.current
+                (t <= te.sys.game.shields.current
                   ? (s = "shield")
                   : t <= te.sys.game.lives.current && (s = "life-full"),
-                  e.push(s);
+                  e.push(s));
               }
-            if (s.boosts) t.push("boost-full"), t.push("infinite");
+            if (s.boosts) (t.push("boost-full"), t.push("infinite"));
             else
               for (let e = 1; e <= te.sys.game.boosts.max; e++) {
                 const s =
@@ -2914,36 +2992,47 @@
                     : "boost-empty";
                 t.push(s);
               }
-            (this.livesDisplay.textContent = ""),
-              (this.boostDisplay.textContent = "");
+            ((this.livesDisplay.textContent = ""),
+              (this.boostDisplay.textContent = ""));
             const i = "url(" + pe.sys.objectsImg.src + ")";
             if (e.length > 0) {
-              const lifeIcon = this.createNew("div", this.livesDisplay, void 0, e[0]);
+              const lifeIcon = this.createNew(
+                "div",
+                this.livesDisplay,
+                void 0,
+                e[0],
+              );
               lifeIcon.style.backgroundImage = i;
-              const lifeCount = this.createNew("span", this.livesDisplay, "life-count");
-              lifeCount.textContent = "x" + te.sys.game.lives.current;
+              const lifeCount = this.createNew(
+                "span",
+                this.livesDisplay,
+                "life-count",
+              );
+              lifeCount.textContent = s.lives
+                ? "Infinite"
+                : "x" + te.sys.game.lives.current;
             }
           }
           createIconSVG(e, t, s, i = "0 0 0 0") {
             const a = document.createElementNS(
               "http://www.w3.org/2000/svg",
-              "svg"
+              "svg",
             );
-            a.classList.add("icon-" + t),
+            (a.classList.add("icon-" + t),
               (a.style.margin = i),
               (a.style.display = "inline-block"),
               a.setAttribute("width", s + "px"),
               a.setAttribute("height", s + "px"),
-              a.setAttribute("viewBox", this.icons[t].viewbox);
+              a.setAttribute("viewBox", this.icons[t].viewbox));
             const o = document.createElementNS(
               "http://www.w3.org/2000/svg",
-              "path"
+              "path",
             );
-            a.insertAdjacentElement("beforeend", o),
+            (a.insertAdjacentElement("beforeend", o),
               o.classList.add("icon-fill"),
               o.setAttribute("d", this.icons[t].path),
               e.insertAdjacentElement("afterbegin", a),
-              a.insertAdjacentElement("afterbegin", o);
+              a.insertAdjacentElement("afterbegin", o));
           }
           defineIcons() {
             this.icons = {
@@ -2996,11 +3085,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -3010,15 +3099,15 @@
           constructor() {
             if (
               (me(this, "legend", void 0),
-                me(this, "spawnSingle", void 0),
-                me(this, "library", void 0),
-                ye.sys)
+              me(this, "spawnSingle", void 0),
+              me(this, "library", void 0),
+              ye.sys)
             )
               return ye.sys;
-            (ye.sys = this), this.defineLegend(), this.defineClusters();
+            ((ye.sys = this), this.defineLegend(), this.defineClusters());
           }
           defineLegend() {
-            (this.legend = {
+            ((this.legend = {
               wall: {
                 sw: ["sw"],
                 s: ["s"],
@@ -3158,7 +3247,7 @@
                   "tall8",
                 ],
                 spin: ["spin1", "spin2", "spin3", "spin4", "spin5"],
-              });
+              }));
           }
           defineClusters() {
             this.library = {
@@ -7158,11 +7247,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -7170,7 +7259,7 @@
         me(ye, "sys", null);
         class we {
           constructor(e, t, s) {
-            fe(this, "type", void 0),
+            (fe(this, "type", void 0),
               fe(this, "x", void 0),
               fe(this, "y", void 0),
               fe(this, "w", void 0),
@@ -7181,11 +7270,11 @@
               (this.type = e),
               (this.x = t),
               (this.y = s),
-              this.reset();
+              this.reset());
           }
           reset() {
             const e = be.sys.sheet[this.type];
-            (this.w = e.w),
+            ((this.w = e.w),
               (this.h = e.h),
               (this.fx = e.fx),
               (this.hit = false),
@@ -7194,23 +7283,23 @@
                 y: this.y - this.h / 2 + e.hitbox.y,
                 w: e.hitbox.w,
                 h: e.hitbox.h,
-              });
+              }));
           }
           move(e) {
             this.shift(-e.x, -e.y);
           }
           shift(e = 0, t = 0) {
-            (this.x += e),
+            ((this.x += e),
               (this.hitbox.x += e),
               (this.y += t),
-              (this.hitbox.y += t);
+              (this.hitbox.y += t));
           }
-          update() { }
-          draw() { }
+          update() {}
+          draw() {}
         }
         class ve extends we {
           constructor(e, t, s, i) {
-            super(e, t, s),
+            (super(e, t, s),
               fe(this, "pose", void 0),
               fe(this, "time", void 0),
               fe(this, "sleep", void 0),
@@ -7219,16 +7308,16 @@
               fe(this, "decor", void 0),
               fe(this, "gateId", void 0),
               (this.pose = i),
-              this.reset();
+              this.reset());
           }
           reset() {
-            super.reset(),
+            (super.reset(),
               (this.time = 0),
               (this.sleep = false),
               (this.anim = "looping"),
               (this.pickup = false),
               (this.decor = void 0),
-              (this.gateId = void 0);
+              (this.gateId = void 0));
           }
           update() {
             "paused" !== this.anim && (this.time += te.sys.game.time.loop);
@@ -7237,8 +7326,8 @@
             this.pickup
               ? de.sys.drawPickup(this)
               : (void 0 !== this.fx &&
-                "hidden" !== this.anim &&
-                de.sys.drawFx(this.time, this.x, this.y + this.fx),
+                  "hidden" !== this.anim &&
+                  de.sys.drawFx(this.time, this.x, this.y + this.fx),
                 de.sys.drawLayer(
                   this.type,
                   this.pose,
@@ -7246,20 +7335,20 @@
                   this.y,
                   this.time,
                   this.anim,
-                  this
+                  this,
                 ),
                 void 0 !== this.decor &&
-                de.sys.drawLayer(
-                  "wallDecor",
-                  this.decor,
-                  this.x,
-                  this.y - 24
-                ));
+                  de.sys.drawLayer(
+                    "wallDecor",
+                    this.decor,
+                    this.x,
+                    this.y - 24,
+                  ));
           }
         }
         class xe extends ve {
           constructor(e, t, s, i) {
-            super(e, t, s, i),
+            (super(e, t, s, i),
               fe(this, "angle", void 0),
               fe(this, "pose", void 0),
               fe(this, "speed", null),
@@ -7267,10 +7356,10 @@
               fe(this, "timer", null),
               fe(this, "style", void 0),
               fe(this, "state", void 0),
-              this.reset();
+              this.reset());
           }
           reset() {
-            super.reset(),
+            (super.reset(),
               (this.objectsHit = []),
               (this.angle = 0),
               (this.speed = {
@@ -7285,21 +7374,21 @@
               }),
               (this.style = te.sys.rand(0, 3)),
               this.changeState("crash"),
-              this.resume();
+              this.resume());
           }
           update() {
-            super.update(),
+            (super.update(),
               this.isCrashed() ||
-              (this.updateDirection(),
+                (this.updateDirection(),
                 this.updateSpeed(),
-                this.updatePosition());
+                this.updatePosition()));
           }
           crash() {
             this.changeState("crash");
           }
           resume() {
             const e = Math.random() > 0.5 ? "right" : "left";
-            (this.timer.crash = 0), (this.timer.dir = 1), this.changeState(e);
+            ((this.timer.crash = 0), (this.timer.dir = 1), this.changeState(e));
           }
           slow() {
             this.speed.raw *= 0.5;
@@ -7309,7 +7398,7 @@
               !(this.timer.crash <= 0) &&
               ((this.timer.crash -=
                 te.sys.game.time.loop * te.sys.game.time.scale),
-                !(this.timer.crash <= 0) || (this.resume(), false))
+              !(this.timer.crash <= 0) || (this.resume(), false))
             );
           }
           changeState(e) {
@@ -7325,16 +7414,16 @@
               case "crash":
                 t = 90;
             }
-            (this.pose = e),
+            ((this.pose = e),
               (this.angle = (t * Math.PI) / 180),
               "crash" === e &&
-              ((this.timer.crash += 1.5), (this.speed.raw = 0));
+                ((this.timer.crash += 1.5), (this.speed.raw = 0)));
           }
           updateDirection() {
             if (
               ((this.timer.dir -=
                 te.sys.game.time.loop * te.sys.game.time.scale),
-                this.timer.dir <= 0)
+              this.timer.dir <= 0)
             ) {
               this.timer.dir = te.sys.rand(50, 200) / 100;
               const e = "left" === this.state ? "right" : "left";
@@ -7344,8 +7433,8 @@
           updateSpeed() {
             const e = this.speed,
               t = e.accel * te.sys.game.time.scale;
-            (this.speed.raw = e.raw <= e.max ? (e.raw += t) : (e.raw -= t)),
-              (this.speed.current = e.raw * te.sys.game.time.scale);
+            ((this.speed.raw = e.raw <= e.max ? (e.raw += t) : (e.raw -= t)),
+              (this.speed.current = e.raw * te.sys.game.time.scale));
           }
           updatePosition() {
             const e = this.speed.current * -Math.cos(this.angle),
@@ -7358,17 +7447,17 @@
         }
         class Se extends ve {
           constructor(e, t, s, i) {
-            super(e, t, s, i),
+            (super(e, t, s, i),
               fe(this, "angle", void 0),
               fe(this, "dist", void 0),
               fe(this, "speed", null),
               fe(this, "objectsHit", void 0),
               fe(this, "timer", null),
               fe(this, "state", void 0),
-              this.reset();
+              this.reset());
           }
           reset() {
-            super.reset(),
+            (super.reset(),
               (this.objectsHit = []),
               (this.angle = 0),
               (this.dist = 0),
@@ -7378,16 +7467,16 @@
                 max: 9,
                 accel: 0.05,
               }),
-              this.changeState("chase");
+              this.changeState("chase"));
           }
           update() {
-            super.update(),
+            (super.update(),
               this.hit
                 ? this.updateEnding()
                 : this.isCrashed() ||
-                (this.updateDirection(),
+                  (this.updateDirection(),
                   this.updateSpeed(),
-                  this.updatePosition());
+                  this.updatePosition()));
           }
           updateEnding() {
             const e = {
@@ -7395,9 +7484,9 @@
               y: te.sys.session.y - 64 - this.y,
             };
             if (Math.hypot(e.x, e.y) < 8)
-              this.shift(e.x, e.y),
+              (this.shift(e.x, e.y),
                 this.changeState("end"),
-                (te.sys.game.caught = true);
+                (te.sys.game.caught = true));
             else {
               const t = Math.atan2(e.y, e.x),
                 s = Math.cos(t),
@@ -7422,13 +7511,13 @@
               !(this.timer.crash <= 0) &&
               ((this.timer.crash -=
                 te.sys.game.time.loop * te.sys.game.time.scale),
-                !(this.timer.crash <= 0) || (this.resume(), false))
+              !(this.timer.crash <= 0) || (this.resume(), false))
             );
           }
           changeState(e) {
             if (this.state !== e) {
               switch (
-              ((this.state = e),
+                ((this.state = e),
                 (this.timer = {
                   crash: 0,
                   dir: 0,
@@ -7438,14 +7527,14 @@
                 case "chase":
                   break;
                 case "crash":
-                  (this.timer.crash += 1.25), (this.speed.raw = 0);
+                  ((this.timer.crash += 1.25), (this.speed.raw = 0));
                   break;
                 case "end":
-                  (this.anim = "oneshot"),
+                  ((this.anim = "oneshot"),
                     (this.time = 0),
                     (this.speed.current = 0),
                     (this.speed.raw = 0),
-                    (this.speed.max = 0);
+                    (this.speed.max = 0));
               }
               this.pose = e;
             }
@@ -7454,11 +7543,11 @@
             if (
               ((this.dist = Math.hypot(
                 te.sys.session.x - this.x,
-                te.sys.session.y - this.y
+                te.sys.session.y - this.y,
               )),
-                (this.timer.dir -=
-                  te.sys.game.time.loop * te.sys.game.time.scale),
-                this.timer.dir <= 0)
+              (this.timer.dir -=
+                te.sys.game.time.loop * te.sys.game.time.scale),
+              this.timer.dir <= 0)
             ) {
               this.timer.dir +=
                 (te.sys.rand(25, 100) / 100) * (this.dist / te.sys.session.y);
@@ -7472,12 +7561,12 @@
             const e = this.speed,
               t = e.accel * te.sys.game.time.scale,
               s = this.y >= te.sys.session.y;
-            e.raw < e.max && !s
+            (e.raw < e.max && !s
               ? (this.speed.raw += t)
               : s
                 ? (this.speed.raw -= t)
                 : (this.speed.raw = e.max),
-              (this.speed.current = e.raw * te.sys.game.time.scale);
+              (this.speed.current = e.raw * te.sys.game.time.scale));
           }
           updatePosition() {
             const e = (this.dist / te.sys.session.y) * 15,
@@ -7494,7 +7583,7 @@
               this.y,
               this.time,
               this.anim,
-              this
+              this,
             );
           }
         }
@@ -7503,11 +7592,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -7516,36 +7605,36 @@
           constructor() {
             if (
               (Ce(this, "all", void 0),
-                Ce(this, "top", void 0),
-                Ce(this, "btm", void 0),
-                Ce(this, "npc", void 0),
-                Ce(this, "foe", void 0),
-                Ce(this, "endingFoe", void 0),
-                Ce(this, "swapBuilt", void 0),
-                Ce(this, "sleeping", void 0),
-                Ce(this, "prevClusters", void 0),
-                Ce(this, "startingObjects", void 0),
-                Ce(this, "endless", void 0),
-                Ce(this, "timetrial", void 0),
-                Ce(this, "zigzag", void 0),
-                Ce(this, "grid", void 0),
-                ke.sys)
+              Ce(this, "top", void 0),
+              Ce(this, "btm", void 0),
+              Ce(this, "npc", void 0),
+              Ce(this, "foe", void 0),
+              Ce(this, "endingFoe", void 0),
+              Ce(this, "swapBuilt", void 0),
+              Ce(this, "sleeping", void 0),
+              Ce(this, "prevClusters", void 0),
+              Ce(this, "startingObjects", void 0),
+              Ce(this, "endless", void 0),
+              Ce(this, "timetrial", void 0),
+              Ce(this, "zigzag", void 0),
+              Ce(this, "grid", void 0),
+              ke.sys)
             )
               return ke.sys;
-            (ke.sys = this),
+            ((ke.sys = this),
               new ye(),
               new ze("player", te.sys.session.x, te.sys.session.y, "down"),
               this.reset(),
-              this.createSleepingObjects();
+              this.createSleepingObjects());
           }
           reset() {
-            void 0 === this.sleeping
+            (void 0 === this.sleeping
               ? (this.sleeping = [])
               : (this.sleeping = this.sleeping
-                .concat(this.top)
-                .concat(this.btm)
-                .concat(this.npc)
-                .concat(this.foe)),
+                  .concat(this.top)
+                  .concat(this.btm)
+                  .concat(this.npc)
+                  .concat(this.foe)),
               (this.grid = {
                 size: 16,
                 gap: 1024,
@@ -7658,14 +7747,14 @@
               (this.endingFoe = void 0),
               this.calcClusterSlots(),
               ze.sys.reset(),
-              this.all.push(ze.sys);
+              this.all.push(ze.sys));
           }
           calcClusterSlots() {
             this.grid.slots =
               2 *
-              Math.ceil(
-                (te.sys.session.h - te.sys.session.y) / this.grid.gap
-              ) +
+                Math.ceil(
+                  (te.sys.session.h - te.sys.session.y) / this.grid.gap,
+                ) +
               3;
           }
           createSleepingObjects() {
@@ -7722,6 +7811,18 @@
                 break;
               case q.ZigZag:
                 this.createZigZagStart();
+                break;
+              case q.Custom:
+                const mapData = localStorage.getItem("customMapData");
+                if (mapData && mapData.trim() !== "") {
+                    try {
+                        const parsedMap = JSON.parse(mapData);
+                        this.loadCustomMapFromData(parsedMap);
+                    } catch (error) {
+                        console.error("Error parsing map data on load:", error);
+                    }
+                }
+                break;
             }
           }
           update() {
@@ -7734,6 +7835,10 @@
                 break;
               case q.ZigZag:
                 this.updateZigZagMode();
+                break;
+              case q.Custom:
+                this.updateCustomMode();
+                break;
             }
             this.mergeAll();
           }
@@ -7750,9 +7855,9 @@
             return e - te.sys.game.dist.y + te.sys.session.y;
           }
           updateEndlessMode() {
-            this.nextReady(this.endless.row, false) && this.createEndlessRow(),
+            (this.nextReady(this.endless.row, false) && this.createEndlessRow(),
               this.nextReady(this.endless.foe) && this.createFoe(),
-              this.nextReady(this.endless.npc) && this.createNpc();
+              this.nextReady(this.endless.npc) && this.createNpc());
           }
           updateTimeTrialMode() {
             this.nextReady(this.timetrial.row, false) &&
@@ -7762,11 +7867,24 @@
           updateZigZagMode() {
             this.nextReady(this.zigzag.row, false) && this.createZigZagGate();
           }
+          updateCustomMode() {}
+          createCustomMap() {
+            this.all.forEach((obj) => (obj.sleep = true));
+            this.putToSleep();
+            this.mergeAll();
+            fetch("map.json")
+              .then((response) => response.text())
+              .then((data) => {
+                document.getElementById("map-textarea").value = data;
+                const parsedMap = JSON.parse(data);
+                ke.sys.loadCustomMapFromData(parsedMap);
+              });
+          }
           createEndlessStart() {
             this.buildCluster(
               "endlessStarts",
               te.sys.session.x,
-              te.sys.session.y + 128
+              te.sys.session.y + 128,
             );
           }
           createEndlessRow() {
@@ -7795,16 +7913,16 @@
                           : this.nextReady(t.lure) && (n = "endlessLures");
                 }
               else
-                (i =te.sys.rand(-20, 20) * this.grid.size),
-                  (o = te.sys.rand(0, 32) * this.grid.size);
+                ((i = te.sys.rand(-20, 20) * this.grid.size),
+                  (o = te.sys.rand(0, 32) * this.grid.size));
               let r = 0;
               "left" === e.dir || "downleft" === e.dir
                 ? (r = -this.grid.gap / 4)
                 : ("right" !== e.dir && "downright" !== e.dir) ||
-                (r = this.grid.gap / 4);
+                  (r = this.grid.gap / 4);
               const l = te.sys.session.x + a * this.grid.gap + i + r,
                 h = s + o;
-              this.buildCluster(n, l, h), this.buildEndlessRandomSnags(l, h);
+              (this.buildCluster(n, l, h), this.buildEndlessRandomSnags(l, h));
             }
           }
           buildEndlessRandomSnags(e, t) {
@@ -7817,7 +7935,7 @@
               ],
               o = a.length;
             for (let s = 0; s < o; s++) {
-              if (Math.random() < 0.90) continue;
+              if (Math.random() < 0.9) continue;
               const i = a[s][0] + te.sys.rand(-8, 8) * this.grid.size,
                 o = a[s][1] + te.sys.rand(-8, 8) * this.grid.size;
               let n = "snag";
@@ -7832,27 +7950,27 @@
             const e = this.timetrial.clusterList[this.timetrial.counter],
               t = te.sys.session.x - te.sys.game.dist.x,
               s = this.calcSpawnHeight(this.timetrial.row.next);
-            this.buildCluster("timetrialScenes", t, s, e),
-              (this.timetrial.counter += 1);
+            (this.buildCluster("timetrialScenes", t, s, e),
+              (this.timetrial.counter += 1));
           }
           createZigZagStart() {
-            this.buildCluster(
+            (this.buildCluster(
               "zigzagGates",
               te.sys.session.x,
               te.sys.session.y + 512,
-              "gateFirst"
+              "gateFirst",
             ),
-              (this.zigzag.counter += 1);
+              (this.zigzag.counter += 1));
           }
           createZigZagGate() {
             const e = te.sys.session.x - te.sys.game.dist.x,
               t = this.calcSpawnHeight(this.zigzag.row.next),
               s = this.zigzag.counter % 2 != 0;
-            s
+            (s
               ? this.buildCluster("zigzagGates", e - 320, t, "gateLeft")
               : this.buildCluster("zigzagGates", e + 320, t, "gateRight"),
               (this.zigzag.counter += 1),
-              this.createGateClusters(e, t, s);
+              this.createGateClusters(e, t, s));
           }
           createGateClusters(e, t, s) {
             const i = s ? e + 64 : e - 64;
@@ -7860,12 +7978,12 @@
               "allNormal",
               i,
               t - 128,
-              te.sys.randIndex(this.zigzag.clusterList)
+              te.sys.randIndex(this.zigzag.clusterList),
             );
             const a = t + 0.5 * this.zigzag.row.inc;
             if (
               (this.buildCluster("zigzagGateScenes", e, a),
-                this.nextReady(this.zigzag.life))
+              this.nextReady(this.zigzag.life))
             )
               this.buildObject("life", e, a, "life");
             else if (this.nextReady(this.zigzag.boost))
@@ -7877,18 +7995,18 @@
               this.buildObject(t, e, a, t + "1");
             }
             const o = t + 0.25 * this.zigzag.row.inc;
-            this.buildCluster(
+            (this.buildCluster(
               "allNormal",
               e - 560,
               o + te.sys.rand(0, 32) * this.grid.size,
-              te.sys.randIndex(this.zigzag.clusterList)
+              te.sys.randIndex(this.zigzag.clusterList),
             ),
               this.buildCluster(
                 "allNormal",
                 e + 560,
                 o + te.sys.rand(0, 32) * this.grid.size,
-                te.sys.randIndex(this.zigzag.clusterList)
-              );
+                te.sys.randIndex(this.zigzag.clusterList),
+              ));
           }
           confirmGate(e) {
             this.all
@@ -7907,13 +8025,13 @@
           buildCluster(e, t, s, i) {
             if (!i) {
               const t = Object.keys(ye.sys.library[e]).filter(
-                (e) => !this.prevClusters.includes(e)
+                (e) => !this.prevClusters.includes(e),
               );
               i = te.sys.randIndex(t);
             }
             const a = ye.sys.library[e][i];
-            this.prevClusters.unshift(i),
-              this.prevClusters.length > 14 && this.prevClusters.pop();
+            (this.prevClusters.unshift(i),
+              this.prevClusters.length > 14 && this.prevClusters.pop());
             for (const e in a)
               if (a.hasOwnProperty(e)) {
                 const i = a[e],
@@ -7944,36 +8062,64 @@
             if (t) return a;
             {
               const e = {};
-              return (e[a] = i), e;
+              return ((e[a] = i), e);
             }
           }
           buildCrashedFriend(e, t) {
-            (this.buildObject("friend", e, t, "crash").hit = true),
+            ((this.buildObject("friend", e, t, "crash").hit = true),
               (this.endless.friend.next =
-                te.sys.game.dist.unit + this.endless.friend.inc);
+                te.sys.game.dist.unit + this.endless.friend.inc));
           }
           buildCheckpoint(e, t) {
-            (this.endless.row.next += this.endless.row.inc),
+            ((this.endless.row.next += this.endless.row.inc),
               (this.top = this.sleep(this.top, -64, te.sys.session.h + 64)),
-              this.buildCluster("endlessCheckpoints", e, t);
+              this.buildCluster("endlessCheckpoints", e, t));
           }
           buildSwap() {
-            (this.swapBuilt = true),
+            ((this.swapBuilt = true),
               (this.endless.row.next += 1280),
               (this.top = this.sleep(this.top, -64, te.sys.session.h + 64)),
               this.buildCluster(
                 "endlessSwap",
                 te.sys.session.x - (te.sys.session.h - te.sys.session.y) - 256,
-                te.sys.session.h + 256
+                te.sys.session.h + 256,
+              ));
+          }
+          loadCustomMapFromData(mapData) {
+            if (mapData.options) {
+              mapData.options.max_speed && (te.sys.session.customMapSpeed = mapData.options.max_speed);
+              const currentState = re.getState();
+              re.dispatch(oe({
+                ...currentState,
+                mode: "custom",
+                gameSpeed: mapData.options.max_speed,
+                lives: mapData.options.max_lives,
+                boundaries: mapData.options.boundaries,
+                area_size: mapData.options.area_size
+              }));
+            }
+
+            // Clear existing objects
+            this.all.forEach((obj) => (obj.sleep = true));
+            this.putToSleep();
+            this.mergeAll();
+            
+            mapData.obstacles.forEach((obstacle) => {
+              this.buildObject(
+                obstacle.type,
+                te.sys.session.x + obstacle.x,
+                te.sys.session.y + obstacle.y,
+                obstacle.pose,
               );
+            });
           }
           buildObject(e, t, s, i) {
-            (t =
+            ((t =
               Math.floor(t) +
               (te.sys.game.dist.x - Math.floor(te.sys.game.dist.x))),
               (s =
                 Math.floor(s) +
-                (te.sys.game.dist.y - Math.floor(te.sys.game.dist.y)));
+                (te.sys.game.dist.y - Math.floor(te.sys.game.dist.y))));
             let a = this.wake(e, t, s, i);
             switch ((a || (a = this.createObject(e, t, s, i)), a.type)) {
               case "wall":
@@ -8033,10 +8179,10 @@
             function t(e, t) {
               return e.hitbox.y + e.hitbox.h - (t.hitbox.y + t.hitbox.h);
             }
-            "air" in ze.sys.dist
+            ("air" in ze.sys.dist
               ? (e.sort((e, s) => t(e, s)), e.push(ze.sys))
               : (e.push(ze.sys), e.sort((e, s) => t(e, s))),
-              (this.all = this.btm.concat(e));
+              (this.all = this.btm.concat(e)));
           }
           wake(e, t, s, i) {
             let a;
@@ -8050,14 +8196,14 @@
             const i = s.length;
             for (let a = 0; a < i; a++)
               if (s[a].type === e)
-                return (s[a].pose = t), (s = s.splice(a, 1)), s[a];
+                return ((s[a].pose = t), (s = s.splice(a, 1)), s[a]);
             return null;
           }
           putToSleep() {
-            (this.top = this.sleep(this.top)),
+            ((this.top = this.sleep(this.top)),
               (this.btm = this.sleep(this.btm)),
               (this.npc = this.sleep(this.npc, -64, te.sys.session.h + 64)),
-              (this.foe = this.sleep(this.foe, -256));
+              (this.foe = this.sleep(this.foe, -256)));
           }
           sleep(e, t = -64, s = 1e4) {
             function i(e) {
@@ -8065,7 +8211,8 @@
             }
             const a = e.filter((e) => !i(e));
             return (
-              (this.sleeping = this.sleeping.concat(a)), e.filter((e) => i(e))
+              (this.sleeping = this.sleeping.concat(a)),
+              e.filter((e) => i(e))
             );
           }
         }
@@ -8074,11 +8221,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -8088,21 +8235,21 @@
           constructor() {
             if (
               (Te(this, "indexList", void 0),
-                Te(this, "buttonMap", void 0),
-                Te(this, "last", void 0),
-                Te(this, "vib", void 0),
-                Te(this, "vibCurrent", void 0),
-                Te(this, "timer", void 0),
-                Te(this, "linkedPad", void 0),
-                Me.sys)
+              Te(this, "buttonMap", void 0),
+              Te(this, "last", void 0),
+              Te(this, "vib", void 0),
+              Te(this, "vibCurrent", void 0),
+              Te(this, "timer", void 0),
+              Te(this, "linkedPad", void 0),
+              Me.sys)
             )
               return Me.sys;
-            (Me.sys = this),
+            ((Me.sys = this),
               window.addEventListener("gamepadconnected", (e) =>
-                Me.sys.onGamepadConnected(e)
+                Me.sys.onGamepadConnected(e),
               ),
               window.addEventListener("gamepaddisconnected", (e) =>
-                Me.sys.onGamepadDisconnected(e)
+                Me.sys.onGamepadDisconnected(e),
               ),
               (this.indexList = []),
               (this.buttonMap = [
@@ -8132,7 +8279,7 @@
               }),
               this.defineVibrations(),
               this.setVibration(),
-              this.reset();
+              this.reset());
           }
           reset() {
             this.last = void 0;
@@ -8187,7 +8334,8 @@
             };
           }
           setVibration(e = "default") {
-            (this.vibCurrent = this.vib[e]), (this.timer = this.vibCurrent.dur);
+            ((this.vibCurrent = this.vib[e]),
+              (this.timer = this.vibCurrent.dur));
           }
           vibrateController() {
             const e = te.sys.session.inputType;
@@ -8207,23 +8355,23 @@
           }
           onGamepadDisconnected(e) {
             const t = Me.sys.indexList.indexOf(e.gamepad.index);
-            t > -1 && Me.sys.indexList.splice(t, 1),
+            (t > -1 && Me.sys.indexList.splice(t, 1),
               (this.linkedPad = {
                 index: void 0,
                 pad: void 0,
                 pressed: {},
-              });
+              }));
             const s = te.sys.session.inputType;
             (s !== ee.Xbox && s !== ee.Ps) ||
               Ae.sys.changeInputMethod(ee.Keyboard);
           }
           setController(e, t) {
-            (this.linkedPad = {
+            ((this.linkedPad = {
               index: e,
               pad: t,
               pressed: {},
             }),
-              this.changeControllerType(t);
+              this.changeControllerType(t));
           }
           update() {
             const e = this.indexList.length;
@@ -8245,9 +8393,9 @@
               }
           }
           checkVibrations() {
-            this.vibrateController(),
+            (this.vibrateController(),
               (this.timer -= 1e3 * te.sys.game.time.loop),
-              this.timer <= 0 && this.setVibration();
+              this.timer <= 0 && this.setVibration());
           }
           changeControllerType(e) {
             const t = e.id.toLowerCase().includes("054c") ? ee.Ps : ee.Xbox;
@@ -8279,7 +8427,7 @@
                       : (n = He.Down)
                     : (n = He.Stop))
                 : (this.last = void 0),
-                this.last !== n)
+              this.last !== n)
             ) {
               if (((this.last = n), n))
                 if (te.sys.session.flyoutActive)
@@ -8311,8 +8459,8 @@
                 if (this.linkedPad.pressed[this.buttonMap[a]]) return;
                 if (
                   ((this.linkedPad.pressed[this.buttonMap[a]] = true),
-                    this.changeControllerType(e),
-                    te.sys.session.flyoutActive &&
+                  this.changeControllerType(e),
+                  te.sys.session.flyoutActive &&
                     ["a", "b", "up", "down"].includes(this.buttonMap[a]))
                 ) {
                   switch (this.buttonMap[a]) {
@@ -8358,21 +8506,21 @@
                   case "touchpad":
                     s = He.Settings;
                 }
-                Ae.sys.routeInput(s, false, false), Ae.sys.checkCheatCode(s);
+                (Ae.sys.routeInput(s, false, false), Ae.sys.checkCheatCode(s));
               } else this.linkedPad.pressed[this.buttonMap[a]] = false;
             return s;
           }
           focusNextElement(e = 1) {
             const t = Array.from(
-              document.querySelectorAll(
-                'a:not([disabled]), select:not([disabled]), div[role="option"]:not([disabled]), input:not([disabled]), button:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])'
-              )
-            ).filter(
-              (e) =>
-                e.offsetWidth > 0 ||
-                e.offsetHeight > 0 ||
-                e === document.activeElement
-            ),
+                document.querySelectorAll(
+                  'a:not([disabled]), select:not([disabled]), div[role="option"]:not([disabled]), input:not([disabled]), button:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])',
+                ),
+              ).filter(
+                (e) =>
+                  e.offsetWidth > 0 ||
+                  e.offsetHeight > 0 ||
+                  e === document.activeElement,
+              ),
               s = t.indexOf(document.activeElement) || 0;
             (t[s + e] || t[0]).focus();
           }
@@ -8382,11 +8530,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -8395,29 +8543,29 @@
         class Pe {
           constructor() {
             if ((inEntity(this, "mousePos", void 0), Pe.sys)) return Pe.sys;
-            (Pe.sys = this),
+            ((Pe.sys = this),
               window.addEventListener(
                 "click",
                 function (e) {
                   Pe.sys.onClick(e);
                 },
-                false
+                false,
               ),
               window.addEventListener(
                 "mousemove",
                 function (e) {
                   Pe.sys.onMouseMove(e);
                 },
-                false
+                false,
               ),
               window.addEventListener(
                 "contextmenu",
                 function (e) {
                   Pe.sys.onContextMenu(e);
                 },
-                false
+                false,
               ),
-              this.reset();
+              this.reset());
           }
           reset() {
             this.mousePos = void 0;
@@ -8459,11 +8607,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -8473,26 +8621,26 @@
           constructor(e, t, s, i) {
             if (
               (super(e, t, s, i),
-                Ee(this, "pose", void 0),
-                Ee(this, "speed", void 0),
-                Ee(this, "timer", void 0),
-                Ee(this, "dist", void 0),
-                Ee(this, "angle", void 0),
-                Ee(this, "dir", void 0),
-                Ee(this, "scale", void 0),
-                Ee(this, "swapped", void 0),
-                Ee(this, "trick", void 0),
-                Ee(this, "shadow", void 0),
-                Ee(this, "boostFx", void 0),
-                Ee(this, "previousGate", void 0),
-                Ee(this, "skins", void 0),
-                ze.sys)
+              Ee(this, "pose", void 0),
+              Ee(this, "speed", void 0),
+              Ee(this, "timer", void 0),
+              Ee(this, "dist", void 0),
+              Ee(this, "angle", void 0),
+              Ee(this, "dir", void 0),
+              Ee(this, "scale", void 0),
+              Ee(this, "swapped", void 0),
+              Ee(this, "trick", void 0),
+              Ee(this, "shadow", void 0),
+              Ee(this, "boostFx", void 0),
+              Ee(this, "previousGate", void 0),
+              Ee(this, "skins", void 0),
+              ze.sys)
             )
               return ze.sys;
-            (ze.sys = this), this.reset();
+            ((ze.sys = this), this.reset());
           }
           reset() {
-            super.reset(),
+            (super.reset(),
               (this.speed = {
                 current: 0,
                 x: 0,
@@ -8535,20 +8683,20 @@
                   "downleft",
                 ],
               }),
-              this.changeCharacter(te.sys.session.settings.character, true);
+              this.changeCharacter(te.sys.session.settings.character, true));
           }
-          move() { }
+          move() {}
           unlockForNewGame() {
-            this.changeDirection("down"), Me.sys.setVibration("big");
+            (this.changeDirection("down"), Me.sys.setVibration("big"));
           }
           update() {
-            super.update(),
+            (super.update(),
               (this.speed.x = this.speed.current * -Math.cos(this.angle)),
               (this.speed.y = this.speed.current * -Math.sin(this.angle)),
               this.checkBoundaries(),
               this.updateTrackers(),
               this.updateBoostFx(),
-              "stop" === this.dir || this.timer.crash || this.updateSpeed();
+              "stop" === this.dir || this.timer.crash || this.updateSpeed());
           }
           checkBoundaries() {
             const e = te.sys.game.dist,
@@ -8556,19 +8704,20 @@
             switch (t) {
               case q.TimeTrial:
               case q.ZigZag:
+              case q.Custom:
                 Math.abs(e.x) > be.sys.boundary[t] && this.bounce();
                 break;
               case q.Endless:
-                e.y < 8000 &&
+                (e.y < 8000 &&
                   e.x < -6400 &&
                   !ke.sys.swapBuilt &&
                   ke.sys.buildSwap(),
                   !te.sys.game.highScore &&
-                  e.unit > te.sys.session.bestScore.endless &&
-                  !te.sys.game.cheat.used &&
-                  ((te.sys.game.highScore = true),
+                    e.unit > te.sys.session.bestScore.endless &&
+                    !te.sys.game.cheat.used &&
+                    ((te.sys.game.highScore = true),
                     ue.sys.refreshDisplay(),
-                    e.unit > 100 && ue.sys.sendNotification("score"));
+                    e.unit > 100 && ue.sys.sendNotification("score")));
             }
           }
           changeCharacter(e, t = false) {
@@ -8576,28 +8725,26 @@
               !be.sys.selectionList.includes(be.sys.characterList[e]) &&
               be.sys.selectionList.push(be.sys.characterList[e]);
             const s = be.sys.selectionList;
-            t ||
+            (t ||
               (e =
                 (s.length + te.sys.session.settings.character + e) % s.length),
-              (this.skins.render = []);
+              (this.skins.render = []));
             const i = this.skins.zoom.length;
             for (let t = 0; t < i; t++) {
               const a = (s.length + e + (t - Math.floor(i / 2))) % s.length;
               this.skins.render[t] = a;
             }
-            (te.sys.session.settings.character = e),
+            ((te.sys.session.settings.character = e),
               te.sys.saveSessionSettings(),
               be.sys.createPlayerSprite(),
-              Me.sys.setVibration("small");
+              Me.sys.setVibration("small"));
           }
           routeAction(e, t = false) {
-            if (
-              !(
-                te.sys.session.state !== Q.Play ||
-                this.timer.crash ||
-                "bounce" in this.dist
-              )
-            )
+            if (!(
+              te.sys.session.state !== Q.Play ||
+              this.timer.crash ||
+              "bounce" in this.dist
+            ))
               switch (e) {
                 case He.Stop:
                   this.stop();
@@ -8614,35 +8761,32 @@
               }
           }
           changeDirection(e, t = false) {
-            if (
-              this.timer.crash || "bounce" in this.dist
-            )
-              return;
+            if (this.timer.crash || "bounce" in this.dist) return;
             let s;
             switch (
-            (t || "left" !== e || "left" === this.dir
-              ? t ||
-              "right" !== e ||
-              "right" === this.dir ||
-              (e = "downright" === this.dir ? "right" : "downright")
-              : (e = "downleft" === this.dir ? "left" : "downleft"),
+              (t || "left" !== e || "left" === this.dir
+                ? t ||
+                  "right" !== e ||
+                  "right" === this.dir ||
+                  (e = "downright" === this.dir ? "right" : "downright")
+                : (e = "downleft" === this.dir ? "left" : "downleft"),
               e)
             ) {
               case "left":
                 s = -42;
-                this.speed.raw += this.speed.raw * .08;
+                this.speed.raw += this.speed.raw * 0.08;
                 break;
               case "right":
                 s = -138;
-                this.speed.raw += this.speed.raw * .08;
+                this.speed.raw += this.speed.raw * 0.08;
                 break;
               case "downleft":
                 s = -60;
-                this.speed.raw += this.speed.raw * .03;
+                this.speed.raw += this.speed.raw * 0.03;
                 break;
               case "downright":
                 s = -120;
-                this.speed.raw += this.speed.raw * .03;
+                this.speed.raw += this.speed.raw * 0.03;
                 break;
               case "down":
                 s = -90;
@@ -8650,33 +8794,33 @@
               case "stop":
                 s = 90;
             }
-            (this.dir = e),
+            ((this.dir = e),
               this.changePose(e),
-              (this.angle = (s * Math.PI) / 180);
+              (this.angle = (s * Math.PI) / 180));
           }
           changePose(e) {
-            this.swapped && (e = "stop" === e ? "crash" : "chase"),
-              (this.pose = e);
+            (this.swapped && (e = "stop" === e ? "crash" : "chase"),
+              (this.pose = e));
           }
           updateTrackers() {
             this.timer.crash &&
               ((this.timer.crash -=
                 te.sys.game.time.loop * te.sys.game.time.scale),
-                this.timer.crash < 0 &&
+              this.timer.crash < 0 &&
                 ((this.timer.crash = void 0), this.stop(), Pe.sys.reset()));
             for (const e in this.dist)
-              (this.dist[e] -= this.speed.current),
+              ((this.dist[e] -= this.speed.current),
                 this.dist[e] <= 0 &&
-                (delete this.dist[e], this.endDistTracker(e));
+                  (delete this.dist[e], this.endDistTracker(e)));
           }
           updateSpeed() {
             let e = 1;
             const t = this.speed;
-            ("air" in this.dist || "boost" in this.dist) && (e = 8),
-              this.setMinPlayerSpeed();
+            (("air" in this.dist || "boost" in this.dist) && (e = 8),
+              this.setMinPlayerSpeed());
             const s = t.accel * e * te.sys.game.time.scale;
-            (this.speed.raw = t.raw <= t.max ? t.raw += s : (t.raw -= s)),
-              (this.speed.current = t.raw * te.sys.game.time.scale);
+            ((this.speed.raw = t.raw <= t.max ? (t.raw += s) : (t.raw -= s)),
+              (this.speed.current = t.raw * te.sys.game.time.scale));
           }
           stop() {
             if ("air" in this.dist) return;
@@ -8687,7 +8831,9 @@
           down() {
             if ("air" in this.dist) {
               this.trick = (this.trick % 2) + 1;
-              this.trick === 1 ? this.changePose("air1") : this.changePose("air2");
+              this.trick === 1
+                ? this.changePose("air1")
+                : this.changePose("air2");
               Me.sys.setVibration("small");
               this.changeDirection("down");
             } else {
@@ -8695,18 +8841,18 @@
             }
           }
           slow() {
-            (this.speed.raw *= 0.7), Me.sys.setVibration("slow");
+            ((this.speed.raw *= 0.7), Me.sys.setVibration("slow"));
           }
           crash() {
             if ("immune" in this.dist) return;
             const e = te.sys.game.cheat;
-            te.sys.game.friend &&
+            (te.sys.game.friend &&
               !e.safety &&
               (this.removeFriend(),
-                ke.sys.buildCrashedFriend(
-                  this.x + 48 * (Math.random() - 0.5),
-                  this.y + -72
-                )),
+              ke.sys.buildCrashedFriend(
+                this.x + 48 * (Math.random() - 0.5),
+                this.y + -72,
+              )),
               e.lives || e.safety || (te.sys.game.lives.current -= 1),
               ue.sys.refreshDisplay(),
               te.sys.game.lives.current <= 0
@@ -8714,23 +8860,23 @@
                 : ((this.timer.crash = 0),
                   (this.dist.immune = 120),
                   this.changePose("crash"),
-                  Me.sys.setVibration("crash"));
+                  Me.sys.setVibration("crash")));
           }
           air(e) {
             this.timer.crash ||
               (this.changeDirection("down"),
-                "boost" in this.dist && (this.dist.boost += e * 3),
-                (this.dist.air = e * 3),
-                (this.trick = te.sys.rand(1, 2)),
-                (this.speed.max = this.speed.base + this.speed.airAdd * 3),
-                (this.shadow = 0),
-                this.down(),
-                Me.sys.setVibration("ramp"));
+              "boost" in this.dist && (this.dist.boost += e * 3),
+              (this.dist.air = e * 3),
+              (this.trick = te.sys.rand(1, 2)),
+              (this.speed.max = this.speed.base + this.speed.airAdd * 3),
+              (this.shadow = 0),
+              this.down(),
+              Me.sys.setVibration("ramp"));
           }
           boost(e = false) {
             // Check if boost is allowed
             if (!e && "boost" in this.dist) {
-              return; // can't boost     
+              return; // can't boost
             }
 
             // Apply boost effects
@@ -8743,7 +8889,7 @@
             new Audio("resources/sfx/boost.mp3").play();
           }
           bounce() {
-            this.spin(), (this.dist.bounce = 32);
+            (this.spin(), (this.dist.bounce = 32));
           }
           endDistTracker(e) {
             switch (e) {
@@ -8751,18 +8897,19 @@
                 const splashSfx = new Audio("resources/sfx/splash.mp3");
                 splashSfx.currentTime = 0.5;
                 splashSfx.play();
-                (this.dist.immune = 256),
+                ((this.dist.immune = 256),
                   Pe.sys.reset(),
                   "boost" in this.dist || (this.speed.max = this.speed.base),
                   this.down(),
-                  Me.sys.setVibration("slow");
+                  Me.sys.setVibration("slow"));
                 break;
               case "boost":
-                (this.speed.max = this.speed.base), Me.sys.setVibration("tiny");
+                ((this.speed.max = this.speed.base),
+                  Me.sys.setVibration("tiny"));
             }
           }
           swap() {
-            this.removeFriend(true),
+            (this.removeFriend(true),
               (this.swapped = true),
               this.changePose("chase"),
               (this.speed.base *= 3000),
@@ -8775,11 +8922,12 @@
               ke.sys.top
                 .filter((e) => "lure" === e.type)
                 .forEach((e) => {
-                  ke.sys.buildObject("foe", e.x, e.y, "chase"), (e.sleep = true);
+                  (ke.sys.buildObject("foe", e.x, e.y, "chase"),
+                    (e.sleep = true));
                 }),
               (te.sys.game.cheat.used = true),
               ue.sys.sendNotification("cheat"),
-              Me.sys.setVibration("big");
+              Me.sys.setVibration("big"));
           }
           spin() {
             const e = Math.random() > 0.5;
@@ -8795,10 +8943,10 @@
               default:
                 this.changeDirection(e ? "left" : "right", true);
             }
-            (this.speed.raw *= 0.9), Me.sys.setVibration("slow");
+            ((this.speed.raw *= 0.9), Me.sys.setVibration("slow"));
           }
           collectBoost() {
-            this.boost()
+            this.boost();
             // Me.sys.setVibration("pickup");
           }
           collectLife() {
@@ -8817,85 +8965,86 @@
             new Audio("resources/sfx/pickup.mp3").play();
           }
           collectCoin() {
-            (te.sys.game.coins += 1), Me.sys.setVibration("pickup");
+            ((te.sys.game.coins += 1), Me.sys.setVibration("pickup"));
             new Audio("resources/sfx/pickup.mp3").play();
           }
           collectFriend() {
-            (te.sys.game.friend = true),
+            ((te.sys.game.friend = true),
               be.sys.createPlayerSprite(),
               te.sys.session.settings.mode === q.Endless &&
-              ((te.sys.game.shields.current = te.sys.game.shields.max),
+                ((te.sys.game.shields.current = te.sys.game.shields.max),
                 ue.sys.refreshDisplay()),
-              Me.sys.setVibration("pickup");
+              Me.sys.setVibration("pickup"));
           }
           removeFriend(e = false) {
             !te.sys.game.friend ||
               te.sys.game.cheat.safety ||
               e ||
               ((te.sys.game.friend = false),
-                be.sys.createPlayerSprite(),
-                (te.sys.game.shields.current = 0),
-                ue.sys.refreshDisplay());
+              be.sys.createPlayerSprite(),
+              (te.sys.game.shields.current = 0),
+              ue.sys.refreshDisplay());
           }
           useShield() {
             te.sys.game.cheat.safety ||
               ((te.sys.game.shields.current -= 1),
-                ue.sys.refreshDisplay(),
-                Me.sys.setVibration("small"));
+              ue.sys.refreshDisplay(),
+              Me.sys.setVibration("small"));
           }
           lose() {
-            (te.sys.game.lives.current = 0),
+            ((te.sys.game.lives.current = 0),
               (te.sys.game.shields.current = 0),
               (this.dist.immune = 0),
               this.stopPlayerSpeed(),
               this.changePose("crash"),
               (this.boostFx = []),
               Ze.sys.changeGameState(Q.Over),
-              Me.sys.setVibration("big");
+              Me.sys.setVibration("big"));
           }
           finishline() {
-            (te.sys.game.finish = true),
+            ((te.sys.game.finish = true),
               this.changePose("stop"),
               (this.boostFx = []),
               Ze.sys.changeGameState(Q.Over),
-              Me.sys.setVibration("big");
+              Me.sys.setVibration("big"));
           }
           passGate(e) {
-            e - 1 === this.previousGate && (te.sys.game.gates += 1),
+            (e - 1 === this.previousGate && (te.sys.game.gates += 1),
               (this.previousGate = e),
               te.sys.saveGameStats(),
               ue.sys.refreshDisplay(),
-              Me.sys.setVibration("small");
+              Me.sys.setVibration("small"));
             new Audio("resources/sfx/pass.mp3").play();
           }
           failGate(e) {
-            te.sys.game.highScore &&
-              (ue.sys.sendNotification("score"), (te.sys.game.highScore = false)),
-              this.lose();
+            (te.sys.game.highScore &&
+              (ue.sys.sendNotification("score"),
+              (te.sys.game.highScore = false)),
+              this.lose());
           }
           stopPlayerSpeed() {
-            (this.speed.current = 0),
+            ((this.speed.current = 0),
               (this.speed.raw = 0),
               (this.speed.max = 0),
               (this.speed.x = 0),
-              (this.speed.y = 0);
+              (this.speed.y = 0));
           }
           setMinPlayerSpeed() {
-            (this.speed.raw = Math.max(this.speed.raw, this.speed.min)),
-              (this.speed.max = Math.max(this.speed.max, this.speed.base));
+            ((this.speed.raw = Math.max(this.speed.raw, this.speed.min)),
+              (this.speed.max = Math.max(this.speed.max, this.speed.base)));
           }
           updateBoostFx() {
             if (
               (this.boostFx.length > 0 &&
                 (this.boostFx.forEach((e) => {
-                  (e.start.x -= 0.8 * this.speed.x),
+                  ((e.start.x -= 0.8 * this.speed.x),
                     (e.end.x -= this.speed.x),
                     (e.start.y -= 0.8 * this.speed.y),
                     (e.end.y -= this.speed.y),
-                    (e.time += te.sys.game.time.loop);
+                    (e.time += te.sys.game.time.loop));
                 }),
-                  (this.boostFx = this.boostFx.filter((e) => e.time < 0.5))),
-                "boost" in this.dist && this.speed.current > 0)
+                (this.boostFx = this.boostFx.filter((e) => e.time < 0.5))),
+              "boost" in this.dist && this.speed.current > 0)
             ) {
               const e = 16 - 32 * Math.random();
               this.boostFx.push({
@@ -8925,28 +9074,28 @@
                 n = 1;
               const r = this.skins.zoom[o];
               let l = this.skins.poses[i];
-              (o !== s - 1 && o !== s + 1) || (t = 96), (a.globalAlpha = r);
+              ((o !== s - 1 && o !== s + 1) || (t = 96), (a.globalAlpha = r));
               const h = be.sys.characterList[this.skins.render[o]];
               if (o !== s)
-                (l = "down"),
+                ((l = "down"),
                   de.sys.drawPlayerMenu(
                     h,
                     l,
                     te.sys.session.x + t * (o - s),
                     te.sys.session.y,
-                    n + r
-                  );
+                    n + r,
+                  ));
               else {
                 n = this.scale;
-                te.sys.game.shields.current / te.sys.game.shields.max > 0 &&
+                (te.sys.game.shields.current / te.sys.game.shields.max > 0 &&
                   de.sys.drawShield(this.x, this.y + 16),
                   de.sys.drawPlayerSprite(
                     l,
                     e,
                     te.sys.session.x + t * (o - s),
                     te.sys.session.y,
-                    n + r
-                  );
+                    n + r,
+                  ));
               }
             }
             a.restore();
@@ -8954,7 +9103,7 @@
           draw() {
             if (
               (this.boostFx.length > 0 && de.sys.drawBoost(this.boostFx),
-                this.swapped)
+              this.swapped)
             )
               de.sys.drawLayer(
                 "foe",
@@ -8962,21 +9111,21 @@
                 this.x,
                 this.y,
                 this.time,
-                this.anim
+                this.anim,
               );
             else {
               const e = te.sys.game.time.elapsed;
-              te.sys.game.shields.current / te.sys.game.shields.max > 0 &&
+              (te.sys.game.shields.current / te.sys.game.shields.max > 0 &&
                 de.sys.drawShield(this.x, this.y + 16),
                 "air" in this.dist &&
-                (this.dist.air < 256
-                  ? (this.shadow = this.dist.air / 4)
-                  : this.shadow < 64
-                    ? (this.shadow += 3 * te.sys.game.time.scale)
-                    : (this.shadow = 64),
+                  (this.dist.air < 256
+                    ? (this.shadow = this.dist.air / 4)
+                    : this.shadow < 64
+                      ? (this.shadow += 3 * te.sys.game.time.scale)
+                      : (this.shadow = 64),
                   de.sys.drawShadow(this.x, this.y + 16, this.shadow)),
                 "immune" in this.dist &&
-                (de.sys.ctx.save(),
+                  (de.sys.ctx.save(),
                   (de.sys.ctx.globalAlpha =
                     Math.floor(4 * e) % 2 == 0 ? 0.4 : 0.7)),
                 de.sys.drawPlayerSprite(
@@ -8984,9 +9133,9 @@
                   e,
                   this.x,
                   this.y,
-                  this.scale
+                  this.scale,
                 ),
-                "immune" in this.dist && de.sys.ctx.restore();
+                "immune" in this.dist && de.sys.ctx.restore());
             }
           }
         }
@@ -8995,11 +9144,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -9008,14 +9157,14 @@
         class De {
           constructor() {
             if ((Le(this, "pressed", void 0), De.sys)) return De.sys;
-            (De.sys = this),
+            ((De.sys = this),
               window.addEventListener(
                 "keydown",
                 (e) => De.sys.onKeydown(e),
-                false
+                false,
               ),
               window.addEventListener("keyup", (e) => De.sys.onKeyup(e), false),
-              (this.pressed = {});
+              (this.pressed = {}));
           }
           onKeydown(e) {
             const t = e.key.toLowerCase();
@@ -9058,11 +9207,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -9072,32 +9221,32 @@
           constructor() {
             if (
               (_e(this, "swipeStart", void 0),
-                _e(this, "swipeDelta", void 0),
-                _e(this, "touchData", void 0),
-                _e(this, "touchPos", void 0),
-                Oe.sys)
+              _e(this, "swipeDelta", void 0),
+              _e(this, "touchData", void 0),
+              _e(this, "touchPos", void 0),
+              Oe.sys)
             )
               return Oe.sys;
-            (Oe.sys = this),
+            ((Oe.sys = this),
               window.addEventListener(
                 "touchstart",
                 (e) => Oe.sys.onTouchStart(e),
-                false
+                false,
               ),
               window.addEventListener(
                 "touchmove",
                 (e) => Oe.sys.onTouchMove(e),
-                false
+                false,
               ),
               window.addEventListener(
                 "touchend",
                 (e) => Oe.sys.onTouchEnd(e),
-                false
+                false,
               ),
-              this.reset();
+              this.reset());
           }
           reset() {
-            (this.swipeStart = 0),
+            ((this.swipeStart = 0),
               (this.swipeDelta = 400),
               (this.touchData = {
                 down: {
@@ -9108,7 +9257,7 @@
                   x: 0,
                   y: 0,
                 },
-              });
+              }));
           }
           onTouchStart(e) {
             if (
@@ -9116,7 +9265,7 @@
               (Ae.sys.changeInputMethod(ee.Touch), e.targetTouches)
             ) {
               const t = e.targetTouches[0];
-              (this.swipeStart = Date.now()),
+              ((this.swipeStart = Date.now()),
                 (this.touchPos = void 0),
                 (this.touchData = {
                   down: {
@@ -9127,7 +9276,7 @@
                     x: t.clientX,
                     y: t.clientY,
                   },
-                });
+                }));
             }
           }
           onTouchMove(e) {
@@ -9138,7 +9287,7 @@
                 x: t.clientX,
                 y: t.clientY,
               }),
-                te.sys.session.state === Q.Play &&
+              te.sys.session.state === Q.Play &&
                 Date.now() - this.swipeStart > 80)
             ) {
               const e = this.checkAngle(te.sys.session, this.touchData.move);
@@ -9154,16 +9303,16 @@
               ((this.touchPos = void 0), Math.abs(t) < 10 && Math.abs(s) < 10)
             ) {
               const e = {
-                x: te.sys.session.x,
-                y: te.sys.session.y,
-              },
+                  x: te.sys.session.x,
+                  y: te.sys.session.y,
+                },
                 t = this.checkAngle(e, this.touchData.down);
-              te.sys.session.state === Q.Menu
+              (te.sys.session.state === Q.Menu
                 ? t === He.Left || t === He.Right
                   ? Ae.sys.routeInput(t, true, false)
                   : Ae.sys.routeInput(He.Toggle)
                 : Ae.sys.routeInput(t, true, true),
-                Ae.sys.checkCheatCode(t);
+                Ae.sys.checkCheatCode(t));
             } else if (Date.now() - this.swipeStart <= this.swipeDelta) {
               let e = this.checkAngle(this.touchData.down, this.touchData.move);
               if (te.sys.session.state === Q.Menu)
@@ -9205,19 +9354,19 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
         }
         let He;
-        _e(Oe, "sys", null),
+        (_e(Oe, "sys", null),
           (function (e) {
-            (e.Settings = "settings"),
+            ((e.Settings = "settings"),
               (e.Left = "left"),
               (e.Right = "right"),
               (e.Down = "down"),
@@ -9226,31 +9375,31 @@
               (e.DownRight = "downright"),
               (e.Boost = "boost"),
               (e.Toggle = "toggle"),
-              (e.Reset = "reset");
-          })(He || (He = {}));
+              (e.Reset = "reset"));
+          })(He || (He = {})));
         class Ae {
           constructor() {
             if (
               (Re(this, "codes", void 0),
-                Re(this, "lastTime", void 0),
-                Re(this, "thisTime", void 0),
-                Re(this, "lastInput", void 0),
-                Re(this, "lastInputTime", void 0),
-                Re(this, "doubleDelta", void 0),
-                Re(this, "codesPossible", void 0),
-                Ae.sys)
+              Re(this, "lastTime", void 0),
+              Re(this, "thisTime", void 0),
+              Re(this, "lastInput", void 0),
+              Re(this, "lastInputTime", void 0),
+              Re(this, "doubleDelta", void 0),
+              Re(this, "codesPossible", void 0),
+              Ae.sys)
             )
               return Ae.sys;
-            (Ae.sys = this),
+            ((Ae.sys = this),
               new Me(),
               new De(),
               new Pe(),
               new Oe(),
               this.defineCodes(),
-              this.reset();
+              this.reset());
           }
           reset() {
-            Me.sys.reset(),
+            (Me.sys.reset(),
               Pe.sys.reset(),
               Oe.sys.reset(),
               (this.lastTime = 0),
@@ -9258,7 +9407,7 @@
               (this.lastInput = void 0),
               (this.lastInputTime = Date.now()),
               (this.doubleDelta = 300),
-              (this.codesPossible = []);
+              (this.codesPossible = []));
           }
           update() {
             Me.sys.update();
@@ -9317,16 +9466,16 @@
             let a = false;
             if (
               (s && (a = this.registerDoubleInput(e)),
-                (i !== ee.Mouse && i !== ee.Touch) || e !== He.Toggle || a)
+              (i !== ee.Mouse && i !== ee.Touch) || e !== He.Toggle || a)
             )
               if (
                 ((i !== ee.Keyboard && i !== ee.Touch) ||
-                  e !== He.Down ||
-                  t ||
-                  !a
+                e !== He.Down ||
+                t ||
+                !a
                   ? i === ee.Touch && a && (e = He.Toggle)
                   : (e = He.Boost),
-                  te.sys.session.state !== Q.Menu ||
+                te.sys.session.state !== Q.Menu ||
                   (e !== He.Left && e !== He.Right))
               )
                 switch (e) {
@@ -9356,8 +9505,8 @@
             let t = false;
             return (
               this.thisTime - this.lastTime <= this.doubleDelta &&
-              this.lastInput === e &&
-              ((t = true), (e = void 0)),
+                this.lastInput === e &&
+                ((t = true), (e = void 0)),
               (this.lastTime = this.thisTime),
               (this.lastInput = e),
               t
@@ -9367,8 +9516,8 @@
             te.sys.session.inputType === e ||
               this.lastInputTime + 100 > Date.now() ||
               ((this.lastInputTime = Date.now()),
-                (te.sys.session.inputType = e),
-                ue.sys.updateInputTypeUI());
+              (te.sys.session.inputType = e),
+              ue.sys.updateInputTypeUI());
           }
           inputToggle() {
             const e = te.sys.session.state;
@@ -9379,16 +9528,16 @@
                 : e === Q.Over && Ze.sys.changeGameState(Q.Menu);
           }
           inputSettings() {
-            te.sys.session.state === Q.Play && Ze.sys.changeGameState(Q.Pause),
-              document.dispatchEvent(new CustomEvent(lt));
+            (te.sys.session.state === Q.Play && Ze.sys.changeGameState(Q.Pause),
+              document.dispatchEvent(new CustomEvent(lt)));
           }
           checkCheatCode(e) {
             const t = te.sys.session.inputType;
             if (te.sys.session.state !== Q.Menu) return;
             const s =
               t === ee.Keyboard ? this.codes.keyboard : this.codes.directional;
-            (this.codesPossible = this.codesPossible.filter(
-              (t) => e === s[t.idx][t.pos]
+            ((this.codesPossible = this.codesPossible.filter(
+              (t) => e === s[t.idx][t.pos],
             )),
               s
                 .filter((t) => e === t[0])
@@ -9403,14 +9552,14 @@
                   let t = "code";
                   switch (e.idx) {
                     case 0:
-                      this.cheat("lives"), (t = "cheatcode");
+                      (this.cheat("lives"), (t = "cheatcode"));
 
                       break;
                     case 1:
-                      this.cheat("boosts"), (t = "cheatcode");
+                      (this.cheat("boosts"), (t = "cheatcode"));
                       break;
                     case 2:
-                      this.cheat("safety"), (t = "cheatcode");
+                      (this.cheat("safety"), (t = "cheatcode"));
                       break;
                     case 3:
                       ze.sys.changeCharacter(7, true);
@@ -9420,7 +9569,7 @@
                   }
                   ue.sys.sendNotification(t);
                 }
-              });
+              }));
           }
           cheat(e, t = true) {
             const s = te.sys.game.cheat;
@@ -9441,8 +9590,8 @@
                 case "safety":
                   ze.sys.removeFriend();
               }
-            s.lives || s.boosts || s.safety || (s.used = false),
-              ue.sys.updateIcons();
+            (s.lives || s.boosts || s.safety || (s.used = false),
+              ue.sys.updateIcons());
           }
         }
         Re(Ae, "sys", null);
@@ -9488,19 +9637,19 @@
                     ke.sys.denyGate(a.gateId),
                     (a.hit = true))
                   : "ambient" === a.type &&
-                    "hidden" === a.anim &&
-                    a.y + 32 < e.y
+                      "hidden" === a.anim &&
+                      a.y + 32 < e.y
                     ? ((a.anim = "oneshot"), (a.time = 0))
                     : "lure" === a.type &&
-                    a.hit &&
-                    a.y + 192 < e.y &&
-                    (ke.sys.buildObject("foe", a.x, a.y + 32, "chase"),
+                      a.hit &&
+                      a.y + 192 < e.y &&
+                      (ke.sys.buildObject("foe", a.x, a.y + 32, "chase"),
                       (a.sleep = true));
               else {
                 if (((a.hit = true), e.swapped))
                   return (
                     "lure" === a.type &&
-                    ke.sys.buildObject("foe", a.x, a.y, "chase"),
+                      ke.sys.buildObject("foe", a.x, a.y, "chase"),
                     void (a.sleep = true)
                   );
                 switch (a.type) {
@@ -9525,7 +9674,7 @@
                     e.spin();
                     break;
                   case "boost":
-                    e.collectBoost(), this.collectAnim(a);
+                    (e.collectBoost(), this.collectAnim(a));
                     break;
                   case "ramp":
                     s && te.sys.session.settings.mode !== q.TimeTrial
@@ -9535,45 +9684,45 @@
                         : e.air(1080);
                     break;
                   case "life":
-                    e.collectLife(), this.collectAnim(a);
+                    (e.collectLife(), this.collectAnim(a));
                     break;
                   case "coin":
-                    e.collectCoin(), this.collectAnim(a);
+                    (e.collectCoin(), this.collectAnim(a));
                     break;
                   case "friend":
-                    e.collectFriend(), this.collectAnim(a);
+                    (e.collectFriend(), this.collectAnim(a));
                     break;
                   case "gate": {
                     e.passGate(a.gateId);
                     const t = ke.sys.buildObject("ambient", e.x, e.y);
-                    (t.hit = true),
+                    ((t.hit = true),
                       this.collectAnim(t),
-                      ke.sys.confirmGate(a.gateId);
+                      ke.sys.confirmGate(a.gateId));
                     break;
                   }
                   case "finish":
                     e.finishline();
                     break;
                   case "checkpoint":
-                    ke.sys.npc.forEach((e) => {
+                    (ke.sys.npc.forEach((e) => {
                       e.crash();
                     }),
                       ke.sys.foe.forEach((e) => {
                         e.crash();
                       }),
                       te.sys.saveGameStats(),
-                      e.boost(true);
+                      e.boost(true));
                     break;
                   case "swap":
                     e.swap();
                 }
               }
-              ke.sys.npc.forEach((e) => {
+              (ke.sys.npc.forEach((e) => {
                 o(a, e);
               }),
                 ke.sys.foe.forEach((e) => {
                   o(a, e);
-                });
+                }));
             }
             const n = ke.sys.foe.length,
               r = ke.sys.npc.length;
@@ -9614,11 +9763,14 @@
                     e.x < te.sys.session.w + 64) ||
                   "gate" === e.type
                 );
-              })(e)
+              })(e),
             );
           }
           collectAnim(e) {
-            (e.pickup = true), (e.time = 0), (e.anim = "ending"), (e.fx = void 0);
+            ((e.pickup = true),
+              (e.time = 0),
+              (e.anim = "ending"),
+              (e.fx = void 0));
           }
           collision(e, t) {
             return (
@@ -9630,19 +9782,19 @@
           }
         }
         var Fe, Be, Ve;
-        (Ve = null),
+        ((Ve = null),
           (Be = "sys") in (Fe = Ne)
             ? Object.defineProperty(Fe, Be, {
-              value: Ve,
-              enumerable: true,
-              configurable: true,
-              writable: true,
-            })
-            : (Fe[Be] = Ve);
+                value: Ve,
+                enumerable: true,
+                configurable: true,
+                writable: true,
+              })
+            : (Fe[Be] = Ve));
         class Ze {
           constructor() {
             if (Ze.sys) return Ze.sys;
-            (Ze.sys = this),
+            ((Ze.sys = this),
               new te(),
               new Y(),
               new Ae(),
@@ -9655,7 +9807,7 @@
               de.sys.createBackground(),
               this.updateTheme(te.sys.session.settings.theme, false),
               this.reflowCanvas(),
-              this.changeGameState(Q.Menu);
+              this.changeGameState(Q.Menu));
           }
           gameLoop(e) {
             if ((Ae.sys.update(), te.sys.session.state !== Q.Pause))
@@ -9685,48 +9837,48 @@
               case Q.Over:
                 this.triggerOver();
             }
-            this.checkForcedColors(),
+            (this.checkForcedColors(),
               re.dispatch(
                 (function (e) {
                   return {
                     type: ae.UPDATE_GAME_STATE,
                     gameState: e,
                   };
-                })(e)
-              );
+                })(e),
+              ));
           }
           triggerMenu() {
-            ue.sys.hideNotification(),
+            (ue.sys.hideNotification(),
               te.sys.saveGameStats(),
               te.sys.resetGameData(),
               de.sys.defineCanvas(),
               de.sys.clearCanvas(),
               ke.sys.reset(),
               ue.sys.showMenuScreen(),
-              Ae.sys.reset();
+              Ae.sys.reset());
           }
           triggerPlay(e) {
-            e === Q.Menu && this.triggerStart(),
+            (e === Q.Menu && this.triggerStart(),
               ue.sys.hideOverlayUI(),
-              ue.sys.refreshDisplay();
+              ue.sys.refreshDisplay());
           }
           triggerStart() {
-            (te.sys.game.time.elapsed = 0),
+            ((te.sys.game.time.elapsed = 0),
               ze.sys.unlockForNewGame(),
               ke.sys.buildStartScene(),
-              ue.sys.hideNotification();
+              ue.sys.hideNotification());
           }
           triggerPause() {
             ue.sys.showPauseScreen();
           }
           triggerOver() {
-            ke.sys.all.forEach((e) => {
+            (ke.sys.all.forEach((e) => {
               "ending" === e.anim && (e.sleep = true);
             }),
               ue.sys.showOverScreen(),
               (te.sys.session.settings.mode !== q.TimeTrial ||
-                te.sys.game.finish) &&
-              te.sys.saveGameStats();
+                  te.sys.game.finish) &&
+                  te.sys.saveGameStats());
             const e = te.sys.game.highScore ? "score" : "share";
             ue.sys.sendNotification(e, 1e4);
           }
@@ -9734,7 +9886,10 @@
             this.render();
           }
           updatePlay() {
-            Ne.sys.update(),
+            if (te.sys.session.settings.mode === q.Custom && te.sys.session.customMapSpeed && ke.sys.all.some(o => o.type === 'finish') && te.sys.session.settings.gameSpeed !== te.sys.session.customMapSpeed) {
+              te.sys.session.settings.gameSpeed = te.sys.session.customMapSpeed;
+            }
+            (Ne.sys.update(),
               ke.sys.update(),
               ke.sys.all.forEach((e) => {
                 e.update();
@@ -9746,26 +9901,26 @@
               ue.sys.updateSpeed(ze.sys.speed.raw),
               te.sys.updateDistances(ze.sys.speed.x, ze.sys.speed.y),
               de.sys.updateBackground(0, 0, ze.sys.speed),
-              this.render();
+              this.render());
           }
           updateOver() {
             const e = ke.sys.endingFoe;
             e && e.hit && "paused" !== e.anim && (e.update(), this.render());
           }
           updateMode() {
-            ue.sys.updateGameModeUI(), ue.sys.sendNotification("mode");
+            (ue.sys.updateGameModeUI(), ue.sys.sendNotification("mode"));
           }
           updateTheme(e, t = false) {
-            pe.sys.loadNewTheme(e),
+            (pe.sys.loadNewTheme(e),
               (async () => {
-                await pe.sys.objectsTemp.decode(),
+                (await pe.sys.objectsTemp.decode(),
                   await pe.sys.playerTemp.decode(),
                   await pe.sys.bgTemp.decode(),
                   pe.sys.setNewTheme(e),
                   ue.sys.updateIcons(),
                   ue.sys.updateGameTitleUI(),
-                  t && ue.sys.sendNotification("theme");
-              })();
+                  t && ue.sys.sendNotification("theme"));
+              })());
           }
           reflowCanvas() {
             te.sys.session.state === Q.Play && this.changeGameState(Q.Pause);
@@ -9774,7 +9929,7 @@
             de.sys.defineCanvas();
             const s = te.sys.session.x - e,
               i = te.sys.session.y - t;
-            ke.sys.calcClusterSlots(),
+            (ke.sys.calcClusterSlots(),
               ke.sys.all.forEach((e) => {
                 e.shift(s, i);
               }),
@@ -9782,7 +9937,7 @@
                 x: 0,
                 y: 0,
               }),
-              this.render();
+              this.render());
           }
           checkForcedColors() {
             const e = window.matchMedia("(forced-colors:active)");
@@ -9798,25 +9953,25 @@
                 e.y < te.sys.session.h + 96
               );
             });
-            e.forEach((e) => {
+            (e.forEach((e) => {
               e.draw();
             }),
               te.sys.session.settings.hitbox &&
-              e.forEach((e) => {
-                de.sys.drawHitbox(e.type, e.hitbox);
-              }),
+                e.forEach((e) => {
+                  de.sys.drawHitbox(e.type, e.hitbox);
+                }),
               te.sys.session.settings.mode !== q.Endless &&
-              de.sys.drawBoundaries();
+                de.sys.drawBoundaries());
           }
         }
         !(function (e, t, s) {
           t in e
             ? Object.defineProperty(e, t, {
-              value: s,
-              enumerable: true,
-              configurable: true,
-              writable: true,
-            })
+                value: s,
+                enumerable: true,
+                configurable: true,
+                writable: true,
+              })
             : (e[t] = s);
         })(Ze, "sys", null);
         var je = s(325),
@@ -9834,7 +9989,7 @@
             },
             a.createElement("path", {
               d: "M1783 384q30 0 55 12t43 31 28 46 11 55v864q0 29-10 55t-29 45-43 32-55 12H137q-30 0-55-12t-43-31-28-46-11-55V528q0-28 10-54t29-46 43-32 55-12h1646zm9 144q0-11-9-16H137q-9 5-9 16v864q0 11 9 16h1646q9-5 9-16V528zM384 768H256V640h128v128zM256 896h256v128H256V896zm1152 0h256v128h-256V896zm0 256h256v128h-256v-128zm-1152 0h256v128H256v-128zm384 0h640v128H640v-128zm0-384H512V640h128v128zm0 128h128v128H640V896zm256 0h128v128H896V896zm256 0h128v128h-128V896zM896 768H768V640h128v128zm256 0h-128V640h128v128zm256 0h-128V640h128v128zm128-128h128v128h-128V640z",
-            })
+            }),
           );
         }
 
@@ -9850,7 +10005,7 @@
             },
             a.createElement("path", {
               d: "M1184 0q100 0 187 37t153 103 102 152 38 188v864q0 97-25 187t-71 168-110 143-142 110-169 71-187 25q-97 0-187-25t-168-71-143-110-110-142-71-169-25-187V480q0-100 37-187t103-153T548 38 736 0h448zm352 480q0-73-27-137t-76-112-112-75-137-28h-160v640H896V128H736q-73 0-137 27t-112 76-75 112-28 137v864q0 119 45 224t124 183 183 123 224 46q119 0 224-45t183-124 123-183 46-224V480z",
-            })
+            }),
           );
         }
 
@@ -9866,7 +10021,7 @@
             },
             a.createElement("path", {
               d: "M1600 896q40 0 75 15t61 41 41 61 15 75v384q0 119-45 224t-124 183-183 123-224 46q-144 0-268-55t-226-156l-472-472q-28-28-43-65t-15-76q0-42 16-78t43-64 63-42 78-16q82 0 141 59l107 106V853q-59-28-106-70t-80-95-52-114-18-126q0-93 35-174t96-143 142-96T832 0q93 0 174 35t143 96 96 142 35 175q0 93-37 178t-105 149q35 9 63 30t49 52q45-25 94-25 50 0 93 23t69 66q45-25 94-25zM512 448q0 75 34 143t94 113V448q0-40 15-75t41-61 61-41 75-15q40 0 75 15t61 41 41 61 15 75v256q60-45 94-113t34-143q0-66-25-124t-69-101-102-69-124-26q-66 0-124 25t-102 69-69 102-25 124zm1152 640q0-26-19-45t-45-19q-34 0-47 19t-16 47-1 62 0 61-16 48-48 19q-37 0-50-23t-16-60 2-77 2-77-15-59-51-24q-34 0-47 19t-16 47-1 62 0 61-16 48-48 19q-37 0-50-23t-16-60 2-77 2-77-15-59-51-24q-34 0-47 19t-16 47-1 62 0 61-16 48-48 19q-26 0-45-19t-19-45V448q0-26-19-45t-45-19q-26 0-45 19t-19 45v787q0 23-8 42t-23 35-35 23-42 9q-22 0-42-8t-37-24l-139-139q-21-21-50-21t-50 21-22 51q0 29 21 50l472 473q84 84 184 128t219 45q93 0 174-35t142-96 96-142 36-175v-384z",
-            })
+            }),
           );
         }
 
@@ -9882,7 +10037,7 @@
             },
             a.createElement("path", {
               d: "M1728 480q17 14 31 31t26 38q35 68 64 139t59 142q37 92 70 186t52 193q8 44 13 88t5 89q0 59-13 115t-45 107q-15 22-37 44t-48 39-56 28-57 11q-31 0-69-27t-77-64-71-76-54-62q-22-25-46-55t-52-49l-24-17q-20-14-42-21t-46-10-48-3-47-1H785q-24 0-47 4t-46 10-43 21l-24 17q-27 20-51 49t-47 55q-21 23-54 62t-71 76-76 64-70 27q-28 0-57-11t-55-28-49-39-37-44q-32-51-45-107T0 1386q0-45 5-89t13-88q8-46 23-100t36-114 43-120 48-119 49-110 46-96q11-20 25-37t32-33v-25q0-12 2-22t9-20 20-18q11-7 35-15t52-17 54-15 40-10q38-8 77-12t77-4q15 0 33 1t33 9h1q23 12 45 25t45 26h362q23-13 40-24t34-19 36-13 47-5q38 0 77 4t77 12q14 3 40 9t53 15 52 17 36 16q25 17 28 37t3 48zm69 1120q36-10 60-32t38-51 19-63 6-67q0-39-4-78t-12-78q-20-106-58-208t-80-202q-23-54-45-108t-50-106q-8-15-20-23t-23-18-20-20-8-32v-20q-57-20-115-32t-119-12h-11q-6 0-11 1-38 22-57 34t-37 18-38 7-61 1H897q-40 0-61-1t-38-7-37-18-57-34q-5-1-11-1t-11 0q-60 0-118 12t-116 32q0 28-5 44t-30 33q-11 6-20 15t-16 21q-28 51-50 105t-45 109q-41 99-79 201t-59 209q-8 38-12 77t-4 79q0 33 5 66t20 63 37 51 60 33q15-9 40-32t52-52 51-56 38-44q10-11 26-30t35-38 35-36 31-25q5-3 9-6t9-6q28-21 59-32t63-17 66-7 68-2h384q34 0 67 1t66 7 64 17 59 33q5 3 9 6t9 6q13 8 30 24t36 36 34 39 27 30q15 17 38 44t49 54 51 51 42 35zm-773-960q26 0 45 19t19 45q0 26-19 45t-45 19q-26 0-45-19t-19-45q0-26 19-45t45-19z",
-            })
+            }),
           );
         }
 
@@ -9903,11 +10058,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -9918,7 +10073,7 @@
         }
         class Je extends O.Z {
           constructor(...e) {
-            super(...e),
+            (super(...e),
               Xe(this, "handledProps", {
                 managedClasses: void 0,
               }),
@@ -9930,7 +10085,7 @@
                   ["mouse", a.createRef()],
                   ["touch", a.createRef()],
                   ["controller", a.createRef()],
-                ])
+                ]),
               ),
               Xe(this, "state", {
                 selectedInput: "keyboard",
@@ -9948,10 +10103,10 @@
                     a.createElement(
                       "strong",
                       null,
-                      Z.pz.getString("endlessModeTitleInline")
+                      Z.pz.getString("endlessModeTitleInline"),
                     ),
                     " ",
-                    Z.pz.getString("howToPlayEndless")
+                    Z.pz.getString("howToPlayEndless"),
                   ),
                   a.createElement(
                     x.nv,
@@ -9962,10 +10117,10 @@
                     a.createElement(
                       "strong",
                       null,
-                      Z.pz.getString("timetrialModeTitleInline")
+                      Z.pz.getString("timetrialModeTitleInline"),
                     ),
                     " ",
-                    Z.pz.getString("howToPlayTimeTrial")
+                    Z.pz.getString("howToPlayTimeTrial"),
                   ),
                   a.createElement(
                     x.nv,
@@ -9976,13 +10131,13 @@
                     a.createElement(
                       "strong",
                       null,
-                      Z.pz.getString("zigzagModeTitleInline")
+                      Z.pz.getString("zigzagModeTitleInline"),
                     ),
                     " ",
-                    Z.pz.getString("howToPlayZigZag")
+                    Z.pz.getString("howToPlayZigZag"),
                   ),
-                  this.renderInputSection()
-                )
+                  this.renderInputSection(),
+                ),
               ),
               Xe(this, "onInputIconKeydown", (e) => {
                 let t = this.state.selectedInput;
@@ -10022,11 +10177,11 @@
                       return;
                   }
                 }
-                e.stopPropagation(),
+                (e.stopPropagation(),
                   this.setState({
                     selectedInput: t,
-                  });
-              });
+                  }));
+              }));
           }
           render() {
             return a.createElement(
@@ -10034,7 +10189,7 @@
               $e({}, this.unhandledProps(), {
                 onKeyDown: Ye,
                 content: this.renderHowToPlayContent,
-              })
+              }),
             );
           }
           componentDidUpdate(e, t) {
@@ -10051,7 +10206,7 @@
               "div",
               null,
               this.renderInputIcons(),
-              this.getInputDescription(this.state.selectedInput)
+              this.getInputDescription(this.state.selectedInput),
             );
           }
           getInputDescription(e) {
@@ -10061,25 +10216,25 @@
             let o, n, r;
             switch (e) {
               case "touch":
-                (o = "howToPlayTouchMovement"),
+                ((o = "howToPlayTouchMovement"),
                   (n = "howToPlayTouchBoost"),
-                  (r = "howToPlayTouchRefresh");
+                  (r = "howToPlayTouchRefresh"));
                 break;
               case "mouse":
-                (o = "howToPlayMouseMovement"),
+                ((o = "howToPlayMouseMovement"),
                   (n = "howToPlayMouseBoost"),
-                  (r = "howToPlayMouseRefresh");
+                  (r = "howToPlayMouseRefresh"));
                 break;
               case "controller":
-                (o = "howToPlayControllerMovement"),
+                ((o = "howToPlayControllerMovement"),
                   (n = "howToPlayControllerBoost"),
-                  (r = "howToPlayControllerRefresh");
+                  (r = "howToPlayControllerRefresh"));
                 break;
               default:
               case "keyboard":
-                (o = "howToPlayKeyboardMovement"),
+                ((o = "howToPlayKeyboardMovement"),
                   (n = "howToPlayKeyboardBoost"),
-                  (r = "howToPlayKeyboardRefresh");
+                  (r = "howToPlayKeyboardRefresh"));
             }
             return a.createElement(
               "ul",
@@ -10099,29 +10254,29 @@
                     className: s,
                   },
                   ((l = t),
-                    a.createElement(
-                      "svg",
-                      {
-                        width: 20,
-                        height: 20,
-                        viewBox: "0 0 20 20",
-                        className: l,
-                      },
-                      a.createElement("path", {
-                        d: "M7.15 4.35c.2.2.5.2.7 0L9.5 2.71V6.5a.5.5 0 001 0V2.7l1.65 1.65a.5.5 0 00.7-.7l-2.5-2.5a.5.5 0 00-.7 0l-2.5 2.5a.5.5 0 000 .7z",
-                      }),
-                      a.createElement("path", {
-                        d: "M4.35 7.85a.5.5 0 10-.7-.7l-2.5 2.5a.5.5 0 000 .7l2.5 2.5a.5.5 0 00.7-.7L2.71 10.5H6.5a.5.5 0 000-1H2.7l1.65-1.65z",
-                      }),
-                      a.createElement("path", {
-                        d: "M15.65 7.85a.5.5 0 01.7-.7l2.5 2.5c.2.2.2.5 0 .7l-2.5 2.5a.5.5 0 01-.7-.7l1.64-1.65H13.5a.5.5 0 010-1h3.8l-1.65-1.65z",
-                      }),
-                      a.createElement("path", {
-                        d: "M7.85 15.65a.5.5 0 00-.7.7l2.5 2.5c.2.2.5.2.7 0l2.5-2.5a.5.5 0 00-.7-.7l-1.65 1.64V13.5a.5.5 0 00-1 0v3.8l-1.65-1.65z",
-                      })
-                    ))
+                  a.createElement(
+                    "svg",
+                    {
+                      width: 20,
+                      height: 20,
+                      viewBox: "0 0 20 20",
+                      className: l,
+                    },
+                    a.createElement("path", {
+                      d: "M7.15 4.35c.2.2.5.2.7 0L9.5 2.71V6.5a.5.5 0 001 0V2.7l1.65 1.65a.5.5 0 00.7-.7l-2.5-2.5a.5.5 0 00-.7 0l-2.5 2.5a.5.5 0 000 .7z",
+                    }),
+                    a.createElement("path", {
+                      d: "M4.35 7.85a.5.5 0 10-.7-.7l-2.5 2.5a.5.5 0 000 .7l2.5 2.5a.5.5 0 00.7-.7L2.71 10.5H6.5a.5.5 0 000-1H2.7l1.65-1.65z",
+                    }),
+                    a.createElement("path", {
+                      d: "M15.65 7.85a.5.5 0 01.7-.7l2.5 2.5c.2.2.2.5 0 .7l-2.5 2.5a.5.5 0 01-.7-.7l1.64-1.65H13.5a.5.5 0 010-1h3.8l-1.65-1.65z",
+                    }),
+                    a.createElement("path", {
+                      d: "M7.85 15.65a.5.5 0 00-.7.7l2.5 2.5c.2.2.5.2.7 0l2.5-2.5a.5.5 0 00-.7-.7l-1.65 1.64V13.5a.5.5 0 00-1 0v3.8l-1.65-1.65z",
+                    }),
+                  )),
                 ),
-                Z.pz.getString(o)
+                Z.pz.getString(o),
               ),
               a.createElement(
                 "li",
@@ -10146,11 +10301,11 @@
                       },
                       a.createElement("path", {
                         d: "M9.28568 2.52142C9.38509 2.21078 9.67385 2 10 2H18.75C18.998 2 19.23 2.12264 19.3697 2.32761C19.5094 2.53258 19.5388 2.79337 19.4481 3.02424L17.1004 8.99999H22.25C22.5476 8.99999 22.8171 9.17598 22.9367 9.44849C23.0564 9.72101 23.0035 10.0385 22.8021 10.2576L8.55213 25.7576C8.32001 26.0101 7.94619 26.0729 7.64426 25.9102C7.34233 25.7476 7.18921 25.4008 7.2724 25.0681L9.53942 16H6C5.76052 16 5.53543 15.8856 5.39423 15.6922C5.25303 15.4987 5.2127 15.2495 5.28569 15.0214L9.28568 2.52142Z",
-                      })
+                      }),
                     );
-                  })(t)
+                  })(t),
                 ),
-                Z.pz.getString(n)
+                Z.pz.getString(n),
               ),
               a.createElement(
                 "li",
@@ -10174,12 +10329,12 @@
                       },
                       a.createElement("path", {
                         d: "M3.07 9.05a7 7 0 0112.55-3.22l.13.17H12.5a.5.5 0 100 1h4a.5.5 0 00.5-.5v-4a.5.5 0 00-1 0v2.2a8 8 0 101.99 4.77.5.5 0 00-1 .08 7 7 0 11-13.92-.5z",
-                      })
+                      }),
                     );
-                  })(t)
+                  })(t),
                 ),
-                Z.pz.getString(r)
-              )
+                Z.pz.getString(r),
+              ),
             );
             var l;
           }
@@ -10196,7 +10351,7 @@
               let o = this.props.managedClasses.howToPlayModal_inputButton;
               return (
                 i &&
-                (o += ` ${this.props.managedClasses.howToPlayModal_inputButton__selected}`),
+                  (o += ` ${this.props.managedClasses.howToPlayModal_inputButton__selected}`),
                 a.createElement(
                   k.XC,
                   {
@@ -10212,7 +10367,7 @@
                     "aria-checked": i,
                     tabIndex: i ? 0 : -1,
                   },
-                  t("")
+                  t(""),
                 )
               );
             });
@@ -10223,50 +10378,50 @@
                   this.props.managedClasses.howToPlayModal_inputButtonGroup,
                 role: "radiogroup",
               },
-              e
+              e,
             );
           }
         }
         var Qe = s(53363),
           et = s(58934);
         const tt = {
-          howToPlayModal: {},
-          howToPlayModal_bulletedList: {
-            listStyle: "none",
-            color: p.CH,
+            howToPlayModal: {},
+            howToPlayModal_bulletedList: {
+              listStyle: "none",
+              color: p.CH,
+            },
+            howToPlayModal_listItem: {
+              ...(0, Qe.Sh)("t7"),
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "0.25em",
+            },
+            howToPlayModal_icon: {
+              color: p.CH,
+              fill: "currentColor",
+              padding: "4px",
+              height: "16px",
+              width: "16px",
+            },
+            howToPlayModal_iconContainer: {
+              marginInlineEnd: "12px",
+              display: "inline-block",
+            },
+            howToPlayModal_inputButton: {},
+            howToPlayModal_inputButton__selected: {
+              backgroundColor: et.Ob,
+            },
+            howToPlayModal_inputButtonGroup: {
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "12px",
+              marginBottom: "8px",
+            },
+            howToPlayModal_paragraph: {
+              marginBottom: "0.5em",
+            },
           },
-          howToPlayModal_listItem: {
-            ...(0, Qe.Sh)("t7"),
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "0.25em",
-          },
-          howToPlayModal_icon: {
-            color: p.CH,
-            fill: "currentColor",
-            padding: "4px",
-            height: "16px",
-            width: "16px",
-          },
-          howToPlayModal_iconContainer: {
-            marginInlineEnd: "12px",
-            display: "inline-block",
-          },
-          howToPlayModal_inputButton: {},
-          howToPlayModal_inputButton__selected: {
-            backgroundColor: et.Ob,
-          },
-          howToPlayModal_inputButtonGroup: {
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: "12px",
-            marginBottom: "8px",
-          },
-          howToPlayModal_paragraph: {
-            marginBottom: "0.5em",
-          },
-        },
           st = (0, c.ZP)(tt)(Je);
 
         function it() {
@@ -10286,11 +10441,11 @@
           return (
             t in e
               ? Object.defineProperty(e, t, {
-                value: s,
-                enumerable: true,
-                configurable: true,
-                writable: true,
-              })
+                  value: s,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                })
               : (e[t] = s),
             e
           );
@@ -10307,7 +10462,7 @@
           lt = "toggleSettingsMenu";
         class ht extends O.Z {
           constructor(e) {
-            super(e),
+            (super(e),
               at(this, "handledProps", {
                 setModal: void 0,
                 dispatch: void 0,
@@ -10324,77 +10479,77 @@
               at(this, "buttonRef", a.createRef()),
               at(this, "onHighVisiblityModeChange", () => {
                 const e = !this.props.highVisibilityMode;
-                he.saveHighVisibilityMode(e),
+                (he.saveHighVisibilityMode(e),
                   this.props.dispatch(
                     oe({
                       ...re.getState(),
                       highVisibilityMode: e,
-                    })
+                    }),
                   ),
                   (te.sys.session.settings.hitbox = e),
-                  Ze.sys.render();
+                  Ze.sys.render());
               }),
               at(this, "onReducedSpeedModeChange", () => {
                 const e = this.props.gameSpeed === se ? 0.5 : se;
-                he.saveReducedSpeedMode(e !== se),
+                (he.saveReducedSpeedMode(e !== se),
                   this.props.dispatch(
                     oe({
                       ...re.getState(),
                       gameSpeed: e,
-                    })
-                  );
+                    }),
+                  ));
               }),
               at(this, "onGameModeChange", (e) => {
-                this.props.dispatch(
+                (this.props.dispatch(
                   oe({
                     ...re.getState(),
                     mode: e,
-                  })
+                  }),
                 ),
                   Ze.sys.changeGameState(Q.Menu),
                   Ze.sys.updateMode(),
-                  he.saveGameMode(e);
+                  he.saveGameMode(e));
               }),
               at(this, "onGameThemeChange", (newTheme) => {
-                this.props.dispatch(
+                (this.props.dispatch(
                   oe({
                     ...re.getState(),
                     theme: newTheme,
-                  })
+                  }),
                 ),
                   Ze.sys.updateTheme(newTheme),
-                  he.saveGameTheme(newTheme);
+                  he.saveGameTheme(newTheme));
               }),
               at(this, "onNewGameClick", () => {
                 Ze.sys.changeGameState(Q.Menu);
               }),
               at(this, "copyShareLinkToClipboard", () => {
-                $(Z.pz.getString("shareLink")),
+                ($(Z.pz.getString("shareLink")),
                   this.setState({
                     shareLinkCopied: true,
-                  });
+                  }));
               }),
               at(this, "onHamburgerMenuClick", (e) => {
-                "function" == typeof this.props.onClick &&
+                ("function" == typeof this.props.onClick &&
                   this.props.onClick(e),
-                  this.toggleSettingsMenu();
+                  this.toggleSettingsMenu());
               }),
               at(this, "toggleSettingsMenu", () => {
-                this.state.menuOpen ||
+                (this.state.menuOpen ||
                   this.props.gameState !== Q.Play ||
                   Ze.sys.changeGameState(Q.Pause),
                   this.setState({
                     menuOpen: !this.state.menuOpen,
                     shareLinkCopied: false,
                   }),
-                  (te.sys.session.flyoutActive = !te.sys.session.flyoutActive);
+                  (te.sys.session.flyoutActive = !te.sys.session.flyoutActive));
               }),
               at(this, "dismissMenu", () => {
-                this.setState({
+                (this.setState({
                   menuOpen: false,
                   shareLinkCopied: false,
                 }),
-                  (te.sys.session.flyoutActive = false);
+                  (te.sys.session.flyoutActive = false));
               }),
               at(this, "closeModal", () => {
                 this.props.setModal(null);
@@ -10408,7 +10563,7 @@
                     acceptMessage: Z.pz.getString("close"),
                     dismiss: this.closeModal,
                     closeButtonToolTip: Z.pz.getString("close"),
-                  })
+                  }),
                 );
               }),
               at(this, "openGameCreditsModal", () => {
@@ -10421,7 +10576,7 @@
                     dismiss: this.closeModal,
                     closeButtonToolTip: Z.pz.getString("close"),
                     content: this.getGameCreditsModalBody,
-                  })
+                  }),
                 );
               }),
               at(this, "getGameCreditsModalBody", () =>
@@ -10431,7 +10586,7 @@
                   a.createElement(
                     x.nv,
                     null,
-                    "Parker Young, Scott Porterfield, Patrick Evan Little, Connor Smith, William Devereux, Adina Shanholtz"
+                    "Parker Young, Scott Porterfield, Patrick Evan Little, Connor Smith, William Devereux, Adina Shanholtz",
                   ),
                   a.createElement(
                     S.X6,
@@ -10442,12 +10597,12 @@
                       size: C.Gm._7,
                       tag: C.lb.h3,
                     },
-                    Z.pz.getString("specialThanks")
+                    Z.pz.getString("specialThanks"),
                   ),
                   a.createElement(
                     x.nv,
                     null,
-                    "Jonathan Merrin, Charles Duval, Addison Kaufmann, Rachel Weil, Joseph Oak, Amanda Velasco Gallardo, Ramya Challa, Chris Pirih"
+                    "Jonathan Merrin, Charles Duval, Addison Kaufmann, Rachel Weil, Joseph Oak, Amanda Velasco Gallardo, Ramya Challa, Chris Pirih",
                   ),
                   a.createElement(
                     S.X6,
@@ -10458,14 +10613,10 @@
                       size: C.Gm._7,
                       tag: C.lb.h3,
                     },
-                    Z.pz.getString("modder")
+                    Z.pz.getString("modder"),
                   ),
-                  a.createElement(
-                    x.nv,
-                    null,
-                    "DarkDeath2796"
-                  )
-                )
+                  a.createElement(x.nv, null, "DarkDeath2796"),
+                ),
               ),
               at(this, "confirmResetStats", () => {
                 this.props.setModal(
@@ -10478,26 +10629,35 @@
                     handleConfirm: this.resetStats,
                     handleReject: this.closeModal,
                     onClick: ot,
-                  })
+                  }),
                 );
               }),
               at(this, "resetStats", () => {
-                this.props.dispatch(ne()),
+                (this.props.dispatch(ne()),
                   he.resetAllStats(),
                   ue.sys.refreshDisplay(),
-                  this.closeModal();
+                  this.closeModal());
                 location.reload(); // reload after stats are reset so that stale stats are not displayed
               }),
               (this.state = {
                 menuOpen: false,
                 shareLinkCopied: false,
-              });
+              }));
           }
           componentDidMount() {
             document.addEventListener(lt, this.toggleSettingsMenu);
+            const mapData = localStorage.getItem("customMapData");
+            if (mapData && this.mapTextArea) {
+              this.mapTextArea.value = mapData;
+            }
           }
           componentWillUnmount() {
             document.removeEventListener(lt, this.toggleSettingsMenu);
+          }
+          onMapDataChange() {
+            if (this.mapTextArea) {
+              localStorage.setItem("customMapData", this.mapTextArea.value);
+            }
           }
           render() {
             return a.createElement(
@@ -10521,29 +10681,29 @@
                       ref: this.buttonRef,
                       onClick: this.onHamburgerMenuClick,
                       className: (0, R.A)(
-                        this.props.managedClasses.settingsHamburgerMenu
+                        this.props.managedClasses.settingsHamburgerMenu,
                       ),
                     }),
                     ((e =
                       this.props.managedClasses
                         .settingsHamburgerMenu_settingsButton),
-                      a.createElement(
-                        "svg",
-                        {
-                          width: 24,
-                          height: 24,
-                          viewBox: "0 0 24 24",
-                          className: e,
-                          xmlns: "http://www.w3.org/2000/svg",
-                        },
-                        a.createElement("path", {
-                          d: "M12.0124 2.25C12.7464 2.25846 13.4775 2.34326 14.1939 2.50304C14.5067 2.57279 14.7406 2.83351 14.7761 3.15196L14.9463 4.67881C15.0233 5.37986 15.6152 5.91084 16.3209 5.91158C16.5105 5.91188 16.6982 5.87238 16.8734 5.79483L18.2741 5.17956C18.5654 5.05159 18.9057 5.12136 19.1232 5.35362C20.1354 6.43464 20.8892 7.73115 21.3279 9.14558C21.4225 9.45058 21.3137 9.78203 21.0566 9.9715L19.8151 10.8866C19.461 11.1468 19.2518 11.56 19.2518 11.9995C19.2518 12.4389 19.461 12.8521 19.8159 13.1129L21.0585 14.0283C21.3156 14.2177 21.4246 14.5492 21.3299 14.8543C20.8914 16.2685 20.138 17.5649 19.1264 18.6461C18.9091 18.8783 18.569 18.9483 18.2777 18.8206L16.8714 18.2045C16.4691 18.0284 16.007 18.0542 15.6268 18.274C15.2466 18.4937 14.9935 18.8812 14.9452 19.3177L14.7761 20.8444C14.7413 21.1592 14.5124 21.4182 14.2043 21.4915C12.7558 21.8361 11.2467 21.8361 9.79828 21.4915C9.49015 21.4182 9.26129 21.1592 9.22643 20.8444L9.0576 19.32C9.00802 18.8843 8.75459 18.498 8.37467 18.279C7.99475 18.06 7.53345 18.0343 7.13244 18.2094L5.72582 18.8256C5.43446 18.9533 5.09428 18.8833 4.87703 18.6509C3.86487 17.5685 3.11144 16.2705 2.67344 14.8548C2.57911 14.5499 2.68811 14.2186 2.94509 14.0293L4.18842 13.1133C4.54256 12.8531 4.75172 12.4399 4.75172 12.0005C4.75172 11.561 4.54256 11.1478 4.18796 10.8873L2.94541 9.97285C2.68804 9.78345 2.57894 9.45178 2.67361 9.14658C3.11236 7.73215 3.86619 6.43564 4.87837 5.35462C5.09584 5.12236 5.43618 5.05259 5.72749 5.18056L7.12786 5.79572C7.53081 5.97256 7.99404 5.94585 8.37601 5.72269C8.75633 5.50209 9.00953 5.11422 9.05841 4.67764L9.22849 3.15196C9.26401 2.83335 9.49811 2.57254 9.81105 2.50294C10.5283 2.34342 11.2602 2.25865 12.0124 2.25ZM11.9999 8.99995C10.3431 8.99995 8.99994 10.3431 8.99994 12C8.99994 13.6568 10.3431 15 11.9999 15C13.6568 15 14.9999 13.6568 14.9999 12C14.9999 10.3431 13.6568 8.99995 11.9999 8.99995Z",
-                        })
-                      ))
-                  )
-                )
+                    a.createElement(
+                      "svg",
+                      {
+                        width: 24,
+                        height: 24,
+                        viewBox: "0 0 24 24",
+                        className: e,
+                        xmlns: "http://www.w3.org/2000/svg",
+                      },
+                      a.createElement("path", {
+                        d: "M12.0124 2.25C12.7464 2.25846 13.4775 2.34326 14.1939 2.50304C14.5067 2.57279 14.7406 2.83351 14.7761 3.15196L14.9463 4.67881C15.0233 5.37986 15.6152 5.91084 16.3209 5.91158C16.5105 5.91188 16.6982 5.87238 16.8734 5.79483L18.2741 5.17956C18.5654 5.05159 18.9057 5.12136 19.1232 5.35362C20.1354 6.43464 20.8892 7.73115 21.3279 9.14558C21.4225 9.45058 21.3137 9.78203 21.0566 9.9715L19.8151 10.8866C19.461 11.1468 19.2518 11.56 19.2518 11.9995C19.2518 12.4389 19.461 12.8521 19.8159 13.1129L21.0585 14.0283C21.3156 14.2177 21.4246 14.5492 21.3299 14.8543C20.8914 16.2685 20.138 17.5649 19.1264 18.6461C18.9091 18.8783 18.569 18.9483 18.2777 18.8206L16.8714 18.2045C16.4691 18.0284 16.007 18.0542 15.6268 18.274C15.2466 18.4937 14.9935 18.8812 14.9452 19.3177L14.7761 20.8444C14.7413 21.1592 14.5124 21.4182 14.2043 21.4915C12.7558 21.8361 11.2467 21.8361 9.79828 21.4915C9.49015 21.4182 9.26129 21.1592 9.22643 20.8444L9.0576 19.32C9.00802 18.8843 8.75459 18.498 8.37467 18.279C7.99475 18.06 7.53345 18.0343 7.13244 18.2094L5.72582 18.8256C5.43446 18.9533 5.09428 18.8833 4.87703 18.6509C3.86487 17.5685 3.11144 16.2705 2.67344 14.8548C2.57911 14.5499 2.68811 14.2186 2.94509 14.0293L4.18842 13.1133C4.54256 12.8531 4.75172 12.4399 4.75172 12.0005C4.75172 11.561 4.54256 11.1478 4.18796 10.8873L2.94541 9.97285C2.68804 9.78345 2.57894 9.45178 2.67361 9.14658C3.11236 7.73215 3.86619 6.43564 4.87837 5.35462C5.09584 5.12236 5.43618 5.05259 5.72749 5.18056L7.12786 5.79572C7.53081 5.97256 7.99404 5.94585 8.37601 5.72269C8.75633 5.50209 9.00953 5.11422 9.05841 4.67764L9.22849 3.15196C9.26401 2.83335 9.49811 2.57254 9.81105 2.50294C10.5283 2.34342 11.2602 2.25865 12.0124 2.25ZM11.9999 8.99995C10.3431 8.99995 8.99994 10.3431 8.99994 12C8.99994 13.6568 10.3431 15 11.9999 15C13.6568 15 14.9999 13.6568 14.9999 12C14.9999 10.3431 13.6568 8.99995 11.9999 8.99995Z",
+                      }),
+                    )),
+                  ),
+                ),
               ),
-              this.renderMenu()
+              this.renderMenu(),
             );
             var e;
           }
@@ -10551,7 +10711,7 @@
             return Z.pz.getStringF(
               "bestScoreMenuDisplay",
               te.sys.getHighScore(te.sys.session.settings.mode),
-              Z.pz.getString(te.sys.session.settings.mode + "Unit")
+              Z.pz.getString(te.sys.session.settings.mode + "Unit"),
             );
           }
 
@@ -10586,7 +10746,7 @@
                   jssStyleSheet: y,
                   onClick: this.onNewGameClick,
                 },
-                Z.pz.getString("newGame")
+                Z.pz.getString("newGame"),
               ),
               a.createElement(P.iz, {
                 className:
@@ -10606,19 +10766,19 @@
                 ((t =
                   this.props.managedClasses
                     .settingsHamburgerMenu_flyout_scoreStar),
-                  a.createElement(
-                    "svg",
-                    {
-                      width: 20,
-                      height: 20,
-                      viewBox: "0 0 20 20",
-                      className: t,
-                    },
-                    a.createElement("path", {
-                      d: "M9.1 2.9a1 1 0 011.8 0l1.93 3.91 4.31.63a1 1 0 01.56 1.7l-3.13 3.05.74 4.3a1 1 0 01-1.45 1.05L10 15.51l-3.86 2.03a1 1 0 01-1.45-1.05l.74-4.3L2.3 9.14a1 1 0 01.56-1.7l4.31-.63L9.1 2.9z",
-                    })
-                  )),
-                Z.pz.getStringF("bestScoreFlyout", e)
+                a.createElement(
+                  "svg",
+                  {
+                    width: 20,
+                    height: 20,
+                    viewBox: "0 0 20 20",
+                    className: t,
+                  },
+                  a.createElement("path", {
+                    d: "M9.1 2.9a1 1 0 011.8 0l1.93 3.91 4.31.63a1 1 0 01.56 1.7l-3.13 3.05.74 4.3a1 1 0 01-1.45 1.05L10 15.51l-3.86 2.03a1 1 0 01-1.45-1.05l.74-4.3L2.3 9.14a1 1 0 01.56-1.7l4.31-.63L9.1 2.9z",
+                  }),
+                )),
+                Z.pz.getStringF("bestScoreFlyout", e),
               ),
               a.createElement(P.iz, {
                 className:
@@ -10651,7 +10811,7 @@
               }),
 
               // game tips, info, and reset
-              this.renderButtonSection()
+              this.renderButtonSection(),
             );
             var t;
           }
@@ -10665,8 +10825,9 @@
                 onClick: this.dismissMenu,
               },
               (0, F.p)(
-                this.props.managedClasses.settingsHamburgerMenu_closeButton_icon
-              )
+                this.props.managedClasses
+                  .settingsHamburgerMenu_closeButton_icon,
+              ),
             );
           }
           renderGameModePicker() {
@@ -10677,6 +10838,33 @@
               o =
                 this.props.gameState === Q.Pause ||
                 this.props.gameState === Q.Play;
+            
+            let mapEditor = null;
+            if (i === q.Custom) {
+              mapEditor = a.createElement(
+                "div",
+                {
+                  className: "map-editor-section",
+                  style: { marginTop: "10px" }
+                },
+                a.createElement(
+                  E.__,
+                  {
+                    className: this.props.managedClasses.settingsHamburgerMenu_flyout_label,
+                  },
+                  "Map Editor"
+                ),
+                a.createElement("textarea", {
+                  id: "map-textarea",
+                  ref: (e) => (this.mapTextArea = e),
+                  rows: "10",
+                  style: { width: "100%", resize: "vertical", fontFamily: "monospace" },
+                  onChange: this.onMapDataChange.bind(this),
+                  defaultValue: ""
+                })
+              );
+            }
+
             return a.createElement(
               "div",
               {
@@ -10692,7 +10880,7 @@
                 },
                 o
                   ? Z.pz.getString("gameModeSelectLabelDisabled")
-                  : Z.pz.getString("gameModeSelectLabel")
+                  : Z.pz.getString("gameModeSelectLabel"),
               ),
               a.createElement(
                 z.Ph,
@@ -10717,8 +10905,14 @@
                   id: q.ZigZag,
                   value: q.ZigZag,
                   displayString: e,
-                })
-              )
+                }),
+                a.createElement(L.$m, {
+                  id: q.Custom,
+                  value: q.Custom,
+                  displayString: "Custom",
+                }),
+              ),
+              mapEditor
             );
           }
           /**
@@ -10740,7 +10934,7 @@
                     this.props.managedClasses
                       .settingsHamburgerMenu_flyout_label,
                 },
-                Z.pz.getString("themeSelectLabel")
+                Z.pz.getString("themeSelectLabel"),
               ),
               a.createElement(
                 z.Ph,
@@ -10759,8 +10953,8 @@
                   id: "ski",
                   value: "ski",
                   displayString: Z.pz.getString("skiTheme"),
-                })
-              )
+                }),
+              ),
             );
           }
           renderToggleSection() {
@@ -10781,7 +10975,7 @@
                   {
                     htmlFor: "highVisibilityMode",
                   },
-                  Z.pz.getString("highVisiblityModeToggleLabel")
+                  Z.pz.getString("highVisiblityModeToggleLabel"),
                 ),
                 a.createElement(D.ZD, {
                   jssStyleSheet: m,
@@ -10790,7 +10984,7 @@
                   unselectedMessage: t,
                   selected: this.props.highVisibilityMode,
                   onChange: this.onHighVisiblityModeChange,
-                })
+                }),
               ),
               a.createElement(
                 "div",
@@ -10804,7 +10998,7 @@
                   {
                     htmlFor: "reducedSpeedMode",
                   },
-                  Z.pz.getString("reducedSpeedModeToggleLabel")
+                  Z.pz.getString("reducedSpeedModeToggleLabel"),
                 ),
                 a.createElement(D.ZD, {
                   jssStyleSheet: m,
@@ -10814,8 +11008,8 @@
                   unselectedMessage: t,
                   selected: this.props.gameSpeed !== se,
                   onChange: this.onReducedSpeedModeChange,
-                })
-              )
+                }),
+              ),
             );
           }
           renderShareSection() {
@@ -10831,7 +11025,7 @@
                 {
                   htmlFor: "shareButton",
                 },
-                Z.pz.getString("share")
+                Z.pz.getString("share"),
               ),
               a.createElement(
                 _.ER,
@@ -10843,8 +11037,8 @@
                 },
                 this.state.shareLinkCopied
                   ? Z.pz.getString("shareLinkCopied")
-                  : Z.pz.getString("shareCopy")
-              )
+                  : Z.pz.getString("shareCopy"),
+              ),
             );
           }
           renderButtonSection() {
@@ -10861,7 +11055,7 @@
                   jssStyleSheet: f,
                   onClick: this.openHowToPlayModal,
                 },
-                Z.pz.getString("howToPlayButton")
+                Z.pz.getString("howToPlayButton"),
               ),
               a.createElement(
                 I.Of,
@@ -10869,7 +11063,7 @@
                   jssStyleSheet: f,
                   onClick: this.openGameCreditsModal,
                 },
-                Z.pz.getString("gameCreditsButton")
+                Z.pz.getString("gameCreditsButton"),
               ),
               a.createElement(
                 I.Of,
@@ -10877,8 +11071,8 @@
                   jssStyleSheet: f,
                   onClick: this.confirmResetStats,
                 },
-                Z.pz.getString("resetAllStats")
-              )
+                Z.pz.getString("resetAllStats"),
+              ),
             );
           }
         }
@@ -10898,14 +11092,14 @@
             a.createElement(r.f, {
               modal: e,
               rootElement: document.getElementById("modal-root"),
-            })
+            }),
           );
         }
-        window.addEventListener("beforeunload", () => {
+        (window.addEventListener("beforeunload", () => {
           he.recordUnload();
         }),
           (window.onload = async function () {
-            await (async function () {
+            (await (async function () {
               const e = await he.getAllStats();
               re.dispatch(
                 oe({
@@ -10921,7 +11115,7 @@
                   gameSpeed: e.reducedSpeedMode ? 0.5 : se,
                   mode: j(e.mode),
                   theme: K(e.theme), // newly added, these are from the old code
-                })
+                }),
               );
             })(),
               (function () {
@@ -10930,27 +11124,27 @@
                 const s = () => {
                   requestAnimationFrame(s);
                   const i = window.performance.now() - t;
-                  e.gameLoop(i), (t = window.performance.now());
+                  (e.gameLoop(i), (t = window.performance.now()));
                 };
-                requestAnimationFrame(s),
+                (requestAnimationFrame(s),
                   (function (e, t) {
                     let s;
                     window.addEventListener("resize", function () {
-                      void 0 !== s && (clearTimeout(s), (s = void 0)),
+                      (void 0 !== s && (clearTimeout(s), (s = void 0)),
                         (s = window.setTimeout(function () {
-                          (s = void 0), e();
-                        }, t));
+                          ((s = void 0), e());
+                        }, t)));
                     });
                   })(function () {
                     e.reflowCanvas();
                   }, 10),
                   document.addEventListener("visibilitychange", function () {
                     e.reflowCanvas();
-                  });
+                  }));
               })(),
               (function () {
                 const e = document.getElementById("hamburger-container");
-                (e.style.zIndex = h._p.CONTEXT_MENU.toString()),
+                ((e.style.zIndex = h._p.CONTEXT_MENU.toString()),
                   i.render(
                     a.createElement(
                       o.zt,
@@ -10962,15 +11156,15 @@
                         {
                           designSystem: l.fn,
                         },
-                        a.createElement(dt, null)
-                      )
+                        a.createElement(dt, null),
+                      ),
                     ),
-                    e
-                  );
-              })();
-          });
+                    e,
+                  ));
+              })());
+          }));
       },
-      73120: () => { },
+      73120: () => {},
       81164: (e, t, s) => {
         "use strict";
         s.d(t, {
@@ -10982,16 +11176,16 @@
           n = s(89526),
           r = s(12468);
         !(function (e) {
-          (e.a = "a"), (e.button = "button");
+          ((e.a = "a"), (e.button = "button"));
         })(i || (i = {}));
         class l extends a.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 disabled: void 0,
                 href: void 0,
                 managedClasses: void 0,
-              });
+              }));
           }
           render() {
             return n.createElement(
@@ -11003,36 +11197,36 @@
                   className: this.generateClassNames(),
                   href: this.props.href || null,
                 },
-                this.renderDisabledAttribute()
+                this.renderDisabledAttribute(),
               ),
-              this.props.children
+              this.props.children,
             );
           }
           generateClassNames() {
             const { button: e, button__disabled: t } =
               this.props.managedClasses;
             return super.generateClassNames(
-              (0, o.A)(e, [t, this.props.disabled])
+              (0, o.A)(e, [t, this.props.disabled]),
             );
           }
           renderDisabledAttribute() {
             if (true === this.props.disabled)
               return this.tag === i.a
                 ? {
-                  "aria-disabled": true,
-                }
+                    "aria-disabled": true,
+                  }
                 : {
-                  disabled: true,
-                };
+                    disabled: true,
+                  };
           }
           get tag() {
             return "string" == typeof this.props.href ? i.a : i.button;
           }
         }
-        (l.displayName = `${r.k}Button`),
+        ((l.displayName = `${r.k}Button`),
           (l.defaultProps = {
             managedClasses: {},
-          });
+          }));
         const h = l;
       },
       65173: (e, t, s) => {
@@ -11060,7 +11254,7 @@
           b = s(12468);
         class g extends i.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 describedBy: void 0,
                 label: void 0,
@@ -11096,12 +11290,15 @@
                 const t = p()(this.rootElement.current),
                   s = t.length;
                 if (0 === s)
-                  return this.tryFocusOnRootElement(), void e.preventDefault();
+                  return (
+                    this.tryFocusOnRootElement(),
+                    void e.preventDefault()
+                  );
                 e.shiftKey && e.target === t[0]
                   ? (t[s - 1].focus(), e.preventDefault())
                   : e.shiftKey ||
-                  e.target !== t[s - 1] ||
-                  (t[0].focus(), e.preventDefault());
+                    e.target !== t[s - 1] ||
+                    (t[0].focus(), e.preventDefault());
               }),
               (this.handleDocumentFocus = (e) => {
                 !e.defaultPrevented &&
@@ -11131,7 +11328,7 @@
                   return void this.props.focusTargetOnClose();
                 const e = (0, l.x)(this.props.focusTargetOnClose);
                 e instanceof HTMLElement && e.focus();
-              });
+              }));
           }
           render() {
             const { dialog_positioningRegion: e, dialog_contentRegion: t } =
@@ -11146,7 +11343,7 @@
                 {
                   className: this.generateClassNames(),
                   "aria-hidden": !this.props.visible,
-                }
+                },
               ),
               r.createElement(
                 "div",
@@ -11169,9 +11366,9 @@
                     "aria-labelledby": this.props.labelledBy,
                     "aria-label": this.props.label,
                   },
-                  this.props.children
-                )
-              )
+                  this.props.children,
+                ),
+              ),
             );
           }
           componentDidMount() {
@@ -11179,38 +11376,38 @@
               (this.shouldAddKeyListener(this.props) &&
                 document.addEventListener(
                   "keydown",
-                  this.handleDocumentKeyDown
+                  this.handleDocumentKeyDown,
                 ),
-                this.props.modal &&
+              this.props.modal &&
                 (document.addEventListener("focusin", this.handleDocumentFocus),
-                  this.shouldForceFocus(document.activeElement) &&
+                this.shouldForceFocus(document.activeElement) &&
                   this.focusOnFirstElement()));
           }
           componentDidUpdate(e) {
             (0, n.N)() &&
               (!e.modal && this.props.modal
                 ? (document.addEventListener(
-                  "focusin",
-                  this.handleDocumentFocus
-                ),
+                    "focusin",
+                    this.handleDocumentFocus,
+                  ),
                   this.focusOnFirstElement())
                 : e.modal &&
-                !this.props.modal &&
-                document.removeEventListener(
-                  "focusin",
-                  this.handleDocumentFocus
-                ),
-                !this.shouldAddKeyListener(e) &&
-                  this.shouldAddKeyListener(this.props)
-                  ? document.addEventListener(
+                  !this.props.modal &&
+                  document.removeEventListener(
+                    "focusin",
+                    this.handleDocumentFocus,
+                  ),
+              !this.shouldAddKeyListener(e) &&
+              this.shouldAddKeyListener(this.props)
+                ? document.addEventListener(
                     "keydown",
-                    this.handleDocumentKeyDown
+                    this.handleDocumentKeyDown,
                   )
-                  : this.shouldAddKeyListener(e) &&
+                : this.shouldAddKeyListener(e) &&
                   !this.shouldAddKeyListener(this.props) &&
                   document.removeEventListener(
                     "keydown",
-                    this.handleDocumentKeyDown
+                    this.handleDocumentKeyDown,
                   ));
           }
           componentWillUnmount() {
@@ -11218,25 +11415,25 @@
               (this.shouldAddKeyListener(this.props) &&
                 document.removeEventListener(
                   "keydown",
-                  this.handleDocumentKeyDown
+                  this.handleDocumentKeyDown,
                 ),
-                this.props.modal &&
+              this.props.modal &&
                 document.removeEventListener(
                   "focusin",
-                  this.handleDocumentFocus
+                  this.handleDocumentFocus,
                 ),
-                this.invokeFocusOnCloseTarget());
+              this.invokeFocusOnCloseTarget());
           }
           generateClassNames() {
             return super.generateClassNames(
-              (0, o.A)(this.props.managedClasses.dialog)
+              (0, o.A)(this.props.managedClasses.dialog),
             );
           }
           renderModalOverlay() {
             if (this.props.modal)
               return r.createElement("div", {
                 className: (0, o.A)(
-                  this.props.managedClasses.dialog_modalOverlay
+                  this.props.managedClasses.dialog_modalOverlay,
                 ),
                 onClick: this.checkForSoftDismiss,
                 onTouchStart: this.checkForSoftDismiss,
@@ -11248,13 +11445,13 @@
               });
           }
         }
-        (g.defaultProps = {
+        ((g.defaultProps = {
           contentHeight: "480px",
           contentWidth: "640px",
           visible: false,
           managedClasses: {},
         }),
-          (g.displayName = `${b.k}Dialog`);
+          (g.displayName = `${b.k}Dialog`));
         const u = g;
       },
       46076: (e, t, s) => {
@@ -11275,15 +11472,15 @@
           n = s(89526),
           r = s(12468);
         !(function (e) {
-          (e.presentation = "presentation"), (e.separator = "separator");
+          ((e.presentation = "presentation"), (e.separator = "separator"));
         })(i || (i = {}));
         class l extends a.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 managedClasses: void 0,
                 role: void 0,
-              });
+              }));
           }
           render() {
             return n.createElement(
@@ -11294,8 +11491,8 @@
                 this.generateAttributes(),
                 {
                   className: this.generateClassNames(),
-                }
-              )
+                },
+              ),
             );
           }
           generateAttributes() {
@@ -11306,14 +11503,14 @@
           }
           generateClassNames() {
             return super.generateClassNames(
-              (0, o.A)(this.props.managedClasses.divider)
+              (0, o.A)(this.props.managedClasses.divider),
             );
           }
         }
-        (l.displayName = `${r.k}Divider`),
+        ((l.displayName = `${r.k}Divider`),
           (l.defaultProps = {
             managedClasses: {},
-          });
+          }));
         const h = l;
       },
       67483: (e, t, s) => {
@@ -11328,16 +11525,16 @@
           r = s(89526),
           l = s(12468);
         !(function (e) {
-          (e.label = "label"), (e.legend = "legend");
+          ((e.label = "label"), (e.legend = "legend"));
         })(i || (i = {}));
         class h extends a.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 hidden: void 0,
                 managedClasses: void 0,
                 tag: void 0,
-              });
+              }));
           }
           get tag() {
             return (0, n.Z)(i[this.props.tag]) ? i.label : i[this.props.tag];
@@ -11348,21 +11545,21 @@
               Object.assign({}, this.unhandledProps(), {
                 className: this.generateClassNames(),
               }),
-              this.props.children
+              this.props.children,
             );
           }
           generateClassNames() {
             const { label: e, label__hidden: t } = this.props.managedClasses;
             return super.generateClassNames(
-              (0, o.A)(e, [t, this.props.hidden])
+              (0, o.A)(e, [t, this.props.hidden]),
             );
           }
         }
-        (h.displayName = `${l.k}Label`),
+        ((h.displayName = `${l.k}Label`),
           (h.defaultProps = {
             tag: i.label,
             managedClasses: {},
-          });
+          }));
         const c = h;
       },
       22545: (e, t, s) => {
@@ -11385,7 +11582,7 @@
           l = s(12468);
         class h extends i.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 disabled: void 0,
                 displayString: void 0,
@@ -11398,11 +11595,11 @@
                 let e = false;
                 return (
                   void 0 !== this.context.listboxSelectedItems &&
-                  (e =
-                    1 ===
-                    this.context.listboxSelectedItems.filter(
-                      (e) => e.id === this.props.id
-                    ).length),
+                    (e =
+                      1 ===
+                      this.context.listboxSelectedItems.filter(
+                        (e) => e.id === this.props.id,
+                      ).length),
                   e
                 );
               }),
@@ -11411,7 +11608,7 @@
                   !this.props.disabled &&
                   ("function" == typeof this.props.onKeyDown &&
                     this.props.onKeyDown(e),
-                    !e.defaultPrevented)
+                  !e.defaultPrevented)
                 )
                   switch (e.keyCode) {
                     case a.bq:
@@ -11423,15 +11620,15 @@
                 this.props.disabled ||
                   ("function" == typeof this.props.onClick &&
                     this.props.onClick(e),
-                    e.defaultPrevented || this.invokeOption(e));
+                  e.defaultPrevented || this.invokeOption(e));
               }),
               (this.handleFocus = (e) => {
                 this.props.disabled ||
                   ("function" == typeof this.context.listboxItemFocused &&
                     this.context.listboxItemFocused(this.props, e),
-                    "function" == typeof this.props.onFocus &&
+                  "function" == typeof this.props.onFocus &&
                     this.props.onFocus(e));
-              });
+              }));
           }
           render() {
             return n.createElement(
@@ -11446,7 +11643,7 @@
                 onFocus: this.handleFocus,
                 onKeyDown: this.handleKeyDown,
               }),
-              this.props.children
+              this.props.children,
             );
           }
           generateClassNames() {
@@ -11456,23 +11653,23 @@
               listboxItem__selected: s,
             } = this.props.managedClasses;
             return super.generateClassNames(
-              (0, o.A)(e, [t, this.props.disabled], [s, this.isItemSelected()])
+              (0, o.A)(e, [t, this.props.disabled], [s, this.isItemSelected()]),
             );
           }
           invokeOption(e) {
-            this.context.listboxItemInvoked &&
+            (this.context.listboxItemInvoked &&
               this.context.listboxItemInvoked(this.props, e),
               "function" == typeof this.props.onInvoke &&
-              this.props.onInvoke(e, this.props);
+                this.props.onInvoke(e, this.props));
           }
         }
-        (h.displayName = `${l.k}ListboxItem`),
+        ((h.displayName = `${l.k}ListboxItem`),
           (h.contextType = r.R),
           (h.defaultProps = {
             disabled: false,
             managedClasses: {},
           }),
-          (h.contextType = r.R);
+          (h.contextType = r.R));
         const c = h;
       },
       18078: (e, t, s) => {
@@ -11512,7 +11709,7 @@
           b = s(97084);
         class g extends i.Z {
           constructor(e) {
-            super(e),
+            (super(e),
               (this.handledProps = {
                 children: void 0,
                 defaultSelection: void 0,
@@ -11552,13 +11749,13 @@
                 let s = -1;
                 for (let t = 0; t < e.length; t++)
                   s = g.getItemIndexById(e[t].id, this.props.children);
-                -1 === s &&
+                (-1 === s &&
                   (s = this.domChildren().findIndex(this.isFocusableElement)),
                   this.props.focusItemOnMount && t && -1 !== s
                     ? this.setFocus(s, 1)
                     : this.setState({
-                      focusIndex: s,
-                    });
+                        focusIndex: s,
+                      }));
               }),
               (this.getInitialSelection = () => {
                 let e;
@@ -11566,16 +11763,16 @@
                   (e =
                     void 0 !== this.props.selectedItems
                       ? g.getListboxItemDataFromIds(
-                        this.props.selectedItems,
-                        this.props.children
-                      )
+                          this.props.selectedItems,
+                          this.props.children,
+                        )
                       : g.getListboxItemDataFromIds(
-                        this.props.defaultSelection,
-                        this.props.children
-                      )),
+                          this.props.defaultSelection,
+                          this.props.children,
+                        )),
                   !this.props.multiselectable &&
-                  e.length > 1 &&
-                  (e = e.slice(0, 1)),
+                    e.length > 1 &&
+                    (e = e.slice(0, 1)),
                   e
                 );
               }),
@@ -11586,18 +11783,18 @@
                 this.isDisabledElement(s)
                   ? s.blur()
                   : (this.setState({
-                    focusIndex: i,
-                    focussedItemId: e.id,
-                  }),
+                      focusIndex: i,
+                      focussedItemId: e.id,
+                    }),
                     !this.props.multiselectable &&
-                    this.props.selectOnFocus &&
-                    this.updateSelection([e]));
+                      this.props.selectOnFocus &&
+                      this.updateSelection([e]));
               }),
               (this.handleMenuKeyDown = (e) => {
                 if (
                   ("function" == typeof this.props.onKeyDown &&
                     this.props.onKeyDown(e),
-                    e.defaultPrevented || this.props.disabled)
+                  e.defaultPrevented || this.props.disabled)
                 )
                   return;
                 let t;
@@ -11611,7 +11808,7 @@
                   case a.ho:
                     if (
                       ((t = this.setFocus(this.state.focusIndex + 1, 1)),
-                        this.props.multiselectable && e.shiftKey && "" !== t)
+                      this.props.multiselectable && e.shiftKey && "" !== t)
                     ) {
                       const e = g.getItemPropsById(t, this.props.children);
                       null !== e && this.toggleItem(e);
@@ -11622,7 +11819,7 @@
                   case a.BJ:
                     if (
                       ((t = this.setFocus(this.state.focusIndex - 1, -1)),
-                        this.props.multiselectable && e.shiftKey && "" !== t)
+                      this.props.multiselectable && e.shiftKey && "" !== t)
                     ) {
                       const e = g.getItemPropsById(t, this.props.children);
                       null !== e && this.toggleItem(e);
@@ -11630,56 +11827,57 @@
                     e.preventDefault();
                     break;
                   case a.$B:
-                    this.props.multiselectable &&
+                    (this.props.multiselectable &&
                       e.shiftKey &&
                       e.ctrlKey &&
                       this.selectRange(
                         this.state.focusIndex,
-                        this.domChildren().length - 1
+                        this.domChildren().length - 1,
                       ),
                       this.setFocus(this.domChildren().length - 1, -1),
-                      e.preventDefault();
+                      e.preventDefault());
                     break;
                   case a.wn:
-                    this.props.multiselectable &&
+                    (this.props.multiselectable &&
                       e.shiftKey &&
                       e.ctrlKey &&
                       this.selectRange(0, this.state.focusIndex),
                       this.setFocus(0, 1),
-                      e.preventDefault();
+                      e.preventDefault());
                     break;
                   default:
                     "A" === e.key
                       ? this.selectRange(0, this.domChildren().length)
                       : !e.ctrlKey &&
-                      this.props.typeAheadEnabled &&
-                      this.processTypeAhead(e);
+                        this.props.typeAheadEnabled &&
+                        this.processTypeAhead(e);
                 }
               }),
               (this.processTypeAhead = (e) => {
-                clearTimeout(this.typeAheadTimer),
+                (clearTimeout(this.typeAheadTimer),
                   (this.typeAheadString =
-                    this.typeAheadString + e.key.toLowerCase());
+                    this.typeAheadString + e.key.toLowerCase()));
                 let t = -1;
-                d.Children.toArray(this.props.children).some(
+                (d.Children.toArray(this.props.children).some(
                   (e, s) =>
                     void 0 !== e.props[this.props.typeAheadPropertyKey] &&
                     ((0, o.Ny)(
                       e.props[this.props.typeAheadPropertyKey].toLowerCase(),
-                      this.typeAheadString
+                      this.typeAheadString,
                     )
                       ? ((t = s), true)
-                      : void 0)
+                      : void 0),
                 ),
                   -1 !== t
                     ? ((this.typeAheadTimer = setTimeout(() => {
-                      this.typeAheadTimerExpired();
-                    }, 1e3)),
+                        this.typeAheadTimerExpired();
+                      }, 1e3)),
                       this.setFocus(t, 1))
-                    : (this.typeAheadString = "");
+                    : (this.typeAheadString = ""));
               }),
               (this.typeAheadTimerExpired = () => {
-                (this.typeAheadString = ""), clearTimeout(this.typeAheadTimer);
+                ((this.typeAheadString = ""),
+                  clearTimeout(this.typeAheadTimer));
               }),
               (this.listboxItemInvoked = (e, t) => {
                 if (this.props.disabled) return;
@@ -11689,7 +11887,7 @@
                   i = this.domChildren().indexOf(s);
                 this.props.multiselectable && "click" === t.type
                   ? ((t.shiftKey && -1 !== this.shiftRangeSelectStartIndex) ||
-                    (this.shiftRangeSelectStartIndex = i),
+                      (this.shiftRangeSelectStartIndex = i),
                     t.ctrlKey
                       ? this.toggleItem(e)
                       : t.shiftKey
@@ -11720,12 +11918,12 @@
                 const t = g.validateSelection(e, this.props.children);
                 return (
                   (0, l.Z)(t, this.state.selectedItems) ||
-                  (void 0 === this.props.selectedItems &&
-                    this.setState({
-                      selectedItems: t,
-                    }),
+                    (void 0 === this.props.selectedItems &&
+                      this.setState({
+                        selectedItems: t,
+                      }),
                     this.props.onSelectedItemsChanged &&
-                    this.props.onSelectedItemsChanged(t)),
+                      this.props.onSelectedItemsChanged(t)),
                   t
                 );
               }),
@@ -11733,7 +11931,7 @@
                 focusIndex: -1,
                 focussedItemId: "",
                 selectedItems: this.getInitialSelection(),
-              });
+              }));
           }
           static getListboxItemDataFromIds(e, t) {
             return g.validateSelection(e, t);
@@ -11742,7 +11940,7 @@
             return d.Children.toArray(t).findIndex(
               (t) =>
                 void 0 !== t.props[g.idPropertyKey] &&
-                t.props[g.idPropertyKey] === e
+                t.props[g.idPropertyKey] === e,
             );
           }
           static isValidSelectedItem(e) {
@@ -11756,7 +11954,7 @@
             return d.Children.toArray(t).find(
               (t) =>
                 void 0 !== t.props[g.idPropertyKey] &&
-                t.props[g.idPropertyKey] === e
+                t.props[g.idPropertyKey] === e,
             );
           }
           static getItemPropsById(e, t) {
@@ -11797,8 +11995,8 @@
                     listboxMultiselectable: this.props.multiselectable,
                   },
                 },
-                this.renderChildren()
-              )
+                this.renderChildren(),
+              ),
             );
           }
           componentDidUpdate(e) {
@@ -11807,7 +12005,7 @@
               ((0, l.Z)(e.defaultSelection, this.props.defaultSelection) ||
                 void 0 !== this.props.selectedItems ||
                 (t = this.updateSelection(this.getInitialSelection())),
-                e.children !== this.props.children)
+              e.children !== this.props.children)
             ) {
               t =
                 null === t
@@ -11836,7 +12034,7 @@
             const { listbox: e, listbox__disabled: t } =
               this.props.managedClasses;
             return super.generateClassNames(
-              (0, n.A)(e, [t, this.props.disabled])
+              (0, n.A)(e, [t, this.props.disabled]),
             );
           }
           renderChildren() {
@@ -11861,7 +12059,7 @@
             return i;
           }
         }
-        (g.displayName = `${p.k}Listbox`),
+        ((g.displayName = `${p.k}Listbox`),
           (g.defaultProps = {
             multiselectable: false,
             defaultSelection: [],
@@ -11882,7 +12080,7 @@
             e.filter((e) => g.isValidSelectedItem(e))),
           (g.valuePropertyKey = "value"),
           (g.idPropertyKey = "id"),
-          (g.disabledPropertyKey = "disabled");
+          (g.disabledPropertyKey = "disabled"));
         const u = g;
       },
       79389: (e, t, s) => {
@@ -11912,7 +12110,7 @@
           u = s(8641);
         class m extends i.Z {
           constructor(e) {
-            super(e),
+            (super(e),
               (this.handledProps = {
                 isMenuOpen: void 0,
                 disabled: void 0,
@@ -11946,9 +12144,9 @@
               }),
               (this.onSelectValueChange = (e) => null),
               (this.menuSelectionChange = (e) => {
-                "function" == typeof this.props.onMenuSelectionChange &&
+                ("function" == typeof this.props.onMenuSelectionChange &&
                   this.props.onMenuSelectionChange(e),
-                  this.updateSelection(e);
+                  this.updateSelection(e));
               }),
               (this.updateSelection = (e) => {
                 e = this.trimSelection(e);
@@ -11959,7 +12157,7 @@
                   ("function" != typeof this.props.onValueChange ||
                     (0, h.Z)(e, this.state.selectedItems) ||
                     this.props.onValueChange(t, e, s),
-                    void 0 === this.props.selectedItems)
+                  void 0 === this.props.selectedItems)
                 ) {
                   const i = this.getValidOptions();
                   this.setState({
@@ -11975,8 +12173,8 @@
                 const e = this.trimSelection(
                   b.ZP.getListboxItemDataFromIds(
                     this.props.selectedItems,
-                    this.props.children
-                  )
+                    this.props.children,
+                  ),
                 );
                 this.setState({
                   selectedItems: e,
@@ -12005,9 +12203,10 @@
               }),
               (this.defaultTriggerRenderFunction = (e, t, s) => {
                 if (e.multiselectable) return null;
-                const i = `${(0, c.Z)(this.props.labelledBy)
-                  ? ""
-                  : `${this.props.labelledBy} `
+                const i = `${
+                    (0, c.Z)(this.props.labelledBy)
+                      ? ""
+                      : `${this.props.labelledBy} `
                   }${s}`,
                   a =
                     "" +
@@ -12024,7 +12223,7 @@
                     "aria-describedby": a,
                     "aria-expanded": t.isMenuOpen,
                   },
-                  t.displayString
+                  t.displayString,
                 );
               }),
               (this.defaultDisplayStringFormatter = (e, t) => {
@@ -12032,47 +12231,48 @@
                 return e.length > 0 ? s.join(", ") : t;
               }),
               (this.handleClick = (e) => {
-                "function" == typeof this.props.onClick &&
+                ("function" == typeof this.props.onClick &&
                   this.props.onClick(e),
                   this.props.disabled ||
-                  e.defaultPrevented ||
-                  (e.preventDefault(),
+                    e.defaultPrevented ||
+                    (e.preventDefault(),
                     this.toggleMenu(!this.state.isMenuOpen),
                     false === this.validateMenuState(!this.state.isMenuOpen) &&
-                    this.focusTriggerElement());
+                      this.focusTriggerElement()));
               }),
               (this.handleKeydown = (e) => {
                 if (
                   ("function" == typeof this.props.onKeyDown &&
                     this.props.onKeyDown(e),
-                    !this.props.disabled && !e.defaultPrevented)
+                  !this.props.disabled && !e.defaultPrevented)
                 )
                   switch (e.keyCode) {
                     case a.bq:
                     case a.ei:
-                      e.preventDefault(),
+                      (e.preventDefault(),
                         this.toggleMenu(!this.state.isMenuOpen),
-                        false === this.validateMenuState(!this.state.isMenuOpen) &&
-                        this.focusTriggerElement();
+                        false ===
+                          this.validateMenuState(!this.state.isMenuOpen) &&
+                          this.focusTriggerElement());
                       break;
                     case a.Lp:
-                      e.preventDefault(),
+                      (e.preventDefault(),
                         this.toggleMenu(false),
-                        this.focusTriggerElement();
+                        this.focusTriggerElement());
                       break;
                     case a.Q6:
                     case a.ho:
-                      e.preventDefault(),
+                      (e.preventDefault(),
                         this.props.multiselectable ||
-                        this.state.isMenuOpen ||
-                        this.incrementSelectedOption(1);
+                          this.state.isMenuOpen ||
+                          this.incrementSelectedOption(1));
                       break;
                     case a.$Y:
                     case a.BJ:
-                      e.preventDefault(),
+                      (e.preventDefault(),
                         this.props.multiselectable ||
-                        this.state.isMenuOpen ||
-                        this.incrementSelectedOption(-1);
+                          this.state.isMenuOpen ||
+                          this.incrementSelectedOption(-1));
                   }
               }),
               (this.incrementSelectedOption = (e) => {
@@ -12080,7 +12280,7 @@
                 if (1 === this.state.selectedItems.length) {
                   const s = b.ZP.getItemIndexById(
                     this.state.selectedItems[0].id,
-                    this.props.children
+                    this.props.children,
                   );
                   if (-1 !== s) {
                     const i = s + e,
@@ -12125,13 +12325,13 @@
               (this.getFormattedDisplayString = (e) =>
                 void 0 === this.props.displayStringFormatter
                   ? this.defaultDisplayStringFormatter(
-                    e,
-                    this.props.placeholder
-                  )
+                      e,
+                      this.props.placeholder,
+                    )
                   : this.props.displayStringFormatter(
-                    e,
-                    this.props.placeholder
-                  )),
+                      e,
+                      this.props.placeholder,
+                    )),
               (this.isFocusableButton = (e) =>
                 e instanceof HTMLButtonElement &&
                 "true" !== e.getAttribute("aria-disabled")),
@@ -12140,14 +12340,14 @@
                 null !== e && e.focus();
               }),
               (this.getValidOptions = () =>
-                b.ZP.getValidOptions(p.Children.toArray(this.props.children)));
+                b.ZP.getValidOptions(p.Children.toArray(this.props.children))));
             let t = this.trimSelection(
               b.ZP.getListboxItemDataFromIds(
                 void 0 !== this.props.selectedItems
                   ? this.props.selectedItems
                   : this.props.defaultSelection,
-                this.props.children
-              )
+                this.props.children,
+              ),
             );
             !this.props.multiselectable && t.length > 1 && (t = t.slice(0, 1));
             const s = this.getValidOptions();
@@ -12163,22 +12363,22 @@
           componentDidUpdate(e) {
             let t = false,
               s = this.state.isMenuOpen;
-            e.multiselectable !== this.props.multiselectable &&
+            (e.multiselectable !== this.props.multiselectable &&
               ((t = true), (s = this.checkPropsForMenuState())),
               e.isMenuOpen !== this.props.isMenuOpen &&
-              (s = this.checkPropsForMenuState()),
+                (s = this.checkPropsForMenuState()),
               s !== this.state.isMenuOpen && this.toggleMenu(s),
               e.selectedItems === this.props.selectedItems
                 ? t &&
-                this.updateSelection(this.state.selectedItems.map((e) => e))
-                : this.updateSelectionFromProps();
+                  this.updateSelection(this.state.selectedItems.map((e) => e))
+                : this.updateSelectionFromProps());
           }
           componentDidMount() {
-            this.toggleMenu(this.checkPropsForMenuState()),
+            (this.toggleMenu(this.checkPropsForMenuState()),
               !this.props.autoFocus ||
-              this.state.isMenuOpen ||
-              this.props.multiselectable ||
-              this.focusTriggerElement();
+                this.state.isMenuOpen ||
+                this.props.multiselectable ||
+                this.focusTriggerElement());
           }
           render() {
             return p.createElement(
@@ -12191,7 +12391,7 @@
               }),
               this.renderTrigger(),
               this.renderHiddenSelectElement(),
-              this.renderMenu()
+              this.renderMenu(),
             );
           }
           generateClassNames() {
@@ -12208,12 +12408,12 @@
                 [
                   t,
                   !(0, c.Z)(this.props.menuFlyoutConfig) &&
-                  this.props.menuFlyoutConfig.scaleToFit,
+                    this.props.menuFlyoutConfig.scaleToFit,
                 ],
                 [s, this.props.disabled],
                 [i, this.state.isMenuOpen],
-                [a, this.props.multiselectable]
-              )
+                [a, this.props.multiselectable],
+              ),
             );
           }
           renderHiddenSelectElement() {
@@ -12234,10 +12434,10 @@
             return void 0 !== this.props.trigger
               ? this.props.trigger(this.props, this.state, this.triggerId)
               : this.defaultTriggerRenderFunction(
-                this.props,
-                this.state,
-                this.triggerId
-              );
+                  this.props,
+                  this.state,
+                  this.triggerId,
+                );
           }
           renderMenu() {
             if (!this.state.isMenuOpen) return;
@@ -12246,34 +12446,34 @@
               this.props.autoFocus &&
               (e = this.props.multiselectable);
             const t = p.createElement(
-              b.ZP,
-              {
-                labelledBy: this.props.labelledBy,
-                describedBy: this.props.describedBy,
-                disabled: this.props.disabled,
-                focusItemOnMount: e,
-                multiselectable: this.props.multiselectable,
-                defaultSelection: this.state.selectedItems,
-                selectedItems: this.props.selectedItems,
-                onSelectedItemsChanged: this.menuSelectionChange,
-                onBlur: this.handleMenuBlur,
-                selectOnFocus: false,
-                tabIndex: -1,
-                managedClasses: {
-                  listbox: (0, d.Z)(
-                    this.props.managedClasses,
-                    "select_menu",
-                    ""
-                  ),
-                  listbox__disabled: (0, d.Z)(
-                    this.props.managedClasses,
-                    "select_menuDisabled",
-                    ""
-                  ),
+                b.ZP,
+                {
+                  labelledBy: this.props.labelledBy,
+                  describedBy: this.props.describedBy,
+                  disabled: this.props.disabled,
+                  focusItemOnMount: e,
+                  multiselectable: this.props.multiselectable,
+                  defaultSelection: this.state.selectedItems,
+                  selectedItems: this.props.selectedItems,
+                  onSelectedItemsChanged: this.menuSelectionChange,
+                  onBlur: this.handleMenuBlur,
+                  selectOnFocus: false,
+                  tabIndex: -1,
+                  managedClasses: {
+                    listbox: (0, d.Z)(
+                      this.props.managedClasses,
+                      "select_menu",
+                      "",
+                    ),
+                    listbox__disabled: (0, d.Z)(
+                      this.props.managedClasses,
+                      "select_menuDisabled",
+                      "",
+                    ),
+                  },
                 },
-              },
-              this.props.children
-            ),
+                this.props.children,
+              ),
               s =
                 "function" == typeof this.props.menu
                   ? this.props.menu(this.props, this.state, t)
@@ -12281,19 +12481,19 @@
             return (0, c.Z)(this.props.menuFlyoutConfig)
               ? s
               : p.createElement(
-                u.ZP,
-                Object.assign(
-                  {
-                    anchor: this.rootElement,
-                  },
-                  this.props.menuFlyoutConfig,
-                  {
-                    managedClasses:
-                      this.generateViewportPositionerClassNames(),
-                  }
-                ),
-                s
-              );
+                  u.ZP,
+                  Object.assign(
+                    {
+                      anchor: this.rootElement,
+                    },
+                    this.props.menuFlyoutConfig,
+                    {
+                      managedClasses:
+                        this.generateViewportPositionerClassNames(),
+                    },
+                  ),
+                  s,
+                );
           }
           generateViewportPositionerClassNames() {
             const {
@@ -12317,14 +12517,14 @@
           }
           getTriggerButton() {
             const e =
-              (0, r.N)() && this.rootElement.current instanceof HTMLElement
-                ? Array.from(this.rootElement.current.children)
-                : [],
+                (0, r.N)() && this.rootElement.current instanceof HTMLElement
+                  ? Array.from(this.rootElement.current.children)
+                  : [],
               t = e.findIndex(this.isFocusableButton);
             return -1 !== t ? e[t] : null;
           }
         }
-        (m.displayName = `${g.k}Select`),
+        ((m.displayName = `${g.k}Select`),
           (m.defaultProps = {
             multiselectable: false,
             disabled: false,
@@ -12333,7 +12533,7 @@
             managedClasses: {},
           }),
           (m.idPropertyKey = "id"),
-          (m.triggerUniqueIdPrefix = "selecttrigger-");
+          (m.triggerUniqueIdPrefix = "selecttrigger-"));
         const y = m;
       },
       87472: (e, t, s) => {
@@ -12354,7 +12554,7 @@
           n = s(12468);
         class r extends i.Z {
           constructor(e) {
-            super(e),
+            (super(e),
               (this.handledProps = {
                 managedClasses: void 0,
                 disabled: void 0,
@@ -12368,21 +12568,21 @@
                 onChange: void 0,
               }),
               (this.handleToggleChange = (e) => {
-                "boolean" != typeof this.props.selected &&
+                ("boolean" != typeof this.props.selected &&
                   this.setState({
                     selected: !this.state.selected,
                   }),
-                  this.props.onChange && this.props.onChange(e);
+                  this.props.onChange && this.props.onChange(e));
               }),
               (this.state = {
                 selected: this.props.selected || false,
-              });
+              }));
           }
           static getDerivedStateFromProps(e, t) {
             return "boolean" == typeof e.selected && e.selected !== t.selected
               ? {
-                selected: e.selected,
-              }
+                  selected: e.selected,
+                }
               : null;
           }
           render() {
@@ -12416,9 +12616,9 @@
                 }),
                 o.createElement("span", {
                   className: (0, a.A)(s),
-                })
+                }),
               ),
-              this.renderStatusMessage()
+              this.renderStatusMessage(),
             );
           }
           generateClassNames() {
@@ -12428,7 +12628,7 @@
               toggle__checked: s,
             } = this.props.managedClasses;
             return super.generateClassNames(
-              (0, a.A)(e, [t, this.props.disabled], [s, this.state.selected])
+              (0, a.A)(e, [t, this.props.disabled], [s, this.state.selected]),
             );
           }
           generateToggleStateLabel() {
@@ -12445,7 +12645,7 @@
                   id: this.props.labelId,
                   htmlFor: this.props.inputId,
                 },
-                this.props.children
+                this.props.children,
               );
           }
           renderStatusMessage() {
@@ -12455,17 +12655,17 @@
                 {
                   id: this.props.statusMessageId,
                   className: (0, a.A)(
-                    this.props.managedClasses.toggle_statusMessage
+                    this.props.managedClasses.toggle_statusMessage,
                   ),
                 },
-                this.generateToggleStateLabel()
+                this.generateToggleStateLabel(),
               );
           }
         }
-        (r.displayName = `${n.k}Toggle`),
+        ((r.displayName = `${n.k}Toggle`),
           (r.defaultProps = {
             managedClasses: {},
-          });
+          }));
         const l = r;
       },
       61341: (e, t, s) => {
@@ -12480,12 +12680,12 @@
           r = s(14895);
         class l extends i.Z {
           constructor() {
-            super(...arguments),
+            (super(...arguments),
               (this.handledProps = {
                 managedClasses: void 0,
                 tag: void 0,
                 size: void 0,
-              });
+              }));
           }
           get tag() {
             return this.generateHTMLTag();
@@ -12496,36 +12696,36 @@
               Object.assign({}, this.unhandledProps(), {
                 className: this.generateClassNames(),
               }),
-              this.props.children
+              this.props.children,
             );
           }
           generateClassNames() {
             const e = this.props.managedClasses;
             return super.generateClassNames(
-              (0, a.A)(e.typography, e[`typography__${this.props.size}`])
+              (0, a.A)(e.typography, e[`typography__${this.props.size}`]),
             );
           }
           generateHTMLTag() {
             return r.l[this.props.tag] || r.l.p;
           }
         }
-        (l.defaultProps = {
+        ((l.defaultProps = {
           tag: r.l.p,
           size: r.H._1,
           managedClasses: {},
         }),
-          (l.displayName = `${n.k}Typography`);
+          (l.displayName = `${n.k}Typography`));
         const h = l;
       },
       14895: (e, t, s) => {
         "use strict";
         var i, a;
-        s.d(t, {
+        (s.d(t, {
           l: () => i,
           H: () => a,
         }),
           (function (e) {
-            (e.caption = "caption"),
+            ((e.caption = "caption"),
               (e.h1 = "h1"),
               (e.h2 = "h2"),
               (e.h3 = "h3"),
@@ -12534,10 +12734,10 @@
               (e.h6 = "h6"),
               (e.p = "p"),
               (e.span = "span"),
-              (e.figcaption = "figcaption");
+              (e.figcaption = "figcaption"));
           })(i || (i = {})),
           (function (e) {
-            (e[(e._1 = 1)] = "_1"),
+            ((e[(e._1 = 1)] = "_1"),
               (e[(e._2 = 2)] = "_2"),
               (e[(e._3 = 3)] = "_3"),
               (e[(e._4 = 4)] = "_4"),
@@ -12545,8 +12745,8 @@
               (e[(e._6 = 6)] = "_6"),
               (e[(e._7 = 7)] = "_7"),
               (e[(e._8 = 8)] = "_8"),
-              (e[(e._9 = 9)] = "_9");
-          })(a || (a = {}));
+              (e[(e._9 = 9)] = "_9"));
+          })(a || (a = {})));
       },
       12468: (e, t, s) => {
         "use strict";
@@ -12573,23 +12773,23 @@
           viewport: null,
         });
         var b, g;
-        !(function (e) {
-          (e.left = "left"),
+        (!(function (e) {
+          ((e.left = "left"),
             (e.insetLeft = "insetLeft"),
             (e.insetRight = "insetRight"),
             (e.right = "right"),
-            (e[void 0] = "undefined");
+            (e[void 0] = "undefined"));
         })(b || (b = {})),
           (function (e) {
-            (e.top = "top"),
+            ((e.top = "top"),
               (e.insetTop = "insetTop"),
               (e.insetBottom = "insetBottom"),
               (e.bottom = "bottom"),
-              (e[void 0] = "undefined");
-          })(g || (g = {}));
+              (e[void 0] = "undefined"));
+          })(g || (g = {})));
         class u extends i.Z {
           constructor(e) {
-            super(e),
+            (super(e),
               (this.handledProps = {
                 managedClasses: void 0,
                 anchor: void 0,
@@ -12629,10 +12829,10 @@
                       {},
                       this.props.scaleToFit
                         ? {
-                          height: `${this.state.verticalSelectedPositionHeight}px`,
-                          width: `${this.state.horizontalSelectedPositionWidth}px`,
-                        }
-                        : {}
+                            height: `${this.state.verticalSelectedPositionHeight}px`,
+                            width: `${this.state.horizontalSelectedPositionWidth}px`,
+                          }
+                        : {},
                     ),
                     {
                       opacity:
@@ -12642,9 +12842,9 @@
                       position: "relative",
                       transformOrigin: `${this.state.xTransformOrigin} ${this.state.yTransformOrigin}`,
                       transform: `translate(\n                ${Math.floor(
-                        this.state.xTranslate
+                        this.state.xTranslate,
                       )}px, \n                ${Math.floor(
-                        this.state.yTranslate
+                        this.state.yTranslate,
                       )}px\n            )`,
                       top:
                         null === this.state.top ? null : `${this.state.top}px`,
@@ -12660,22 +12860,22 @@
                         null === this.state.left
                           ? null
                           : `${this.state.left}px`,
-                    }
+                    },
                   ),
-                  e
+                  e,
                 );
               }),
               (this.updateDisabledState = () => {
                 (0, n.N)() && true !== this.props.disabled
                   ? (null === this.getAnchorElement() ||
-                    null === this.getViewportElement(this.props.viewport)) &&
+                      null === this.getViewportElement(this.props.viewport)) &&
                     this.state.validRefChecksRemaining > 0
                     ? this.setState({
-                      validRefChecksRemaining:
-                        this.state.validRefChecksRemaining - 1,
-                      initialLayoutComplete:
-                        this.state.validRefChecksRemaining <= 1,
-                    })
+                        validRefChecksRemaining:
+                          this.state.validRefChecksRemaining - 1,
+                        initialLayoutComplete:
+                          this.state.validRefChecksRemaining <= 1,
+                      })
                     : this.enableComponent()
                   : this.disable();
               }),
@@ -12689,22 +12889,22 @@
                   (0, l.Z)(this.rootElement.current) ||
                   (window.IntersectionObserver && window.ResizeObserver
                     ? (this.setState({
-                      disabled: false,
-                      noObserverMode: false,
-                      validRefChecksRemaining: 0,
-                    }),
+                        disabled: false,
+                        noObserverMode: false,
+                        validRefChecksRemaining: 0,
+                      }),
                       (this.collisionDetector = new window.IntersectionObserver(
                         this.handleCollision,
                         {
                           root: e,
                           rootMargin: "0px",
                           threshold: [0, 1],
-                        }
+                        },
                       )),
                       this.collisionDetector.observe(this.rootElement.current),
                       this.collisionDetector.observe(t),
                       (this.resizeDetector = new window.ResizeObserver(
-                        this.handleResize
+                        this.handleResize,
                       )),
                       this.resizeDetector.observe(t),
                       this.resizeDetector.observe(this.rootElement.current),
@@ -12716,13 +12916,13 @@
                   t = this.getAnchorElement();
                 if ((0, l.Z)(e) || (0, l.Z)(t)) return;
                 const s = this.rootElement.current.getBoundingClientRect();
-                (this.positionerDimension = {
+                ((this.positionerDimension = {
                   height: s.height,
                   width: s.width,
                 }),
-                  (this.viewportRect = e.getBoundingClientRect());
+                  (this.viewportRect = e.getBoundingClientRect()));
                 const i = t.getBoundingClientRect();
-                (this.anchorTop = i.top),
+                ((this.anchorTop = i.top),
                   (this.anchorRight = i.right),
                   (this.anchorBottom = i.bottom),
                   (this.anchorLeft = i.left),
@@ -12734,28 +12934,28 @@
                     disabled: false,
                     noObserverMode: true,
                   }),
-                  this.requestFrame();
+                  this.requestFrame());
               }),
               (this.disable = () => {
                 this.state.disabled ||
                   (this.detachListeners(this.props.viewport),
-                    this.setState({
-                      disabled: true,
-                      validRefChecksRemaining: 0,
-                    }));
+                  this.setState({
+                    disabled: true,
+                    validRefChecksRemaining: 0,
+                  }));
               }),
               (this.detachListeners = (e) => {
                 const t = this.getViewportElement(e);
-                (0, l.Z)(t) ||
+                ((0, l.Z)(t) ||
                   t.removeEventListener("scroll", this.handleScroll),
                   this.collisionDetector &&
-                  "function" == typeof this.collisionDetector.disconnect &&
-                  (this.collisionDetector.disconnect(),
+                    "function" == typeof this.collisionDetector.disconnect &&
+                    (this.collisionDetector.disconnect(),
                     (this.collisionDetector = null)),
                   this.resizeDetector &&
-                  "function" == typeof this.resizeDetector.disconnect &&
-                  (this.resizeDetector.disconnect(),
-                    (this.resizeDetector = null));
+                    "function" == typeof this.resizeDetector.disconnect &&
+                    (this.resizeDetector.disconnect(),
+                    (this.resizeDetector = null)));
               }),
               (this.getHorizontalPositioningOptions = () => {
                 switch (this.props.horizontalPositioningMode) {
@@ -12821,20 +13021,20 @@
                     height: e.contentRect.height,
                     width: e.contentRect.width,
                   }),
-                    this.requestFrame());
+                  this.requestFrame());
               }),
               (this.handleAnchorResize = (e) => {
-                (this.anchorHeight = e.contentRect.height),
+                ((this.anchorHeight = e.contentRect.height),
                   (this.anchorWidth = e.contentRect.width),
                   this.state.currentVerticalPosition === g.top ||
-                    this.state.currentVerticalPosition === g.insetTop
+                  this.state.currentVerticalPosition === g.insetTop
                     ? (this.anchorBottom = this.anchorTop + this.anchorHeight)
                     : (this.anchorTop = this.anchorBottom - this.anchorHeight),
                   this.state.currentHorizontalPosition === b.left ||
-                    this.state.currentHorizontalPosition === b.insetLeft
+                  this.state.currentHorizontalPosition === b.insetLeft
                     ? (this.anchorRight = this.anchorLeft + this.anchorWidth)
                     : (this.anchorLeft = this.anchorRight - this.anchorWidth),
-                  this.requestFrame();
+                  this.requestFrame());
               }),
               (this.handleCollision = (e, t) => {
                 let s = null;
@@ -12845,22 +13045,22 @@
                     : this.handleAnchorCollision(t);
                 });
                 const i = this.getViewportElement(this.props.viewport);
-                (0, l.Z)(i) ||
+                ((0, l.Z)(i) ||
                   ((this.scrollTop = i.scrollTop),
-                    (this.scrollLeft = i.scrollLeft)),
+                  (this.scrollLeft = i.scrollLeft)),
                   2 === e.length &&
-                  null !== s &&
-                  this.updatePositionerOffset(s),
-                  this.requestFrame();
+                    null !== s &&
+                    this.updatePositionerOffset(s),
+                  this.requestFrame());
               }),
               (this.handleAnchorCollision = (e) => {
-                (this.viewportRect = e.rootBounds),
+                ((this.viewportRect = e.rootBounds),
                   (this.anchorTop = e.boundingClientRect.top),
                   (this.anchorRight = e.boundingClientRect.right),
                   (this.anchorBottom = e.boundingClientRect.bottom),
                   (this.anchorLeft = e.boundingClientRect.left),
                   (this.anchorHeight = e.boundingClientRect.height),
-                  (this.anchorWidth = e.boundingClientRect.width);
+                  (this.anchorWidth = e.boundingClientRect.width));
               }),
               (this.handlePositionerCollision = (e, t) => {
                 this.viewportRect = e.rootBounds;
@@ -12870,45 +13070,49 @@
                     height: s.height,
                     width: s.width,
                   }),
-                    t)
+                  t)
                 ) {
                   switch (this.state.currentVerticalPosition) {
                     case g.top:
-                      (this.anchorTop = s.bottom - this.state.yTranslate),
+                      ((this.anchorTop = s.bottom - this.state.yTranslate),
                         (this.anchorBottom =
-                          this.anchorTop + this.anchorHeight);
+                          this.anchorTop + this.anchorHeight));
                       break;
                     case g.insetTop:
-                      (this.anchorBottom = s.bottom - this.state.yTranslate),
+                      ((this.anchorBottom = s.bottom - this.state.yTranslate),
                         (this.anchorTop =
-                          this.anchorBottom - this.anchorHeight);
+                          this.anchorBottom - this.anchorHeight));
                       break;
                     case g.insetBottom:
-                      (this.anchorTop = s.top - this.state.yTranslate),
+                      ((this.anchorTop = s.top - this.state.yTranslate),
                         (this.anchorBottom =
-                          this.anchorTop + this.anchorHeight);
+                          this.anchorTop + this.anchorHeight));
                       break;
                     case g.bottom:
-                      (this.anchorBottom = s.top - this.state.yTranslate),
+                      ((this.anchorBottom = s.top - this.state.yTranslate),
                         (this.anchorTop =
-                          this.anchorBottom - this.anchorHeight);
+                          this.anchorBottom - this.anchorHeight));
                   }
                   switch (this.state.currentHorizontalPosition) {
                     case b.left:
-                      (this.anchorLeft = s.right - this.state.xTranslate),
-                        (this.anchorRight = this.anchorLeft + this.anchorWidth);
+                      ((this.anchorLeft = s.right - this.state.xTranslate),
+                        (this.anchorRight =
+                          this.anchorLeft + this.anchorWidth));
                       break;
                     case b.insetLeft:
-                      (this.anchorRight = s.right - this.state.xTranslate),
-                        (this.anchorLeft = this.anchorRight - this.anchorWidth);
+                      ((this.anchorRight = s.right - this.state.xTranslate),
+                        (this.anchorLeft =
+                          this.anchorRight - this.anchorWidth));
                       break;
                     case b.insetRight:
-                      (this.anchorLeft = s.left - this.state.xTranslate),
-                        (this.anchorRight = this.anchorLeft + this.anchorWidth);
+                      ((this.anchorLeft = s.left - this.state.xTranslate),
+                        (this.anchorRight =
+                          this.anchorLeft + this.anchorWidth));
                       break;
                     case b.right:
-                      (this.anchorRight = s.left - this.state.xTranslate),
-                        (this.anchorLeft = this.anchorRight - this.anchorWidth);
+                      ((this.anchorRight = s.left - this.state.xTranslate),
+                        (this.anchorLeft =
+                          this.anchorRight - this.anchorWidth));
                   }
                 }
               }),
@@ -12977,21 +13181,21 @@
                   s = e.scrollLeft;
                 if (this.scrollTop !== t) {
                   const e = this.scrollTop - t;
-                  (this.scrollTop = t),
+                  ((this.scrollTop = t),
                     (this.anchorTop = this.anchorTop + e),
-                    (this.anchorBottom = this.anchorBottom + e);
+                    (this.anchorBottom = this.anchorBottom + e));
                 }
                 if (this.scrollLeft !== s) {
                   const e = this.scrollLeft - s;
-                  (this.scrollLeft = s),
+                  ((this.scrollLeft = s),
                     (this.anchorLeft = this.anchorLeft + e),
-                    (this.anchorRight = this.anchorRight + e);
+                    (this.anchorRight = this.anchorRight + e));
                 }
               }),
               (this.updateLayout = () => {
                 if (
                   ((this.openRequestAnimationFrame = null),
-                    this.state.disabled ||
+                  this.state.disabled ||
                     (0, l.Z)(this.viewportRect) ||
                     (0, l.Z)(this.positionerDimension) ||
                     (this.props.fixedAfterInitialPlacement &&
@@ -13017,7 +13221,7 @@
                       this.getAvailableWidth(t) < s)) &&
                     (t =
                       this.getAvailableWidth(e[0]) >
-                        this.getAvailableWidth(e[1])
+                      this.getAvailableWidth(e[1])
                         ? e[0]
                         : e[1]);
                 }
@@ -13033,7 +13237,7 @@
                       this.getAvailableHeight(e) < s)) &&
                     (e =
                       this.getAvailableHeight(t[0]) >
-                        this.getAvailableHeight(t[1])
+                      this.getAvailableHeight(t[1])
                         ? t[0]
                         : t[1]);
                 }
@@ -13046,8 +13250,8 @@
                       initialLayoutComplete: true,
                     },
                     this.getHorizontalPositioningState(t, s),
-                    this.getVerticalPositioningState(e, s)
-                  )
+                    this.getVerticalPositioningState(e, s),
+                  ),
                 );
               }),
               (this.getNextPositionerDimension = (e, t) => {
@@ -13057,23 +13261,23 @@
                 };
                 return (
                   this.props.scaleToFit &&
-                  ((s.height = Math.max(
-                    Math.min(
-                      this.getAvailableHeight(t),
-                      this.viewportRect.height
-                    ),
-                    (0, l.Z)(this.props.verticalThreshold)
-                      ? 0
-                      : this.props.verticalThreshold
-                  )),
+                    ((s.height = Math.max(
+                      Math.min(
+                        this.getAvailableHeight(t),
+                        this.viewportRect.height,
+                      ),
+                      (0, l.Z)(this.props.verticalThreshold)
+                        ? 0
+                        : this.props.verticalThreshold,
+                    )),
                     (s.width = Math.max(
                       Math.min(
                         this.getAvailableWidth(e),
-                        this.viewportRect.width
+                        this.viewportRect.width,
                       ),
                       (0, l.Z)(this.props.horizontalThreshold)
                         ? 0
-                        : this.props.horizontalThreshold
+                        : this.props.horizontalThreshold,
                     ))),
                   s
                 );
@@ -13084,19 +13288,21 @@
                   a = "left";
                 switch (e) {
                   case b.left:
-                    (a = "right"), (s = t.width - this.baseHorizontalOffset);
+                    ((a = "right"), (s = t.width - this.baseHorizontalOffset));
                     break;
                   case b.insetLeft:
-                    (a = "right"),
+                    ((a = "right"),
                       (s =
-                        t.width - this.anchorWidth - this.baseHorizontalOffset);
+                        t.width -
+                        this.anchorWidth -
+                        this.baseHorizontalOffset));
                     break;
                   case b.insetRight:
-                    (a = "left"), (i = this.baseHorizontalOffset);
+                    ((a = "left"), (i = this.baseHorizontalOffset));
                     break;
                   case b.right:
-                    (a = "left"),
-                      (i = this.anchorWidth + this.baseHorizontalOffset);
+                    ((a = "left"),
+                      (i = this.anchorWidth + this.baseHorizontalOffset));
                 }
                 return {
                   xTransformOrigin: a,
@@ -13112,19 +13318,21 @@
                   a = "top";
                 switch (e) {
                   case g.top:
-                    (a = "bottom"),
+                    ((a = "bottom"),
                       (i =
-                        t.height + this.anchorHeight - this.baseVerticalOffset);
+                        t.height +
+                        this.anchorHeight -
+                        this.baseVerticalOffset));
                     break;
                   case g.insetTop:
-                    (a = "bottom"), (i = t.height - this.baseVerticalOffset);
+                    ((a = "bottom"), (i = t.height - this.baseVerticalOffset));
                     break;
                   case g.insetBottom:
-                    (a = "top"),
-                      (s = this.baseVerticalOffset - this.anchorHeight);
+                    ((a = "top"),
+                      (s = this.baseVerticalOffset - this.anchorHeight));
                     break;
                   case g.bottom:
-                    (a = "top"), (s = this.baseVerticalOffset);
+                    ((a = "top"), (s = this.baseVerticalOffset));
                 }
                 return {
                   yTransformOrigin: a,
@@ -13140,20 +13348,20 @@
                 let t = 0;
                 switch (e) {
                   case b.left:
-                    (t = this.viewportRect.right - this.anchorLeft),
-                      (t = t < 0 ? t - 1 : 0);
+                    ((t = this.viewportRect.right - this.anchorLeft),
+                      (t = t < 0 ? t - 1 : 0));
                     break;
                   case b.insetLeft:
-                    (t = this.viewportRect.right - this.anchorRight),
-                      (t = t < 0 ? t - 1 : 0);
+                    ((t = this.viewportRect.right - this.anchorRight),
+                      (t = t < 0 ? t - 1 : 0));
                     break;
                   case b.insetRight:
-                    (t = this.viewportRect.left - this.anchorLeft),
-                      (t = t > 0 ? t + 1 : 0);
+                    ((t = this.viewportRect.left - this.anchorLeft),
+                      (t = t > 0 ? t + 1 : 0));
                     break;
                   case b.right:
-                    (t = this.viewportRect.left - this.anchorRight),
-                      (t = t > 0 ? t + 1 : 0);
+                    ((t = this.viewportRect.left - this.anchorRight),
+                      (t = t > 0 ? t + 1 : 0));
                 }
                 return t;
               }),
@@ -13163,20 +13371,20 @@
                 let t = 0;
                 switch (e) {
                   case g.top:
-                    (t = this.viewportRect.bottom - this.anchorTop),
-                      (t = t < 0 ? t - 1 : 0);
+                    ((t = this.viewportRect.bottom - this.anchorTop),
+                      (t = t < 0 ? t - 1 : 0));
                     break;
                   case g.insetTop:
-                    (t = this.viewportRect.bottom - this.anchorBottom),
-                      (t = t < 0 ? t - 1 : 0);
+                    ((t = this.viewportRect.bottom - this.anchorBottom),
+                      (t = t < 0 ? t - 1 : 0));
                     break;
                   case g.insetBottom:
-                    (t = this.viewportRect.top - this.anchorTop),
-                      (t = t < 0 ? 0 : t + 1);
+                    ((t = this.viewportRect.top - this.anchorTop),
+                      (t = t < 0 ? 0 : t + 1));
                     break;
                   case g.bottom:
-                    (t = this.viewportRect.top - this.anchorBottom),
-                      (t = t < 0 ? 0 : t + 1);
+                    ((t = this.viewportRect.top - this.anchorBottom),
+                      (t = t < 0 ? 0 : t + 1));
                 }
                 return t;
               }),
@@ -13245,21 +13453,21 @@
                 currentVerticalPosition: g.undefined,
                 defaultHorizontalPosition: this.getHorizontalPositionToLabel(
                   this.props.horizontalPositioningMode,
-                  this.props.defaultHorizontalPosition
+                  this.props.defaultHorizontalPosition,
                 ),
                 defaultVerticalPosition: this.getVerticalPositionToLabel(
                   this.props.verticalPositioningMode,
-                  this.props.defaultVerticalPosition
+                  this.props.defaultVerticalPosition,
                 ),
                 horizontalSelectedPositionWidth: null,
                 verticalSelectedPositionHeight: null,
                 initialLayoutComplete: false,
                 validRefChecksRemaining: 2,
               })),
-              (this.state = this.generateInitialState());
+              (this.state = this.generateInitialState()));
           }
           componentDidMount() {
-            this.updateDisabledState(), this.requestFrame();
+            (this.updateDisabledState(), this.requestFrame());
           }
           componentWillUnmount() {
             this.state.disabled || this.detachListeners(this.props.viewport);
@@ -13292,19 +13500,19 @@
                 this.state.initialLayoutComplete ||
                 !this.props.delayContentInstanciation
                 ? this.props.children
-                : null
+                : null,
             );
           }
           generateClassNames() {
             const {
-              viewportPositioner: e,
-              viewportPositioner__left: t,
-              viewportPositioner__right: s,
-              viewportPositioner__top: i,
-              viewportPositioner__bottom: o,
-              viewportPositioner__horizontalInset: n,
-              viewportPositioner__verticalInset: r,
-            } = this.props.managedClasses,
+                viewportPositioner: e,
+                viewportPositioner__left: t,
+                viewportPositioner__right: s,
+                viewportPositioner__top: i,
+                viewportPositioner__bottom: o,
+                viewportPositioner__horizontalInset: n,
+                viewportPositioner__verticalInset: r,
+              } = this.props.managedClasses,
               l = this.state.currentHorizontalPosition,
               h = this.state.currentVerticalPosition,
               c = h === g.insetTop || h === g.insetBottom,
@@ -13317,12 +13525,12 @@
                 [n, d],
                 [i, h === g.top || h === g.insetTop],
                 [o, h === g.bottom || h === g.insetBottom],
-                [r, c]
-              )
+                [r, c],
+              ),
             );
           }
         }
-        (u.displayName = `${c.k}ViewportPositioner`),
+        ((u.displayName = `${c.k}ViewportPositioner`),
           (u.contextType = p),
           (u.defaultProps = {
             horizontalPositioningMode: d.tg.uncontrolled,
@@ -13338,32 +13546,32 @@
             delayContentInstanciation: false,
             managedClasses: {},
           }),
-          (u.contextType = p);
+          (u.contextType = p));
         const m = u;
       },
       10736: (e, t, s) => {
         "use strict";
         var i, a, o;
-        s.d(t, {
+        (s.d(t, {
           kv: () => i,
           Lp: () => a,
           tg: () => o,
         }),
           (function (e) {
-            (e.left = "left"),
+            ((e.left = "left"),
               (e.right = "right"),
-              (e.uncontrolled = "uncontrolled");
+              (e.uncontrolled = "uncontrolled"));
           })(i || (i = {})),
           (function (e) {
-            (e.top = "top"),
+            ((e.top = "top"),
               (e.bottom = "bottom"),
-              (e.uncontrolled = "uncontrolled");
+              (e.uncontrolled = "uncontrolled"));
           })(a || (a = {})),
           (function (e) {
-            (e.uncontrolled = "uncontrolled"),
+            ((e.uncontrolled = "uncontrolled"),
               (e.adjacent = "adjacent"),
-              (e.inset = "inset");
-          })(o || (o = {}));
+              (e.inset = "inset"));
+          })(o || (o = {})));
       },
     },
     s = {};
@@ -13376,9 +13584,13 @@
       loaded: false,
       exports: {},
     });
-    return t[e].call(o.exports, o, o.exports, i), (o.loaded = true), o.exports;
+    return (
+      t[e].call(o.exports, o, o.exports, i),
+      (o.loaded = true),
+      o.exports
+    );
   }
-  (i.m = t),
+  ((i.m = t),
     (e = []),
     (i.O = (t, s, a, o) => {
       if (!s) {
@@ -13429,7 +13641,7 @@
         set: () => {
           throw new Error(
             "ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: " +
-            e.id
+              e.id,
           );
         },
       }),
@@ -13437,14 +13649,14 @@
     )),
     (i.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t)),
     (i.r = (e) => {
-      "undefined" != typeof Symbol &&
+      ("undefined" != typeof Symbol &&
         Symbol.toStringTag &&
         Object.defineProperty(e, Symbol.toStringTag, {
           value: "Module",
         }),
         Object.defineProperty(e, "__esModule", {
           value: true,
-        });
+        }));
     }),
     (i.nmd = (e) => ((e.paths = []), e.children || (e.children = []), e)),
     (i.j = 185),
@@ -13454,19 +13666,19 @@
       };
       i.O.j = (t) => 0 === e[t];
       var t = (t, s) => {
-        var a,
-          o,
-          [n, r, l] = s,
-          h = 0;
-        for (a in r) i.o(r, a) && (i.m[a] = r[a]);
-        if (l) var c = l(i);
-        for (t && t(s); h < n.length; h++)
-          (o = n[h]), i.o(e, o) && e[o] && e[o][0](), (e[n[h]] = 0);
-        return i.O(c);
-      },
+          var a,
+            o,
+            [n, r, l] = s,
+            h = 0;
+          for (a in r) i.o(r, a) && (i.m[a] = r[a]);
+          if (l) var c = l(i);
+          for (t && t(s); h < n.length; h++)
+            ((o = n[h]), i.o(e, o) && e[o] && e[o][0](), (e[n[h]] = 0));
+          return i.O(c);
+        },
         s = (self.webpackChunkedge_common = self.webpackChunkedge_common || []);
-      s.forEach(t.bind(null, 0)), (s.push = t.bind(null, s.push.bind(s)));
-    })();
+      (s.forEach(t.bind(null, 0)), (s.push = t.bind(null, s.push.bind(s))));
+    })());
   var a = i.O(void 0, [692, 197], () => i(13695));
   a = i.O(a);
 })();

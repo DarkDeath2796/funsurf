@@ -1,0 +1,13 @@
+# Python
+*.pyc
+__pycache__/
+map_editor.py
+sprite_data.py
+structures.json
+
+# Build artifacts
+dist/
+build/
+
+# Map data
+map.json

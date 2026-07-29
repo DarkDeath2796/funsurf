@@ -84,5 +84,8 @@ loadTimeData.data = {
   zigzagModeTitleInline: "Zig zag:",
   zigzagTitle: "Zig zag",
   zigzagUnit: "gates",
+  customTitle: "Custom",
+  customUnit: "",
+  customDescriptor: "score",
   modder: "Modder", // hehehe
 };
