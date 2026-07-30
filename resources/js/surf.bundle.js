@@ -319,7 +319,7 @@
               he.saveCustomHighScore(e.custom_bestScore),
               he.saveGameMode(e.mode),
               he.saveHighVisibilityMode(e.highVisibilityMode),
-              he.saveReducedSpeedMode(e.gameSpeed < se),
+              he.saveGameSpeed(e.gameSpeed),
               he.saveDefaultCharacter(e.currentCharacter),
               he.saveDefaultTheme(e.theme));
           }
@@ -389,7 +389,7 @@
                 })));
           }
           storeCustomStats() {
-            // TODO: Implement custom stats saving
+            // No-op
           }
         }
 
@@ -516,6 +516,8 @@
               case q.Endless:
               case q.ZigZag:
                 return e.toString();
+              case q.Custom:
+                return '';
               case q.TimeTrial:
                 return W(e);
             }
@@ -529,7 +531,7 @@
               case q.ZigZag:
                 return Math.max(this.session.bestScore.zigzag, 0).toString();
               case q.Custom:
-                return "0";
+                return '';
             }
           }
           resetGameData() {
@@ -566,7 +568,7 @@
               caught: false,
               highScore: false,
               cheat: {
-                used: false,
+                used: this.session.settings.gameSpeed !== se,
                 lives: false,
                 boosts: false,
                 safety: false,
@@ -653,6 +655,7 @@
                 theme: s.theme,
                 boundaries: s.boundaries,
                 area_size: s.area_size,
+                customScore: void 0 === s.customScore ? e.customScore : s.customScore,
                 endless_bestScore: Math.max(
                   e.endless_bestScore,
                   s.endless_bestScore,
@@ -702,6 +705,12 @@
           }
         }
         re.subscribe(updateCustomBoundary);
+
+        window.updateGameSettings = function(options) {
+          if (re && oe) {
+              re.dispatch(oe(options));
+          }
+        }
 
         function le(e, t, s) {
           return (
@@ -926,6 +935,26 @@
                     ),
                     {
                       reducedSpeedMode: e,
+                    },
+                  ),
+                ),
+              );
+            }
+          }
+          static saveGameSpeed(e) {
+            if ("undefined" != typeof Z.e9 && "function" == typeof Z.e9.send) {
+              Z.e9.send("save-game-speed", [e]);
+            } else {
+              localStorage.setItem(
+                "stats",
+                JSON.stringify(
+                  Object.assign(
+                    Object.assign(
+                      {},
+                      JSON.parse(localStorage.getItem("stats")),
+                    ),
+                    {
+                      gameSpeed: e,
                     },
                   ),
                 ),
@@ -10489,15 +10518,14 @@
                   (te.sys.session.settings.hitbox = e),
                   Ze.sys.render());
               }),
-              at(this, "onReducedSpeedModeChange", () => {
-                const e = this.props.gameSpeed === se ? 0.5 : se;
-                (he.saveReducedSpeedMode(e !== se),
-                  this.props.dispatch(
+              at(this, "onGameSpeedChange", (e) => {
+                const newSpeed = parseFloat(e.target.value);
+                this.props.dispatch(
                     oe({
                       ...re.getState(),
-                      gameSpeed: e,
+                      gameSpeed: newSpeed,
                     }),
-                  ));
+                  );
               }),
               at(this, "onGameModeChange", (e) => {
                 (this.props.dispatch(
@@ -10991,24 +11019,26 @@
                 {
                   className:
                     this.props.managedClasses
-                      .settingsHamburgerMenu_flyout_toggleRow,
+                      .settingsHamburgerMenu_flyout_row,
                 },
                 a.createElement(
                   E.__,
                   {
-                    htmlFor: "reducedSpeedMode",
+                    htmlFor: "gameSpeedSlider",
+                    className: this.props.managedClasses.settingsHamburgerMenu_flyout_label
                   },
-                  Z.pz.getString("reducedSpeedModeToggleLabel"),
+                  Z.pz.getString("reducedSpeedModeToggleLabel") + ": " + this.props.gameSpeed.toFixed(2),
                 ),
-                a.createElement(D.ZD, {
-                  jssStyleSheet: m,
-                  inputId: "reducedSpeedMode",
-                  defaultChecked: true,
-                  selectedMessage: e,
-                  unselectedMessage: t,
-                  selected: this.props.gameSpeed !== se,
-                  onChange: this.onReducedSpeedModeChange,
-                }),
+                a.createElement("input", {
+                    id: "gameSpeedSlider",
+                    type: "range",
+                    min: 0.05,
+                    max: 2,
+                    step: 0.05,
+                    value: this.props.gameSpeed,
+                    onChange: this.onGameSpeedChange,
+                    style: { width: "100%" }
+                })
               ),
             );
           }
@@ -11112,7 +11142,7 @@
                     e.timetrial_bestScore < 0
                       ? -1
                       : e.timetrial_bestScore / 1e3,
-                  gameSpeed: e.reducedSpeedMode ? 0.5 : se,
+                  gameSpeed: e.gameSpeed ? e.gameSpeed : (e.reducedSpeedMode ? 0.5 : se),
                   mode: j(e.mode),
                   theme: K(e.theme), // newly added, these are from the old code
                 }),
